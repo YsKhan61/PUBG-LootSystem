@@ -30,7 +30,7 @@ namespace Weapon_System
             ""id"": ""5c3c2922-436a-41b5-aaf5-e1391766132c"",
             ""actions"": [
                 {
-                    ""name"": ""Gun_Slot_1_Choose"",
+                    ""name"": ""PrimaryWeapon_Select"",
                     ""type"": ""Button"",
                     ""id"": ""82111dab-77cf-49e0-8c12-d513c6e0e2cd"",
                     ""expectedControlType"": ""Button"",
@@ -39,7 +39,7 @@ namespace Weapon_System
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Gun_Slot_2_Choose"",
+                    ""name"": ""SecondaryWeapon_Select"",
                     ""type"": ""Button"",
                     ""id"": ""afa0533e-ef77-453d-b974-e0a3700be563"",
                     ""expectedControlType"": ""Button"",
@@ -100,6 +100,60 @@ namespace Weapon_System
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Jump"",
+                    ""type"": ""Button"",
+                    ""id"": ""d55f65dd-b3f9-4fd0-a224-352549969460"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""VerticalMove"",
+                    ""type"": ""Button"",
+                    ""id"": ""86bce3b0-b906-4f2e-8d9b-fef8bd68eb72"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""HorizontalMove"",
+                    ""type"": ""Button"",
+                    ""id"": ""ccfb9416-bc87-4ad1-beb8-d4cf7eb1b25c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Run"",
+                    ""type"": ""Button"",
+                    ""id"": ""bff9e200-7bd8-466f-876f-af5cc5022570"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MouseXAxis"",
+                    ""type"": ""Value"",
+                    ""id"": ""3f7609a2-bcfa-4ea4-8c27-588bb6971bcd"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""MouseYAxis"",
+                    ""type"": ""Value"",
+                    ""id"": ""06f9051b-249e-44ef-8fe8-ea47047e5d1f"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -110,7 +164,7 @@ namespace Weapon_System
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Mouse_And_Keyboard"",
-                    ""action"": ""Gun_Slot_1_Choose"",
+                    ""action"": ""PrimaryWeapon_Select"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -121,7 +175,7 @@ namespace Weapon_System
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Mouse_And_Keyboard"",
-                    ""action"": ""Gun_Slot_2_Choose"",
+                    ""action"": ""SecondaryWeapon_Select"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -153,7 +207,7 @@ namespace Weapon_System
                     ""path"": ""<Keyboard>/3"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""Mouse_And_Keyboard"",
                     ""action"": ""Holster"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -164,7 +218,7 @@ namespace Weapon_System
                     ""path"": ""<Keyboard>/r"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""Mouse_And_Keyboard"",
                     ""action"": ""Reload"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -175,7 +229,7 @@ namespace Weapon_System
                     ""path"": ""<Keyboard>/f"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""Mouse_And_Keyboard"",
                     ""action"": ""Pickup"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -186,8 +240,118 @@ namespace Weapon_System
                     ""path"": ""<Keyboard>/g"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""Mouse_And_Keyboard"",
                     ""action"": ""Drop"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3e0762ba-4fea-43e5-ae11-3fa2f2396788"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Mouse_And_Keyboard"",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""7cb3f589-7730-4aa3-ac3c-c8f6d61693eb"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""VerticalMove"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""1ac4aa6e-2f0e-4353-88dd-352fc5248e43"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Mouse_And_Keyboard"",
+                    ""action"": ""VerticalMove"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""851d78a8-f64c-494f-a42d-2816179f70b9"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Mouse_And_Keyboard"",
+                    ""action"": ""VerticalMove"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""291aa8cf-6982-4cad-a2fe-fe946fcfbfe9"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""HorizontalMove"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""9ceaa6a8-0d9e-4aee-b33d-02250d996005"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Mouse_And_Keyboard"",
+                    ""action"": ""HorizontalMove"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""64e696ad-2f9c-4bac-80dd-769245240429"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Mouse_And_Keyboard"",
+                    ""action"": ""HorizontalMove"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""02b67bac-43fe-4ab7-9cfa-261afbddfa00"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Mouse_And_Keyboard"",
+                    ""action"": ""Run"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d266dac8-90a1-4742-b732-1bdfe1293dca"",
+                    ""path"": ""<Mouse>/delta/x"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Mouse_And_Keyboard"",
+                    ""action"": ""MouseXAxis"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2895b5aa-b7b8-45bf-b6f3-541eae8fd077"",
+                    ""path"": ""<Mouse>/delta/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Mouse_And_Keyboard"",
+                    ""action"": ""MouseYAxis"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -215,14 +379,20 @@ namespace Weapon_System
 }");
             // Player
             m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
-            m_Player_Gun_Slot_1_Choose = m_Player.FindAction("Gun_Slot_1_Choose", throwIfNotFound: true);
-            m_Player_Gun_Slot_2_Choose = m_Player.FindAction("Gun_Slot_2_Choose", throwIfNotFound: true);
+            m_Player_PrimaryWeapon_Select = m_Player.FindAction("PrimaryWeapon_Select", throwIfNotFound: true);
+            m_Player_SecondaryWeapon_Select = m_Player.FindAction("SecondaryWeapon_Select", throwIfNotFound: true);
             m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
             m_Player_ADS = m_Player.FindAction("ADS", throwIfNotFound: true);
             m_Player_Holster = m_Player.FindAction("Holster", throwIfNotFound: true);
             m_Player_Reload = m_Player.FindAction("Reload", throwIfNotFound: true);
             m_Player_Pickup = m_Player.FindAction("Pickup", throwIfNotFound: true);
             m_Player_Drop = m_Player.FindAction("Drop", throwIfNotFound: true);
+            m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
+            m_Player_VerticalMove = m_Player.FindAction("VerticalMove", throwIfNotFound: true);
+            m_Player_HorizontalMove = m_Player.FindAction("HorizontalMove", throwIfNotFound: true);
+            m_Player_Run = m_Player.FindAction("Run", throwIfNotFound: true);
+            m_Player_MouseXAxis = m_Player.FindAction("MouseXAxis", throwIfNotFound: true);
+            m_Player_MouseYAxis = m_Player.FindAction("MouseYAxis", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -284,26 +454,38 @@ namespace Weapon_System
         // Player
         private readonly InputActionMap m_Player;
         private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
-        private readonly InputAction m_Player_Gun_Slot_1_Choose;
-        private readonly InputAction m_Player_Gun_Slot_2_Choose;
+        private readonly InputAction m_Player_PrimaryWeapon_Select;
+        private readonly InputAction m_Player_SecondaryWeapon_Select;
         private readonly InputAction m_Player_Fire;
         private readonly InputAction m_Player_ADS;
         private readonly InputAction m_Player_Holster;
         private readonly InputAction m_Player_Reload;
         private readonly InputAction m_Player_Pickup;
         private readonly InputAction m_Player_Drop;
+        private readonly InputAction m_Player_Jump;
+        private readonly InputAction m_Player_VerticalMove;
+        private readonly InputAction m_Player_HorizontalMove;
+        private readonly InputAction m_Player_Run;
+        private readonly InputAction m_Player_MouseXAxis;
+        private readonly InputAction m_Player_MouseYAxis;
         public struct PlayerActions
         {
             private @InputControls m_Wrapper;
             public PlayerActions(@InputControls wrapper) { m_Wrapper = wrapper; }
-            public InputAction @Gun_Slot_1_Choose => m_Wrapper.m_Player_Gun_Slot_1_Choose;
-            public InputAction @Gun_Slot_2_Choose => m_Wrapper.m_Player_Gun_Slot_2_Choose;
+            public InputAction @PrimaryWeapon_Select => m_Wrapper.m_Player_PrimaryWeapon_Select;
+            public InputAction @SecondaryWeapon_Select => m_Wrapper.m_Player_SecondaryWeapon_Select;
             public InputAction @Fire => m_Wrapper.m_Player_Fire;
             public InputAction @ADS => m_Wrapper.m_Player_ADS;
             public InputAction @Holster => m_Wrapper.m_Player_Holster;
             public InputAction @Reload => m_Wrapper.m_Player_Reload;
             public InputAction @Pickup => m_Wrapper.m_Player_Pickup;
             public InputAction @Drop => m_Wrapper.m_Player_Drop;
+            public InputAction @Jump => m_Wrapper.m_Player_Jump;
+            public InputAction @VerticalMove => m_Wrapper.m_Player_VerticalMove;
+            public InputAction @HorizontalMove => m_Wrapper.m_Player_HorizontalMove;
+            public InputAction @Run => m_Wrapper.m_Player_Run;
+            public InputAction @MouseXAxis => m_Wrapper.m_Player_MouseXAxis;
+            public InputAction @MouseYAxis => m_Wrapper.m_Player_MouseYAxis;
             public InputActionMap Get() { return m_Wrapper.m_Player; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -313,12 +495,12 @@ namespace Weapon_System
             {
                 if (instance == null || m_Wrapper.m_PlayerActionsCallbackInterfaces.Contains(instance)) return;
                 m_Wrapper.m_PlayerActionsCallbackInterfaces.Add(instance);
-                @Gun_Slot_1_Choose.started += instance.OnGun_Slot_1_Choose;
-                @Gun_Slot_1_Choose.performed += instance.OnGun_Slot_1_Choose;
-                @Gun_Slot_1_Choose.canceled += instance.OnGun_Slot_1_Choose;
-                @Gun_Slot_2_Choose.started += instance.OnGun_Slot_2_Choose;
-                @Gun_Slot_2_Choose.performed += instance.OnGun_Slot_2_Choose;
-                @Gun_Slot_2_Choose.canceled += instance.OnGun_Slot_2_Choose;
+                @PrimaryWeapon_Select.started += instance.OnPrimaryWeapon_Select;
+                @PrimaryWeapon_Select.performed += instance.OnPrimaryWeapon_Select;
+                @PrimaryWeapon_Select.canceled += instance.OnPrimaryWeapon_Select;
+                @SecondaryWeapon_Select.started += instance.OnSecondaryWeapon_Select;
+                @SecondaryWeapon_Select.performed += instance.OnSecondaryWeapon_Select;
+                @SecondaryWeapon_Select.canceled += instance.OnSecondaryWeapon_Select;
                 @Fire.started += instance.OnFire;
                 @Fire.performed += instance.OnFire;
                 @Fire.canceled += instance.OnFire;
@@ -337,16 +519,34 @@ namespace Weapon_System
                 @Drop.started += instance.OnDrop;
                 @Drop.performed += instance.OnDrop;
                 @Drop.canceled += instance.OnDrop;
+                @Jump.started += instance.OnJump;
+                @Jump.performed += instance.OnJump;
+                @Jump.canceled += instance.OnJump;
+                @VerticalMove.started += instance.OnVerticalMove;
+                @VerticalMove.performed += instance.OnVerticalMove;
+                @VerticalMove.canceled += instance.OnVerticalMove;
+                @HorizontalMove.started += instance.OnHorizontalMove;
+                @HorizontalMove.performed += instance.OnHorizontalMove;
+                @HorizontalMove.canceled += instance.OnHorizontalMove;
+                @Run.started += instance.OnRun;
+                @Run.performed += instance.OnRun;
+                @Run.canceled += instance.OnRun;
+                @MouseXAxis.started += instance.OnMouseXAxis;
+                @MouseXAxis.performed += instance.OnMouseXAxis;
+                @MouseXAxis.canceled += instance.OnMouseXAxis;
+                @MouseYAxis.started += instance.OnMouseYAxis;
+                @MouseYAxis.performed += instance.OnMouseYAxis;
+                @MouseYAxis.canceled += instance.OnMouseYAxis;
             }
 
             private void UnregisterCallbacks(IPlayerActions instance)
             {
-                @Gun_Slot_1_Choose.started -= instance.OnGun_Slot_1_Choose;
-                @Gun_Slot_1_Choose.performed -= instance.OnGun_Slot_1_Choose;
-                @Gun_Slot_1_Choose.canceled -= instance.OnGun_Slot_1_Choose;
-                @Gun_Slot_2_Choose.started -= instance.OnGun_Slot_2_Choose;
-                @Gun_Slot_2_Choose.performed -= instance.OnGun_Slot_2_Choose;
-                @Gun_Slot_2_Choose.canceled -= instance.OnGun_Slot_2_Choose;
+                @PrimaryWeapon_Select.started -= instance.OnPrimaryWeapon_Select;
+                @PrimaryWeapon_Select.performed -= instance.OnPrimaryWeapon_Select;
+                @PrimaryWeapon_Select.canceled -= instance.OnPrimaryWeapon_Select;
+                @SecondaryWeapon_Select.started -= instance.OnSecondaryWeapon_Select;
+                @SecondaryWeapon_Select.performed -= instance.OnSecondaryWeapon_Select;
+                @SecondaryWeapon_Select.canceled -= instance.OnSecondaryWeapon_Select;
                 @Fire.started -= instance.OnFire;
                 @Fire.performed -= instance.OnFire;
                 @Fire.canceled -= instance.OnFire;
@@ -365,6 +565,24 @@ namespace Weapon_System
                 @Drop.started -= instance.OnDrop;
                 @Drop.performed -= instance.OnDrop;
                 @Drop.canceled -= instance.OnDrop;
+                @Jump.started -= instance.OnJump;
+                @Jump.performed -= instance.OnJump;
+                @Jump.canceled -= instance.OnJump;
+                @VerticalMove.started -= instance.OnVerticalMove;
+                @VerticalMove.performed -= instance.OnVerticalMove;
+                @VerticalMove.canceled -= instance.OnVerticalMove;
+                @HorizontalMove.started -= instance.OnHorizontalMove;
+                @HorizontalMove.performed -= instance.OnHorizontalMove;
+                @HorizontalMove.canceled -= instance.OnHorizontalMove;
+                @Run.started -= instance.OnRun;
+                @Run.performed -= instance.OnRun;
+                @Run.canceled -= instance.OnRun;
+                @MouseXAxis.started -= instance.OnMouseXAxis;
+                @MouseXAxis.performed -= instance.OnMouseXAxis;
+                @MouseXAxis.canceled -= instance.OnMouseXAxis;
+                @MouseYAxis.started -= instance.OnMouseYAxis;
+                @MouseYAxis.performed -= instance.OnMouseYAxis;
+                @MouseYAxis.canceled -= instance.OnMouseYAxis;
             }
 
             public void RemoveCallbacks(IPlayerActions instance)
@@ -393,14 +611,20 @@ namespace Weapon_System
         }
         public interface IPlayerActions
         {
-            void OnGun_Slot_1_Choose(InputAction.CallbackContext context);
-            void OnGun_Slot_2_Choose(InputAction.CallbackContext context);
+            void OnPrimaryWeapon_Select(InputAction.CallbackContext context);
+            void OnSecondaryWeapon_Select(InputAction.CallbackContext context);
             void OnFire(InputAction.CallbackContext context);
             void OnADS(InputAction.CallbackContext context);
             void OnHolster(InputAction.CallbackContext context);
             void OnReload(InputAction.CallbackContext context);
             void OnPickup(InputAction.CallbackContext context);
             void OnDrop(InputAction.CallbackContext context);
+            void OnJump(InputAction.CallbackContext context);
+            void OnVerticalMove(InputAction.CallbackContext context);
+            void OnHorizontalMove(InputAction.CallbackContext context);
+            void OnRun(InputAction.CallbackContext context);
+            void OnMouseXAxis(InputAction.CallbackContext context);
+            void OnMouseYAxis(InputAction.CallbackContext context);
         }
     }
 }

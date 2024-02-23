@@ -1,5 +1,6 @@
 using UnityEngine;
 using Weapon_System;
+using Weapon_System.Utilities;
 
 
 namespace Weapon_System.GameplayObjects.WeaponSystem

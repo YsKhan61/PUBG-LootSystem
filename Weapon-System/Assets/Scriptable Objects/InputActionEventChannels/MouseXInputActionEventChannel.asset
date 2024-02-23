@@ -9,6 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ae413cba541f6bf47ae8e2d24c04cb80, type: 3}
-  m_Name: WeaponDroppedInSlot2_ItemTagEventChannel 1
+  m_Script: {fileID: 11500000, guid: f6a1ad5fae9522947881862986648777, type: 3}
+  m_Name: MouseXInputActionEventChannel
   m_EditorClassIdentifier: 
+  m_RaiseEvent: 0

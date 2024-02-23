@@ -42,7 +42,7 @@ namespace Weapon_System.GameplayObjects.UI
                         item.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
                         itemUI.IsDragSuccess = true;
                         m_ItemUI = itemUI;
-                        m_OnItemDroppedEvent.RaiseEvent(itemTag);
+                        m_OnItemDroppedEvent.SetValueAndRaiseEvent(itemTag);
                         return;
                     }
                 }

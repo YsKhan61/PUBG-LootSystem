@@ -1,11 +1,8 @@
 {
-    "name": "Weapon-System.Player",
+    "name": "UnityStandardAssets",
     "rootNamespace": "",
     "references": [
-        "GUID:f44c6a87c4d81494aa84a29a940fb38f",
-        "GUID:6b0559d8f0f019943b0091a97cc8a82e",
-        "GUID:373f8237bb2862440b9ecb2ab7f21ab3",
-        "GUID:75469ad4d38634e559750d17036d5f7c"
+        "GUID:1f0fc56b52c89de49936b821f39c4a36"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -8,12 +8,5 @@ namespace Weapon_System.Utilities
     [CreateAssetMenu(fileName = "BoolEventChannel", menuName = "ScriptableObjects/Event Channels/BoolEventChannelSO")]
     public class BoolEventChannelSO : EventChannelBaseSO<bool>
     {
-        public bool Value { get; private set; }
-
-        public override void RaiseEvent(bool value = false)
-        {
-            Value = value;
-            OnEventRaised?.Invoke(value);
-        }
     }
 }

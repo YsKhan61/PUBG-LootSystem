@@ -6,7 +6,7 @@
             "id": "5c3c2922-436a-41b5-aaf5-e1391766132c",
             "actions": [
                 {
-                    "name": "Gun_Slot_1_Choose",
+                    "name": "PrimaryWeapon_Select",
                     "type": "Button",
                     "id": "82111dab-77cf-49e0-8c12-d513c6e0e2cd",
                     "expectedControlType": "Button",
@@ -15,7 +15,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Gun_Slot_2_Choose",
+                    "name": "SecondaryWeapon_Select",
                     "type": "Button",
                     "id": "afa0533e-ef77-453d-b974-e0a3700be563",
                     "expectedControlType": "Button",
@@ -76,6 +76,60 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Jump",
+                    "type": "Button",
+                    "id": "d55f65dd-b3f9-4fd0-a224-352549969460",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "VerticalMove",
+                    "type": "Button",
+                    "id": "86bce3b0-b906-4f2e-8d9b-fef8bd68eb72",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "HorizontalMove",
+                    "type": "Button",
+                    "id": "ccfb9416-bc87-4ad1-beb8-d4cf7eb1b25c",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Run",
+                    "type": "Button",
+                    "id": "bff9e200-7bd8-466f-876f-af5cc5022570",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "MouseXAxis",
+                    "type": "Value",
+                    "id": "3f7609a2-bcfa-4ea4-8c27-588bb6971bcd",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "MouseYAxis",
+                    "type": "Value",
+                    "id": "06f9051b-249e-44ef-8fe8-ea47047e5d1f",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -86,7 +140,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Mouse_And_Keyboard",
-                    "action": "Gun_Slot_1_Choose",
+                    "action": "PrimaryWeapon_Select",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -97,7 +151,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Mouse_And_Keyboard",
-                    "action": "Gun_Slot_2_Choose",
+                    "action": "SecondaryWeapon_Select",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -129,7 +183,7 @@
                     "path": "<Keyboard>/3",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Mouse_And_Keyboard",
                     "action": "Holster",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -140,7 +194,7 @@
                     "path": "<Keyboard>/r",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Mouse_And_Keyboard",
                     "action": "Reload",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -151,7 +205,7 @@
                     "path": "<Keyboard>/f",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Mouse_And_Keyboard",
                     "action": "Pickup",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -162,8 +216,118 @@
                     "path": "<Keyboard>/g",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Mouse_And_Keyboard",
                     "action": "Drop",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3e0762ba-4fea-43e5-ae11-3fa2f2396788",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse_And_Keyboard",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "1D Axis",
+                    "id": "7cb3f589-7730-4aa3-ac3c-c8f6d61693eb",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "VerticalMove",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "1ac4aa6e-2f0e-4353-88dd-352fc5248e43",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse_And_Keyboard",
+                    "action": "VerticalMove",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "851d78a8-f64c-494f-a42d-2816179f70b9",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse_And_Keyboard",
+                    "action": "VerticalMove",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "1D Axis",
+                    "id": "291aa8cf-6982-4cad-a2fe-fe946fcfbfe9",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "HorizontalMove",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "9ceaa6a8-0d9e-4aee-b33d-02250d996005",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse_And_Keyboard",
+                    "action": "HorizontalMove",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "64e696ad-2f9c-4bac-80dd-769245240429",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse_And_Keyboard",
+                    "action": "HorizontalMove",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "02b67bac-43fe-4ab7-9cfa-261afbddfa00",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse_And_Keyboard",
+                    "action": "Run",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d266dac8-90a1-4742-b732-1bdfe1293dca",
+                    "path": "<Mouse>/delta/x",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse_And_Keyboard",
+                    "action": "MouseXAxis",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2895b5aa-b7b8-45bf-b6f3-541eae8fd077",
+                    "path": "<Mouse>/delta/y",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse_And_Keyboard",
+                    "action": "MouseYAxis",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
