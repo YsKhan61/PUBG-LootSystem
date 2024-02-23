@@ -1,13 +1,21 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
-using Weapon_System.Utilitites;
+using Weapon_System.Utilities;
 
 namespace Weapon_System.GameplayObjects.UI
 {
     public class ItemSlotUI : MonoBehaviour, IDropHandler
     {
+        [Header("Broadcast to")]
+        [SerializeField]
+        ItemTagEventChannelSO m_OnItemDroppedEvent;
+
+        [Space(10)]
+
         [SerializeField, Tooltip("The items that are allowed to drop in here")]
         ItemTagSO[] m_ItemTags;
+
+        ItemUI m_ItemUI;
         
         public void OnDrop(PointerEventData eventData)
         {
@@ -19,15 +27,22 @@ namespace Weapon_System.GameplayObjects.UI
 
         void TryDropItem(GameObject item)
         {
-            if (item.TryGetComponent(out ItemDragDropUI itemDragDropUI))
+            if (m_ItemUI != null) 
             {
-                foreach (var itemTag in m_ItemTags)
+                return;
+            }
+
+            if (item.TryGetComponent(out ItemUI itemUI))
+            {
+                foreach (ItemTagSO itemTag in m_ItemTags)
                 {
-                    if (itemDragDropUI.ItemTag == itemTag)
+                    if (itemUI.ItemTag == itemTag)
                     {
                         item.transform.SetParent(transform);
                         item.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-                        itemDragDropUI.IsDragSuccess = true;
+                        itemUI.IsDragSuccess = true;
+                        m_ItemUI = itemUI;
+                        m_OnItemDroppedEvent.RaiseEvent(itemTag);
                         return;
                     }
                 }

@@ -1,12 +1,12 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
-using Weapon_System.Utilitites;
+using Weapon_System.Utilities;
 
 
 namespace Weapon_System.GameplayObjects.UI
 {
     [RequireComponent(typeof(RectTransform), typeof(CanvasGroup))]
-    public class ItemDragDropUI : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
+    public class ItemUI : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
         [SerializeField]
         ItemTagSO m_ItemTag;

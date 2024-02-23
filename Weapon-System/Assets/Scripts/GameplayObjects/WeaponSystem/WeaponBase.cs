@@ -1,11 +1,12 @@
 using UnityEngine;
+using Weapon_System.GameplayObjects.Items;
 
 namespace Weapon_System
 {
     /// <summary>
     /// Items that can damage targets.
     /// </summary>
-    public abstract class WeaponBase
+    public abstract class WeaponBase : ItemBase
     {
         /*public enum WeaponType
         {
