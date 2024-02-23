@@ -73,6 +73,33 @@ namespace Weapon_System
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Reload"",
+                    ""type"": ""Button"",
+                    ""id"": ""7a421347-e917-4f6b-98b0-781c426eb155"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Pickup"",
+                    ""type"": ""Button"",
+                    ""id"": ""51839d25-6dac-46f3-b2a3-388307a3e582"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Drop"",
+                    ""type"": ""Button"",
+                    ""id"": ""d099388d-69d7-4813-9ac9-7fd329344b29"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -130,6 +157,39 @@ namespace Weapon_System
                     ""action"": ""Holster"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""543edc80-c026-4610-ab99-c730d420a4df"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Reload"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""06544624-4e53-40c9-8673-4932c8b7c8e2"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pickup"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0c208df6-f46c-4b77-8330-ff7950bbf8fd"",
+                    ""path"": ""<Keyboard>/g"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Drop"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -160,6 +220,9 @@ namespace Weapon_System
             m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
             m_Player_ADS = m_Player.FindAction("ADS", throwIfNotFound: true);
             m_Player_Holster = m_Player.FindAction("Holster", throwIfNotFound: true);
+            m_Player_Reload = m_Player.FindAction("Reload", throwIfNotFound: true);
+            m_Player_Pickup = m_Player.FindAction("Pickup", throwIfNotFound: true);
+            m_Player_Drop = m_Player.FindAction("Drop", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -226,6 +289,9 @@ namespace Weapon_System
         private readonly InputAction m_Player_Fire;
         private readonly InputAction m_Player_ADS;
         private readonly InputAction m_Player_Holster;
+        private readonly InputAction m_Player_Reload;
+        private readonly InputAction m_Player_Pickup;
+        private readonly InputAction m_Player_Drop;
         public struct PlayerActions
         {
             private @InputControls m_Wrapper;
@@ -235,6 +301,9 @@ namespace Weapon_System
             public InputAction @Fire => m_Wrapper.m_Player_Fire;
             public InputAction @ADS => m_Wrapper.m_Player_ADS;
             public InputAction @Holster => m_Wrapper.m_Player_Holster;
+            public InputAction @Reload => m_Wrapper.m_Player_Reload;
+            public InputAction @Pickup => m_Wrapper.m_Player_Pickup;
+            public InputAction @Drop => m_Wrapper.m_Player_Drop;
             public InputActionMap Get() { return m_Wrapper.m_Player; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -259,6 +328,15 @@ namespace Weapon_System
                 @Holster.started += instance.OnHolster;
                 @Holster.performed += instance.OnHolster;
                 @Holster.canceled += instance.OnHolster;
+                @Reload.started += instance.OnReload;
+                @Reload.performed += instance.OnReload;
+                @Reload.canceled += instance.OnReload;
+                @Pickup.started += instance.OnPickup;
+                @Pickup.performed += instance.OnPickup;
+                @Pickup.canceled += instance.OnPickup;
+                @Drop.started += instance.OnDrop;
+                @Drop.performed += instance.OnDrop;
+                @Drop.canceled += instance.OnDrop;
             }
 
             private void UnregisterCallbacks(IPlayerActions instance)
@@ -278,6 +356,15 @@ namespace Weapon_System
                 @Holster.started -= instance.OnHolster;
                 @Holster.performed -= instance.OnHolster;
                 @Holster.canceled -= instance.OnHolster;
+                @Reload.started -= instance.OnReload;
+                @Reload.performed -= instance.OnReload;
+                @Reload.canceled -= instance.OnReload;
+                @Pickup.started -= instance.OnPickup;
+                @Pickup.performed -= instance.OnPickup;
+                @Pickup.canceled -= instance.OnPickup;
+                @Drop.started -= instance.OnDrop;
+                @Drop.performed -= instance.OnDrop;
+                @Drop.canceled -= instance.OnDrop;
             }
 
             public void RemoveCallbacks(IPlayerActions instance)
@@ -311,6 +398,9 @@ namespace Weapon_System
             void OnFire(InputAction.CallbackContext context);
             void OnADS(InputAction.CallbackContext context);
             void OnHolster(InputAction.CallbackContext context);
+            void OnReload(InputAction.CallbackContext context);
+            void OnPickup(InputAction.CallbackContext context);
+            void OnDrop(InputAction.CallbackContext context);
         }
     }
 }

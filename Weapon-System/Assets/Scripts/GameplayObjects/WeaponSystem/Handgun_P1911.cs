@@ -1,10 +1,15 @@
 using UnityEngine;
 using Weapon_System;
 
-public class Handgun_P1911 : WeaponBase
+
+namespace Weapon_System.GameplayObjects.WeaponSystem
 {
-    void Shoot()
+    public class Handgun_P1911 : WeaponBase
     {
-        Debug.Log("P1911: Shooting...");
+        public override void Shoot()
+        {
+            Debug.Log("P1911: Shooting...");
+        }
     }
 }
+

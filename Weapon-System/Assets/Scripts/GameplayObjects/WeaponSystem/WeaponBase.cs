@@ -5,9 +5,9 @@ namespace Weapon_System
     /// <summary>
     /// Items that can damage targets.
     /// </summary>
-    public abstract class WeaponBase : MonoBehaviour
+    public abstract class WeaponBase
     {
-        public enum WeaponType
+        /*public enum WeaponType
         {
             AR,
             DMR,
@@ -33,6 +33,8 @@ namespace Weapon_System
         float m_FireRate;
 
         [SerializeField, Tooltip("Force produced by firing from this weapon")]
-        float m_Force;
+        float m_Force;*/
+
+        public abstract void Shoot();
     }
 }
