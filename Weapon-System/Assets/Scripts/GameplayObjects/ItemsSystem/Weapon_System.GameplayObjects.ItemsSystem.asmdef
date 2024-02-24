@@ -1,0 +1,16 @@
+{
+    "name": "Weapon_System.GameplayObjects.Item",
+    "rootNamespace": "",
+    "references": [
+        "GUID:373f8237bb2862440b9ecb2ab7f21ab3"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

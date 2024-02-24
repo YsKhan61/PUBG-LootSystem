@@ -2,7 +2,7 @@ using UnityEngine;
 using Weapon_System;
 
 
-namespace Weapon_System.GameplayObjects.WeaponSystem
+namespace Weapon_System.GameplayObjects.ItemsSystem.WeaponSystem
 {
     public class Handgun_P1911 : WeaponBase
     {

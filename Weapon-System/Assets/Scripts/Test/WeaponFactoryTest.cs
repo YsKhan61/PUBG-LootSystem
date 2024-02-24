@@ -1,5 +1,5 @@
 using UnityEngine;
-using Weapon_System.GameplayObjects.WeaponSystem;
+using Weapon_System.GameplayObjects.ItemsSystem.WeaponSystem;
 
 namespace Weapon_System.Test
 {

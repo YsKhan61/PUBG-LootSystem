@@ -51,6 +51,9 @@ namespace Weapon_System.GameplayObjects.Player
         BoolEventChannelSO m_FiringWeaponEvent = default;
 
         [SerializeField]
+        BoolEventChannelSO m_PickupItemEvent = default;
+
+        [SerializeField]
         BoolEventChannelSO m_ToggleInventoryEvent = default;
 
         [Space(10)]
@@ -133,6 +136,11 @@ namespace Weapon_System.GameplayObjects.Player
             m_FiringWeaponEvent.SetValueAndRaiseEvent(false);
         }
 
+        private void OnPickupInputActionPerformed(InputAction.CallbackContext context)
+        {
+            m_PickupItemEvent.RaiseEvent();
+        }
+
         private void OnToggleInventoryActionStarted(InputAction.CallbackContext obj)
         {
             m_ToggleInventoryEvent.SetValueAndRaiseEvent(!m_ToggleInventoryEvent.Value);
@@ -173,10 +181,10 @@ namespace Weapon_System.GameplayObjects.Player
             m_InputControls.Player.Fire.started += OnFireInputActionStarted;
             m_InputControls.Player.Fire.canceled += OnFireInputActionCanceled;
 
+            m_InputControls.Player.Pickup.performed += OnPickupInputActionPerformed;
+
             m_InputControls.Global.Toggle_Inventory.started += OnToggleInventoryActionStarted;
         }
-
-        
 
         private void UnsubscribeFromAllInputActionReferences()
         { 
@@ -193,6 +201,8 @@ namespace Weapon_System.GameplayObjects.Player
 
             m_InputControls.Player.Fire.started -= OnFireInputActionStarted;
             m_InputControls.Player.Fire.canceled -= OnFireInputActionCanceled;
+
+            m_InputControls.Player.Pickup.performed -= OnPickupInputActionPerformed;
 
             m_InputControls.Global.Toggle_Inventory.started -= OnToggleInventoryActionStarted;
         }

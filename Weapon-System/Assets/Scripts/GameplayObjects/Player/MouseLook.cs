@@ -18,7 +18,7 @@ namespace Weapon_System.GameplayObjects.Player
 
         private Quaternion m_CharacterTargetRot;
         private Quaternion m_CameraTargetRot;
-        private bool m_cursorIsLocked = true;
+        // private bool m_cursorIsLocked = true;
 
         public void Init(Transform character, Transform camera)
         {
@@ -68,7 +68,7 @@ namespace Weapon_System.GameplayObjects.Player
                 InternalLockUpdate();*/
         }
 
-        private void InternalLockUpdate()
+        /*private void InternalLockUpdate()
         {
             if(Input.GetKeyUp(KeyCode.Escape))
             {
@@ -79,7 +79,7 @@ namespace Weapon_System.GameplayObjects.Player
                 m_cursorIsLocked = true;
             }
 
-            /*if (m_cursorIsLocked)
+            if (m_cursorIsLocked)
             {
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
@@ -88,8 +88,8 @@ namespace Weapon_System.GameplayObjects.Player
             {
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
-            }*/
-        }
+            }
+        }*/
 
         Quaternion ClampRotationAroundXAxis(Quaternion q)
         {

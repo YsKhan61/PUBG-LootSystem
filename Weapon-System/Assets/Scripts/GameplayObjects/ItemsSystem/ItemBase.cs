@@ -1,13 +1,14 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
-namespace Weapon_System.GameplayObjects.Items
+namespace Weapon_System.GameplayObjects.ItemsSystem
 {
-    /// <summary>
-    ///  The base class for all items in the game, 
-    ///  These items are game objects and exist in the game world.
-    /// </summary>
     public abstract class ItemBase : MonoBehaviour
     {
+        [SerializeField, FormerlySerializedAs("m_ItemTag")]
+        ItemDataSO m_ItemData;
 
+        public ItemDataSO ItemData => m_ItemData;
+        public string Name => m_ItemData.ToString();
     }
 }

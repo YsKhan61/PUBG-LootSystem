@@ -1,17 +1,13 @@
 using UnityEngine;
-using Weapon_System.GameplayObjects.Items;
 using Weapon_System.Utilities;
 
-namespace Weapon_System
+namespace Weapon_System.GameplayObjects.ItemsSystem.WeaponSystem
 {
     /// <summary>
     /// Items that can damage targets.
     /// </summary>
     public abstract class WeaponBase : ItemBase
     {
-        [SerializeField]
-        protected ItemTagSO m_ItemTag;
-        public ItemTagSO ItemTag => m_ItemTag;
 
         /*public enum WeaponType
         {

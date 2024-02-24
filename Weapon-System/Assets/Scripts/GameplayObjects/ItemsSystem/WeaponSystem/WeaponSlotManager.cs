@@ -3,7 +3,7 @@ using System;
 using UnityEngine;
 using Weapon_System.Utilities;
 
-namespace Weapon_System.GameplayObjects.WeaponSystem
+namespace Weapon_System.GameplayObjects.ItemsSystem.WeaponSystem
 {
     /// <summary>
     /// Stores weapons in a slot

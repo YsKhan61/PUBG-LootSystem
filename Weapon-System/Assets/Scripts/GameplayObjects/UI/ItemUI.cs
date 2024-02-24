@@ -1,6 +1,8 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using Weapon_System.Utilities;
+using UnityEngine.UI;
+using Weapon_System.GameplayObjects.ItemsSystem;
 
 
 namespace Weapon_System.GameplayObjects.UI
@@ -9,8 +11,14 @@ namespace Weapon_System.GameplayObjects.UI
     public class ItemUI : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
         [SerializeField]
-        ItemTagSO m_ItemTag;
-        public ItemTagSO ItemTag => m_ItemTag;
+        Image m_Icon;
+
+        [SerializeField]
+        TextMeshProUGUI m_NameText;
+
+        [SerializeField]                    // Only for Debugging purpose
+        ItemDataSO m_ItemData;
+        public ItemDataSO ItemData => m_ItemData;
 
         private RectTransform m_RectTransform;
         private Canvas m_Canvas;
@@ -18,6 +26,7 @@ namespace Weapon_System.GameplayObjects.UI
 
         private Vector2 m_lastAnchoredPosition;
 
+        [HideInInspector]
         public bool IsDragSuccess;
 
         private void Awake()
@@ -63,6 +72,12 @@ namespace Weapon_System.GameplayObjects.UI
                 m_RectTransform.anchoredPosition = m_lastAnchoredPosition;
             }
         }
-    }
 
+        public void SetItemData(ItemDataSO itemData)
+        {
+            m_ItemData = itemData;
+            m_Icon.sprite = itemData.Icon;
+            m_NameText.text = itemData.name;
+        }
+    }
 }

@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
-using Weapon_System.Utilities;
+using Weapon_System.GameplayObjects.ItemsSystem;
 
 namespace Weapon_System.GameplayObjects.UI
 {
@@ -8,12 +8,12 @@ namespace Weapon_System.GameplayObjects.UI
     {
         [Header("Broadcast to")]
         [SerializeField]
-        ItemTagEventChannelSO m_OnItemDroppedEvent;
+        ItemDataEventChannelSO m_OnItemDroppedEvent;
 
         [Space(10)]
 
         [SerializeField, Tooltip("The items that are allowed to drop in here")]
-        ItemTagSO[] m_ItemTags;
+        ItemDataSO[] m_ItemTags;
 
         ItemUI m_ItemUI;
         
@@ -34,15 +34,15 @@ namespace Weapon_System.GameplayObjects.UI
 
             if (item.TryGetComponent(out ItemUI itemUI))
             {
-                foreach (ItemTagSO itemTag in m_ItemTags)
+                foreach (ItemDataSO itemData in m_ItemTags)
                 {
-                    if (itemUI.ItemTag == itemTag)
+                    if (itemUI.ItemData.Type == itemData.Type)
                     {
                         item.transform.SetParent(transform);
                         item.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
                         itemUI.IsDragSuccess = true;
                         m_ItemUI = itemUI;
-                        m_OnItemDroppedEvent.SetValueAndRaiseEvent(itemTag);
+                        m_OnItemDroppedEvent.SetValueAndRaiseEvent(itemData);
                         return;
                     }
                 }

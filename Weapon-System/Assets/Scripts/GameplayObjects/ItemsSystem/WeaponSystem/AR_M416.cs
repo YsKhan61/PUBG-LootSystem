@@ -1,9 +1,7 @@
 using UnityEngine;
-using Weapon_System;
-using Weapon_System.Utilities;
 
 
-namespace Weapon_System.GameplayObjects.WeaponSystem
+namespace Weapon_System.GameplayObjects.ItemsSystem.WeaponSystem
 {
     public class AR_M416 : WeaponBase
     {
