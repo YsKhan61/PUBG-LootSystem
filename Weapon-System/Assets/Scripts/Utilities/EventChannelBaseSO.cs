@@ -10,7 +10,7 @@ namespace Weapon_System.Utilities
         protected T m_Value;
         public T Value { get => m_Value; }
 
-        public Action<T> OnEventRaised;
+        public event Action<T> OnEventRaised;
 
         /// <summary>
         /// This method only sets the value. Doesn't raise any event.

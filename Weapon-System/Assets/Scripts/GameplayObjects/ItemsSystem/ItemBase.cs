@@ -3,11 +3,14 @@ using UnityEngine.Serialization;
 
 namespace Weapon_System.GameplayObjects.ItemsSystem
 {
-    public abstract class ItemBase : MonoBehaviour
+    /// <summary>
+    /// The base class for all items
+    /// </summary>
+    public abstract class ItemBase : MonoBehaviour, IName
     {
-        ItemDataSO m_ItemData;
-
+        [SerializeField]
+        protected ItemDataSO m_ItemData;
         public ItemDataSO ItemData => m_ItemData;
-        public string Name => m_ItemData.ToString();
+        public string Name => m_ItemData.name;
     }
 }

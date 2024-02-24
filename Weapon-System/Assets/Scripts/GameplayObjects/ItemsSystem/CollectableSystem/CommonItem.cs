@@ -5,47 +5,49 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
     /// <summary>
     ///  The items that can be collected and stored in inventory, and later can be dropped as well.
     /// </summary>
-    public class CollectableItem : CollectableBase, IStorable, IDropable
+    public class CommonItem : ItemBase, ICollectable, IStorable, IDropable, IUsable
     {
-        [SerializeField]
-        ItemBase m_Item;
-
-        public ItemBase Item => m_Item;
+        public bool IsPickedUp { get; protected set; }
 
         [SerializeField]
         GameObject m_Graphics;
 
-        public override string Name => m_Item?.Name;
-
-        public override bool TryPick()
+        public virtual bool Collect()
         {
-            if (IsCollected)
+            if (IsPickedUp)
             {
                 return false;
             }
 
-            IsCollected = true;
+            IsPickedUp = true;
             HideGraphics();
             return true;
         }
 
-        public virtual bool GetStoredInInventory(Inventory inventory)
+        public virtual bool StoreInInventory(Inventory inventory)
         {
-            return false;
+            inventory.AddCommonItem(this);
+            return true;       // in progress ....
         }
 
-        public bool TryDrop(Vector3 location)
+        public virtual bool Drop(Vector3 location)
         {
-            if (!IsCollected)
+            if (!IsPickedUp)
             {
                 return false;
             }
 
-            IsCollected = false;
+            IsPickedUp = false;
 
             transform.position = location;
             ShowGraphics();
             
+            return true;
+        }
+
+        public virtual bool Use()
+        {
+            Debug.Log("Using " + Name);
             return true;
         }
 

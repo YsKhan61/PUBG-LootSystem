@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Weapon_System.Utilities;
 
 
 namespace Weapon_System.GameplayObjects.ItemsSystem
@@ -7,33 +9,111 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
     public class Inventory : MonoBehaviour
     {
         [Header("Broadcast to")]
-        [SerializeField]
-        ItemDataEventChannelSO m_OnItemAddedEvent;
 
+        [SerializeField]
+        ItemEventChannelSO m_OnCommonItemAddedEvent;
+
+        [SerializeField]
+        GunItemEventChannelSO m_OnGunItemAddedEvent;
+
+        [Header("Listens to")]
+
+        [SerializeField]
+        BoolEventChannelSO m_PrimaryWeaponSelectInputEvent;
+
+        [SerializeField]
+        BoolEventChannelSO m_SecondaryWeaponSelectInputEvent;
+
+        [Space(10)]
+
+        [SerializeField]
+        HandToUseItem m_HandToUseItem;
+
+        [Space(10)]
+
+        [Header("Common items")]
 
         [SerializeField]        // SerializeField is used only for Debug purposes
-        List<ItemBase> m_Items;
+        List<CommonItem> m_CommonItems;
 
-        [SerializeField]
-        ItemGun[] m_ItemGuns;
-        
+        [Space(10)]
+
+        [Header("Gun items")]
+
+        [SerializeField]        // SerializeField is used only for Debug purposes
+        GunItem[] m_ItemGuns;
 
         private void Start()
         {
-            m_Items = new List<ItemBase>();
+            m_CommonItems = new List<CommonItem>();
+            m_ItemGuns = new GunItem[2];
+
+            m_PrimaryWeaponSelectInputEvent.OnEventRaised += OnPrimaryWeaponSelect;
+            m_SecondaryWeaponSelectInputEvent.OnEventRaised += OnSecondaryWeaponSelect;
         }
 
-        public void AddItem(ItemBase item)
+        private void OnDestroy()
         {
-            m_Items.Add(item);
-            m_OnItemAddedEvent.RaiseEvent(item.ItemData);
+            m_PrimaryWeaponSelectInputEvent.OnEventRaised -= OnPrimaryWeaponSelect;
+            m_SecondaryWeaponSelectInputEvent.OnEventRaised -= OnSecondaryWeaponSelect;
+        }
+
+        public void AddCommonItem(CommonItem item)
+        {
+            m_CommonItems.Add(item);
+            m_OnCommonItemAddedEvent.RaiseEvent(item);
             Debug.Log(item.Name + " added to inventory!");
         }
 
-        public void RemoveItem(ItemBase item)
+        public void RemoveCommonItem(CommonItem item)
         {
-            m_Items.Remove(item);
+            m_CommonItems.Remove(item);
             Debug.Log(item.Name + " removed from inventory!");
+        }
+
+        public void AddGunToGunSlot(GunItem item)
+        {
+            // Add to the first empty slot
+            for (int i = 0; i < m_ItemGuns.Length; i++)
+            {
+                if (m_ItemGuns[i] == null)
+                {
+                    m_ItemGuns[i] = item;
+                    m_HandToUseItem.ItemInHand = item;                  // Set the gun in hand
+                    m_OnGunItemAddedEvent.RaiseEvent(item, i);
+                    Debug.Log(item.Name + " added to inventory!");
+                    return;
+                }
+            }
+
+            // If no empty slot, replace the current gun
+            for (int i = 0; i < m_ItemGuns.Length; i++)
+            {
+                if (m_ItemGuns[i] as IUsable == m_HandToUseItem.ItemInHand) // (m_ItemGuns[i].IsInHand)
+                {
+                    m_ItemGuns[i] = item;
+                    m_HandToUseItem.ItemInHand = item;                  // Set the gun in hand
+                    m_OnGunItemAddedEvent.RaiseEvent(item, i);
+                    Debug.Log(item.Name + " added to inventory!");
+                    return;
+                }
+            }
+
+            // If no empty slot and no gun in hand, replace the first gun
+            m_ItemGuns[0] = item;
+            m_HandToUseItem.ItemInHand = item;                  // Set the gun in hand
+            m_OnGunItemAddedEvent.RaiseEvent(item, 0);
+            Debug.Log(item.Name + " added to inventory!");
+        }
+
+        private void OnPrimaryWeaponSelect(bool _)
+        {
+            m_HandToUseItem.ItemInHand = m_ItemGuns[0];
+        }
+
+        private void OnSecondaryWeaponSelect(bool _)
+        {
+            m_HandToUseItem.ItemInHand = m_ItemGuns[1];
         }
     }
 }

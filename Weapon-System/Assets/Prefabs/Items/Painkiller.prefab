@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 287591258168878502}
-  - component: {fileID: 8362104796433430246}
   m_Layer: 0
   m_Name: Painkiller
   m_TagString: Untagged
@@ -34,19 +33,6 @@ Transform:
   - {fileID: 8929834859504233191}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8362104796433430246
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 625859343101431125}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d9ffdf3e403712842917750822b8b600, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_ItemData: {fileID: 11400000, guid: 3c2ebcfa3eca6ac4a91eeb98fd897c87, type: 2}
 --- !u!1001 &1181808817195962450
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -192,18 +178,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3566719088832722666, guid: 1c379bbaeeba73c4d8a45fc167e94da0,
         type: 3}
-      propertyPath: m_Item
-      value: 
-      objectReference: {fileID: 8362104796433430246}
-    - target: {fileID: 3566719088832722666, guid: 1c379bbaeeba73c4d8a45fc167e94da0,
-        type: 3}
       propertyPath: m_Graphics
       value: 
       objectReference: {fileID: 8618587894254063359}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 576706885073001226, guid: 1c379bbaeeba73c4d8a45fc167e94da0,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1737042814709976568}
   m_SourcePrefab: {fileID: 100100000, guid: 1c379bbaeeba73c4d8a45fc167e94da0, type: 3}
 --- !u!4 &8929834859504233191 stripped
 Transform:
@@ -211,3 +196,23 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 8530910076837496718}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &9107191450910547076 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 576706885073001226, guid: 1c379bbaeeba73c4d8a45fc167e94da0,
+    type: 3}
+  m_PrefabInstance: {fileID: 8530910076837496718}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1737042814709976568
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9107191450910547076}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9ffdf3e403712842917750822b8b600, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ItemData: {fileID: 11400000, guid: a5c38fa83eb3a1b498c18a48513e8625, type: 2}
+  m_Graphics: {fileID: 8618587894254063359}

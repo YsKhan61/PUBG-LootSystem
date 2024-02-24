@@ -3,19 +3,28 @@ using UnityEngine;
 
 namespace Weapon_System.GameplayObjects.ItemsSystem
 {
-    public interface IPickable
-    {
-        public bool TryPick();
+    public interface IName
+    { 
+        public string Name { get; }
     }
 
-    public interface IDropable
+    public interface ICollectable : IName
     {
-        public bool TryDrop(Vector3 location);
+        public bool Collect();
     }
 
-    public interface IStorable
+    public interface IDropable : IName
     {
-        public bool GetStoredInInventory(Inventory inventory);
+        public bool Drop(Vector3 location);
     }
 
+    public interface IStorable : IName
+    {
+        public bool StoreInInventory(Inventory inventory);
+    }
+
+    public interface  IUsable : IName
+    {
+        public bool Use();
+    }
 }

@@ -1,4 +1,5 @@
 using JetBrains.Annotations;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -19,8 +20,6 @@ namespace Weapon_System.GameplayObjects.UI
 
         [SerializeField]
         Image m_Icon;
-
-        bool m_IsHavingItem;
         
         public void OnDrop(PointerEventData eventData)
         {
@@ -32,11 +31,6 @@ namespace Weapon_System.GameplayObjects.UI
 
         void TryDropItem(GameObject item)
         {
-            if (m_IsHavingItem)
-            {
-                return;
-            }
-
             if (item.TryGetComponent(out ItemUI itemUI))
             {
                 foreach (ItemUIType type in m_typeToStore)
@@ -46,7 +40,7 @@ namespace Weapon_System.GameplayObjects.UI
                         item.transform.SetParent(transform);
                         item.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
                         itemUI.IsDragSuccess = true;
-                        m_IsHavingItem = true;
+
                         m_Icon.sprite = itemUI.ItemData.IconSprite;
 
                         // This event is raised, for different occasions.
@@ -61,25 +55,18 @@ namespace Weapon_System.GameplayObjects.UI
             }
         }
 
-        public bool IsHavingItem => m_IsHavingItem;
-
         /// <summary>
         /// This method is used to add ItemUI to slot directly after pickup.
         /// </summary>
         /// <param name="itemData"></param>
         public void TryAddItemToSlotUI(ItemDataSO itemData)
         {
-            if (m_IsHavingItem)
-            {
-                return;
-            }
-
             foreach (ItemUIType type in m_typeToStore)
             {
                 if (itemData.UIType == type)
                 {
                     m_Icon.sprite = itemData.IconSprite;
-                    m_IsHavingItem = true;
+
                     return;
                 }
             }

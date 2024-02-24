@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4345107818352820876}
-  - component: {fileID: 274990936527853344}
   m_Layer: 0
   m_Name: P1911
   m_TagString: Untagged
@@ -34,19 +33,6 @@ Transform:
   - {fileID: 3627475599456417607}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &274990936527853344
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7880611331590958776}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6bbd316a709a091468339234ee149ea8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_ItemData: {fileID: 11400000, guid: d8917c0524420c84b91490126b73b6f9, type: 2}
 --- !u!1001 &4206116047313777204
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -192,18 +178,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3566719088832722666, guid: 1c379bbaeeba73c4d8a45fc167e94da0,
         type: 3}
-      propertyPath: m_Item
-      value: 
-      objectReference: {fileID: 274990936527853344}
-    - target: {fileID: 3566719088832722666, guid: 1c379bbaeeba73c4d8a45fc167e94da0,
-        type: 3}
       propertyPath: m_Graphics
       value: 
       objectReference: {fileID: 1130804910419150788}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 576706885073001226, guid: 1c379bbaeeba73c4d8a45fc167e94da0,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1869456260204836714}
   m_SourcePrefab: {fileID: 100100000, guid: 1c379bbaeeba73c4d8a45fc167e94da0, type: 3}
 --- !u!4 &3627475599456417607 stripped
 Transform:
@@ -211,3 +196,23 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 4600890104945990190}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &4024382946590196004 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 576706885073001226, guid: 1c379bbaeeba73c4d8a45fc167e94da0,
+    type: 3}
+  m_PrefabInstance: {fileID: 4600890104945990190}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1869456260204836714
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4024382946590196004}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bbd316a709a091468339234ee149ea8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ItemData: {fileID: 11400000, guid: e129e6037b66fc247a35ad04dd97a5d8, type: 2}
+  m_Graphics: {fileID: 1130804910419150788}

@@ -1,5 +1,7 @@
 using TMPro;
+using UnityEditor.Graphs;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Weapon_System.GameplayObjects.ItemsSystem;
 using Weapon_System.Utilities;
 
@@ -17,7 +19,10 @@ namespace Weapon_System.GameplayObjects.UI
         BoolEventChannelSO m_ToggleInventoryEvent;
 
         [SerializeField]
-        ItemDataEventChannelSO m_OnItemAddedEvent;
+        ItemEventChannelSO m_OnCommonItemAddedEvent;
+
+        [SerializeField]
+        GunItemEventChannelSO m_OnGunItemAddedEvent;
 
         [Space(10)]
 
@@ -30,13 +35,14 @@ namespace Weapon_System.GameplayObjects.UI
         [SerializeField]
         GameObject m_ContentGO;
 
-        [SerializeField]
-        ItemSlotUI[] m_WeaponSlots;
+        [SerializeField, FormerlySerializedAs("m_WeaponSlots")]
+        ItemSlotUI[] m_GunSlots;
 
         private void Start()
         {
             m_ToggleInventoryEvent.OnEventRaised += OnToggleInventory;
-            m_OnItemAddedEvent.OnEventRaised += AddItemUIToInventoryUI;
+            m_OnCommonItemAddedEvent.OnEventRaised += AddCommonItemUIToInventoryUI;
+            m_OnGunItemAddedEvent.OnEventRaised += AddGunItemUIToInventoryUI;
 
             ToggleInventoryUI(false);
         }
@@ -44,23 +50,8 @@ namespace Weapon_System.GameplayObjects.UI
         private void OnDestroy()
         {
             m_ToggleInventoryEvent.OnEventRaised -= OnToggleInventory;
-            m_OnItemAddedEvent.OnEventRaised -= AddItemUIToInventoryUI;
-        }
-
-        public void AddItemUIToInventoryUI(ItemDataSO itemData)
-        {
-            switch (itemData.UIType)
-            { 
-                case ItemUIType.Common:
-                    AddCommonItemUIToInventoryUI(itemData);
-                    break;
-                case ItemUIType.Gun:
-                    AddGunItemUIToInventoryUI(itemData);
-                    break;
-                case ItemUIType.ScopeAttachment:
-                    AddScopeItemUIToInventoryUI(itemData);
-                    break;
-            }
+            m_OnCommonItemAddedEvent.OnEventRaised -= AddCommonItemUIToInventoryUI;
+            m_OnGunItemAddedEvent.OnEventRaised -= AddGunItemUIToInventoryUI;
         }
 
         public void RemoveItemUIFromInventory()
@@ -68,22 +59,14 @@ namespace Weapon_System.GameplayObjects.UI
             
         }
 
-        private void AddCommonItemUIToInventoryUI(ItemDataSO itemData)
+        private void AddCommonItemUIToInventoryUI(ItemBase item)
         {
-            Instantiate(m_ItemUIPrefab, m_ContentGO.transform).SetItemData(itemData);
+            Instantiate(m_ItemUIPrefab, m_ContentGO.transform).SetItemData(item.ItemData);
         }
 
-        private void AddGunItemUIToInventoryUI(ItemDataSO itemData)
+        private void AddGunItemUIToInventoryUI(ItemBase item, int index)
         {
-            foreach (ItemSlotUI slot in m_WeaponSlots)
-            {
-                if (slot.IsHavingItem)
-                {
-                    continue;
-                }
-
-                slot.TryAddItemToSlotUI(itemData);
-            }
+            m_GunSlots[index].TryAddItemToSlotUI(item.ItemData);
         }
 
         /// <summary>

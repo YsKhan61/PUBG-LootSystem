@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Weapon_System.Utilities;
@@ -7,7 +6,7 @@ using Weapon_System.Utilities;
 namespace Weapon_System.GameplayObjects.ItemsSystem
 {
     /// <summary>
-    /// Attached to player to collect items and add to inventory
+    /// Attached to player to collect items and add to inventory (if the item is storable)
     /// It uses Trigger Collider to detect items
     /// </summary>
     public class Collector : MonoBehaviour
@@ -28,11 +27,11 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         float m_Radius = 3f;
 
         Collider[] resultColliders = new Collider[10];
-        List<CollectableBase> m_CollectablesScanned;
+        List<ICollectable> m_CollectablesScanned;
 
         private void Start()
         {
-            m_CollectablesScanned = new List<CollectableBase>();
+            m_CollectablesScanned = new List<ICollectable>();
             m_PickupItemEvent.OnEventRaised += OnPickupItems;
         }
 
@@ -46,12 +45,12 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             if (m_CollectablesScanned.Count > 0)
             {
                 // Add to inventory
-                foreach (CollectableBase collectable in m_CollectablesScanned)
+                foreach (ICollectable item in m_CollectablesScanned)
                 {
-                    if (collectable.TryPick())
+                    if (item.Collect())
                     {
-                        TryStoreCollectableInInventory(collectable);
-                        Debug.Log("Picked up " + collectable.Name);
+                        TryStoreCollectableInInventory(item);
+                        Debug.Log("Picked up " + item.Name);
                     }
                 }
             }
@@ -67,7 +66,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             {
                 for (int i = 0; i < overlaps; i++)
                 {
-                    if (resultColliders[i].TryGetComponent(out CollectableBase collectable))
+                    if (resultColliders[i].TryGetComponent(out ICollectable collectable))
                     {
                         // Add to list of collectables
                         m_CollectablesScanned.Add(collectable);
@@ -78,20 +77,20 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             DisplayAllCollectables();
         }
 
-        void TryStoreCollectableInInventory(CollectableBase collectableItem)
+        void TryStoreCollectableInInventory(ICollectable item)
         {
-            CollectableItem collectable = collectableItem as CollectableItem;
-            if (collectable != null)
+            IStorable storable = item as IStorable;
+            if (storable != null)
             {
-                collectable.GetStoredInInventory(m_Inventory);
+                storable.StoreInInventory(m_Inventory);
             }
         }
 
         private void DisplayAllCollectables()
         {
-            foreach (CollectableBase collectable in m_CollectablesScanned)
+            foreach (ICollectable collectable in m_CollectablesScanned)
             {
-                Debug.Log(collectable.Name);
+                Debug.Log(collectable);
             }
         }
 
