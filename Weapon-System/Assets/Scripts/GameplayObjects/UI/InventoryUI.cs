@@ -19,10 +19,15 @@ namespace Weapon_System.GameplayObjects.UI
         BoolEventChannelSO m_ToggleInventoryEvent;
 
         [SerializeField]
-        ItemEventChannelSO m_OnCommonItemAddedEvent;
+        CommonItemEventChannelSO m_OnCommonItemAddedEvent;
 
         [SerializeField]
         GunItemEventChannelSO m_OnGunItemAddedEvent;
+
+        [Header("Broadcast to")]
+
+        [SerializeField]
+        CommonItemEventChannelSO m_OnCommonItemRemovedEvent;
 
         [Space(10)]
 
@@ -54,14 +59,14 @@ namespace Weapon_System.GameplayObjects.UI
             m_OnGunItemAddedEvent.OnEventRaised -= AddGunItemUIToInventoryUI;
         }
 
-        public void RemoveItemUIFromInventory()
+        public void RemoveItemUIFromInventoryUI(CommonItem item)
         {
-            
+            m_OnCommonItemRemovedEvent?.RaiseEvent(item);
         }
 
-        private void AddCommonItemUIToInventoryUI(ItemBase item)
+        private void AddCommonItemUIToInventoryUI(CommonItem item)
         {
-            Instantiate(m_ItemUIPrefab, m_ContentGO.transform).SetItemData(item.ItemData);
+            Instantiate(m_ItemUIPrefab, m_ContentGO.transform).SetItemData(item, this);
         }
 
         private void AddGunItemUIToInventoryUI(ItemBase item, int index)

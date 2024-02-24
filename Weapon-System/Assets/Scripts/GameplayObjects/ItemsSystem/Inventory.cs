@@ -11,7 +11,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         [Header("Broadcast to")]
 
         [SerializeField]
-        ItemEventChannelSO m_OnCommonItemAddedEvent;
+        CommonItemEventChannelSO m_OnCommonItemAddedEvent;
 
         [SerializeField]
         GunItemEventChannelSO m_OnGunItemAddedEvent;
@@ -23,6 +23,9 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         [SerializeField]
         BoolEventChannelSO m_SecondaryWeaponSelectInputEvent;
+
+        [SerializeField]
+        CommonItemEventChannelSO m_OnCommonItemRemovedEvent;
 
         [Space(10)]
 
@@ -50,12 +53,14 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
             m_PrimaryWeaponSelectInputEvent.OnEventRaised += OnPrimaryWeaponSelect;
             m_SecondaryWeaponSelectInputEvent.OnEventRaised += OnSecondaryWeaponSelect;
+            m_OnCommonItemRemovedEvent.OnEventRaised += RemoveCommonItem;
         }
 
         private void OnDestroy()
         {
             m_PrimaryWeaponSelectInputEvent.OnEventRaised -= OnPrimaryWeaponSelect;
             m_SecondaryWeaponSelectInputEvent.OnEventRaised -= OnSecondaryWeaponSelect;
+            m_OnCommonItemRemovedEvent.OnEventRaised -= RemoveCommonItem;
         }
 
         public void AddCommonItem(CommonItem item)
@@ -69,6 +74,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         {
             m_CommonItems.Remove(item);
             Debug.Log(item.Name + " removed from inventory!");
+            item.Drop(transform.position + transform.forward * 2f);
         }
 
         public void AddGunToGunSlot(GunItem item)

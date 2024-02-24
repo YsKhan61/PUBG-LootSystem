@@ -16,15 +16,17 @@ namespace Weapon_System.GameplayObjects.UI
         [SerializeField]
         TextMeshProUGUI m_NameText;
 
-        [SerializeField]                    // Only for Debugging purpose
-        ItemDataSO m_ItemData;
-        public ItemDataSO ItemData => m_ItemData;
+        public ItemDataSO ItemData { get; private set; }
 
         private RectTransform m_RectTransform;
         private Canvas m_Canvas;
         private CanvasGroup m_CanvasGroup;
 
         private Vector2 m_lastAnchoredPosition;
+
+        private InventoryUI m_InventoryUI;
+        private CommonItem m_Item;
+        public CommonItem Item => m_Item;
 
         [HideInInspector]
         public bool IsDragSuccess;
@@ -45,7 +47,12 @@ namespace Weapon_System.GameplayObjects.UI
 
         public void OnPointerDown(PointerEventData eventData)
         {
-            
+            // Right click to drop item
+            if (eventData.button == PointerEventData.InputButton.Right)
+            {
+                m_InventoryUI.RemoveItemUIFromInventoryUI(m_Item);
+                Destroy(gameObject);
+            }
         }
 
         public void OnBeginDrag(PointerEventData eventData)
@@ -73,11 +80,13 @@ namespace Weapon_System.GameplayObjects.UI
             }
         }
 
-        public void SetItemData(ItemDataSO itemData)
+        public void SetItemData(CommonItem item, InventoryUI inventoryUI)
         {
-            m_ItemData = itemData;
-            m_Icon.sprite = itemData.IconSprite;
-            m_NameText.text = itemData.name;
+            m_InventoryUI = inventoryUI;
+            m_Item = item;
+            ItemData = item.ItemData;
+            m_Icon.sprite = ItemData.IconSprite;
+            m_NameText.text = ItemData.name;
         }
     }
 }

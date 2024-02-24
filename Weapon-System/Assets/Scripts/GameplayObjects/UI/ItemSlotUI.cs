@@ -11,7 +11,7 @@ namespace Weapon_System.GameplayObjects.UI
     {
         [Header("Broadcast to")]
         [SerializeField]
-        ItemDataEventChannelSO m_OnItemDroppedEvent;
+        CommonItemEventChannelSO m_OnItemUIDroppedInInventoryUIEvent;
 
         [Space(10)]
 
@@ -47,7 +47,7 @@ namespace Weapon_System.GameplayObjects.UI
                         // For example: if a gun is placed from Inventory Bag Panel, to the Gun Slot Panel.
                         // The event will be raised, and the gun icon will be added to the Gun Slot Panel.
                         // Also the respective gun will be added to User's hand.
-                        m_OnItemDroppedEvent.SetValueAndRaiseEvent(itemUI.ItemData);
+                        m_OnItemUIDroppedInInventoryUIEvent?.SetValueAndRaiseEvent(itemUI.Item);
                         Destroy(itemUI);
                         return;
                     }
