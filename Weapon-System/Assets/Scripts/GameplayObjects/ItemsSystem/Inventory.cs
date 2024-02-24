@@ -14,6 +14,10 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         [SerializeField]        // SerializeField is used only for Debug purposes
         List<ItemBase> m_Items;
 
+        [SerializeField]
+        ItemGun[] m_ItemGuns;
+        
+
         private void Start()
         {
             m_Items = new List<ItemBase>();

@@ -76,7 +76,7 @@ namespace Weapon_System.GameplayObjects.UI
         public void SetItemData(ItemDataSO itemData)
         {
             m_ItemData = itemData;
-            m_Icon.sprite = itemData.Icon;
+            m_Icon.sprite = itemData.IconSprite;
             m_NameText.text = itemData.name;
         }
     }

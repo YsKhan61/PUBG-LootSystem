@@ -12,10 +12,10 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
     {
         public bool TryDrop(Vector3 location);
     }
-    
 
-    public interface ICollectable : IPickable, IDropable
+    public interface IStorable
     {
+        public bool GetStoredInInventory(Inventory inventory);
     }
 
 }

@@ -5,7 +5,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
     /// <summary>
     ///  The items that can be collected and stored in inventory, and later can be dropped as well.
     /// </summary>
-    public class CollectableItem : CollectableBase, IDropable
+    public class CollectableItem : CollectableBase, IStorable, IDropable
     {
         [SerializeField]
         ItemBase m_Item;
@@ -27,6 +27,11 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             IsCollected = true;
             HideGraphics();
             return true;
+        }
+
+        public virtual bool GetStoredInInventory(Inventory inventory)
+        {
+            return false;
         }
 
         public bool TryDrop(Vector3 location)

@@ -708,9 +708,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_OnItemDroppedEvent: {fileID: 0}
-  m_ItemTags:
-  - {fileID: 0}
-  - {fileID: 0}
+  m_typeToStore: 
+  m_Icon: {fileID: 0}
 --- !u!114 &623450984
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -837,9 +836,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_OnItemDroppedEvent: {fileID: 0}
-  m_ItemTags:
-  - {fileID: 0}
-  - {fileID: 0}
+  m_typeToStore: 
+  m_Icon: {fileID: 0}
 --- !u!114 &667621554
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1984,7 +1982,7 @@ GameObject:
   - component: {fileID: 1208549719}
   - component: {fileID: 1208549720}
   m_Layer: 5
-  m_Name: Weapon Slot
+  m_Name: Gun Slot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2061,9 +2059,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_OnItemDroppedEvent: {fileID: 11400000, guid: 803a2c849d7878a4f835cdaea9aac986,
     type: 2}
-  m_ItemTags:
-  - {fileID: 0}
-  - {fileID: 0}
+  m_typeToStore: 01000000
+  m_Icon: {fileID: 1208549719}
 --- !u!1 &1211301516
 GameObject:
   m_ObjectHideFlags: 0
@@ -2115,9 +2112,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_OnItemDroppedEvent: {fileID: 0}
-  m_ItemTags:
-  - {fileID: 0}
-  - {fileID: 0}
+  m_typeToStore: 
+  m_Icon: {fileID: 0}
 --- !u!114 &1211301519
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2407,7 +2403,7 @@ GameObject:
   - component: {fileID: 1555093683}
   - component: {fileID: 1555093682}
   m_Layer: 5
-  m_Name: Weapon Slot
+  m_Name: Gun Slot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2446,9 +2442,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_OnItemDroppedEvent: {fileID: 11400000, guid: 1b3145fbe089fc04e8d02d3b1526a6a2,
     type: 2}
-  m_ItemTags:
-  - {fileID: 0}
-  - {fileID: 0}
+  m_typeToStore: 01000000
+  m_Icon: {fileID: 1555093683}
 --- !u!114 &1555093683
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2539,8 +2534,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_OnItemDroppedEvent: {fileID: 11400000, guid: 803a2c849d7878a4f835cdaea9aac986,
     type: 2}
-  m_ItemTags:
-  - {fileID: 0}
+  m_typeToStore: 02000000
+  m_Icon: {fileID: 1576406639}
 --- !u!114 &1576406639
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2630,9 +2625,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_OnItemDroppedEvent: {fileID: 0}
-  m_ItemTags:
-  - {fileID: 0}
-  - {fileID: 0}
+  m_typeToStore: 
+  m_Icon: {fileID: 0}
 --- !u!114 &1597243588
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2723,8 +2717,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_OnItemDroppedEvent: {fileID: 11400000, guid: 803a2c849d7878a4f835cdaea9aac986,
     type: 2}
-  m_ItemTags:
-  - {fileID: 0}
+  m_typeToStore: 02000000
+  m_Icon: {fileID: 1599139443}
 --- !u!114 &1599139443
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3672,6 +3666,9 @@ MonoBehaviour:
   m_ItemUIPrefab: {fileID: 3163105790329499988, guid: 31b90ab2993f3714b9c2257a7f0c026c,
     type: 3}
   m_ContentGO: {fileID: 1733424409}
+  m_WeaponSlots:
+  - {fileID: 1208549720}
+  - {fileID: 1555093682}
 --- !u!1 &2113617724
 GameObject:
   m_ObjectHideFlags: 0
@@ -4137,7 +4134,12 @@ PrefabInstance:
     - target: {fileID: 5194145606954023154, guid: 1ec6ef78a21d0784786bf365c221fa5c,
         type: 3}
       propertyPath: m_Name
-      value: RedDot
+      value: 4xScope
+      objectReference: {fileID: 0}
+    - target: {fileID: 5584255180458722668, guid: 1ec6ef78a21d0784786bf365c221fa5c,
+        type: 3}
+      propertyPath: m_Name
+      value: 4xScope_GFX
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

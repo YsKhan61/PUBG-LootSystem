@@ -19,13 +19,13 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         [Space(10)]
 
         [SerializeField]
+        Inventory m_Inventory;
+
+        [SerializeField]
         LayerMask m_ItemLayer;
 
         [SerializeField, Tooltip("This radius will be used for the OverlapSphere that will detect the collectable items nearby")]
         float m_Radius = 3f;
-
-        [SerializeField]
-        Inventory m_Inventory;
 
         Collider[] resultColliders = new Collider[10];
         List<CollectableBase> m_CollectablesScanned;
@@ -83,7 +83,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             CollectableItem collectable = collectableItem as CollectableItem;
             if (collectable != null)
             {
-                m_Inventory.AddItem(collectable.Item);
+                collectable.GetStoredInInventory(m_Inventory);
             }
         }
 

@@ -10,6 +10,23 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         Armor,
         Heal,
         Throwables,
+        GunAttachment,
+    }
+
+    /// <summary>
+    /// Type of the item UI that will be set to the ItemSlotUI
+    /// // Each type has their own ItemSlotUI
+    /// // Common types are stored in the inventory list.
+    /// </summary>
+    public enum ItemUIType
+    {
+        Common,
+        Gun,
+        MuzzleAttachment,
+        ScopeAttachment,
+        MagazineAttachment,
+        StockAttachment,
+        ForegripAttachment,
     }
 
     public abstract class ItemDataSO : ScriptableObject
@@ -19,7 +36,11 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         public ItemType Type => m_Type;
 
         [SerializeField]
-        Sprite m_Icon;
-        public Sprite Icon => m_Icon;
+        ItemUIType m_UIType;
+        public ItemUIType UIType => m_UIType;
+
+        [SerializeField]
+        Sprite m_IconSprite;
+        public Sprite IconSprite => m_IconSprite;
     }
 }

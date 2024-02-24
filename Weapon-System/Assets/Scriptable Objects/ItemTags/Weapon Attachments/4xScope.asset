@@ -10,6 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b40f0ad59e9942c4ab58cb52674cdac2, type: 3}
-  m_Name: RedDot
+  m_Name: 4xScope
   m_EditorClassIdentifier: 
-  m_ItemType: 0
+  m_Type: 0
+  m_UIType: 0
+  m_IconSprite: {fileID: 21300000, guid: 705f080618e4b584793c9b64e9f97104, type: 3}
