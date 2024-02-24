@@ -1,14 +1,23 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Weapon_System.Utilities;
 
 
 namespace Weapon_System.GameplayObjects.UI
 {
     public class WeaponInventoryUI : MonoBehaviour
     {
+        [Header("Listens to")]
+
+        [SerializeField]
+        BoolEventChannelSO m_ToggleInventoryEvent;
+
+        [Space(10)]
+
         [SerializeField]
         GameObject m_Panel;
 
@@ -23,19 +32,24 @@ namespace Weapon_System.GameplayObjects.UI
 
         private void Start()
         {
-            CloseInventory();
+            m_ToggleInventoryEvent.OnEventRaised += OnToggleInventory;
+            ToggleInventoryUI(false);
         }
 
-        public void OpenInventory()
+        private void OnDestroy()
         {
-            m_Panel.SetActive(true);
+            m_ToggleInventoryEvent.OnEventRaised -= OnToggleInventory;
+        
         }
 
-        public void CloseInventory()
+        private void OnToggleInventory(bool value)
         {
-            m_Panel.SetActive(false);
+            ToggleInventoryUI(value);
         }
 
-
+        private void ToggleInventoryUI(bool value)
+        {
+            m_Panel.SetActive(value);
+        }
     }
 }

@@ -356,6 +356,34 @@ namespace Weapon_System
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Global"",
+            ""id"": ""422bd525-aeb7-41d1-bb7f-6afaf0172794"",
+            ""actions"": [
+                {
+                    ""name"": ""Toggle_Inventory"",
+                    ""type"": ""Button"",
+                    ""id"": ""19e59c8d-4bfd-4345-96cb-29c44ea811ee"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""8d258c90-e4d5-4e3c-adae-6a049c3f5508"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Toggle_Inventory"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -393,6 +421,9 @@ namespace Weapon_System
             m_Player_Run = m_Player.FindAction("Run", throwIfNotFound: true);
             m_Player_MouseXAxis = m_Player.FindAction("MouseXAxis", throwIfNotFound: true);
             m_Player_MouseYAxis = m_Player.FindAction("MouseYAxis", throwIfNotFound: true);
+            // Global
+            m_Global = asset.FindActionMap("Global", throwIfNotFound: true);
+            m_Global_Toggle_Inventory = m_Global.FindAction("Toggle_Inventory", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -600,6 +631,52 @@ namespace Weapon_System
             }
         }
         public PlayerActions @Player => new PlayerActions(this);
+
+        // Global
+        private readonly InputActionMap m_Global;
+        private List<IGlobalActions> m_GlobalActionsCallbackInterfaces = new List<IGlobalActions>();
+        private readonly InputAction m_Global_Toggle_Inventory;
+        public struct GlobalActions
+        {
+            private @InputControls m_Wrapper;
+            public GlobalActions(@InputControls wrapper) { m_Wrapper = wrapper; }
+            public InputAction @Toggle_Inventory => m_Wrapper.m_Global_Toggle_Inventory;
+            public InputActionMap Get() { return m_Wrapper.m_Global; }
+            public void Enable() { Get().Enable(); }
+            public void Disable() { Get().Disable(); }
+            public bool enabled => Get().enabled;
+            public static implicit operator InputActionMap(GlobalActions set) { return set.Get(); }
+            public void AddCallbacks(IGlobalActions instance)
+            {
+                if (instance == null || m_Wrapper.m_GlobalActionsCallbackInterfaces.Contains(instance)) return;
+                m_Wrapper.m_GlobalActionsCallbackInterfaces.Add(instance);
+                @Toggle_Inventory.started += instance.OnToggle_Inventory;
+                @Toggle_Inventory.performed += instance.OnToggle_Inventory;
+                @Toggle_Inventory.canceled += instance.OnToggle_Inventory;
+            }
+
+            private void UnregisterCallbacks(IGlobalActions instance)
+            {
+                @Toggle_Inventory.started -= instance.OnToggle_Inventory;
+                @Toggle_Inventory.performed -= instance.OnToggle_Inventory;
+                @Toggle_Inventory.canceled -= instance.OnToggle_Inventory;
+            }
+
+            public void RemoveCallbacks(IGlobalActions instance)
+            {
+                if (m_Wrapper.m_GlobalActionsCallbackInterfaces.Remove(instance))
+                    UnregisterCallbacks(instance);
+            }
+
+            public void SetCallbacks(IGlobalActions instance)
+            {
+                foreach (var item in m_Wrapper.m_GlobalActionsCallbackInterfaces)
+                    UnregisterCallbacks(item);
+                m_Wrapper.m_GlobalActionsCallbackInterfaces.Clear();
+                AddCallbacks(instance);
+            }
+        }
+        public GlobalActions @Global => new GlobalActions(this);
         private int m_Mouse_And_KeyboardSchemeIndex = -1;
         public InputControlScheme Mouse_And_KeyboardScheme
         {
@@ -625,6 +702,10 @@ namespace Weapon_System
             void OnRun(InputAction.CallbackContext context);
             void OnMouseXAxis(InputAction.CallbackContext context);
             void OnMouseYAxis(InputAction.CallbackContext context);
+        }
+        public interface IGlobalActions
+        {
+            void OnToggle_Inventory(InputAction.CallbackContext context);
         }
     }
 }

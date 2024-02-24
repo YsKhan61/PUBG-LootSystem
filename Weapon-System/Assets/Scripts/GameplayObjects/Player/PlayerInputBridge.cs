@@ -50,68 +50,41 @@ namespace Weapon_System.GameplayObjects.Player
         [SerializeField]
         BoolEventChannelSO m_FiringWeaponEvent = default;
 
+        [SerializeField]
+        BoolEventChannelSO m_ToggleInventoryEvent = default;
+
         [Space(10)]
 
         #endregion
 
-        #region Input Action References
 
-        [Header("Input Action References")]
+        [Space(10)]
 
-        [Space(5)]
-
-        [SerializeField, Tooltip("Camera Look X")]
-        InputActionReference m_MouseXInputActionReference;
-
-        [SerializeField, Tooltip("Camera Look Y")]
-        InputActionReference m_MouseYInputActionReference;
-
-        [SerializeField, Tooltip("Move forward/backward")]
-        InputActionReference m_VerticalInputActionReference;
-
-        [SerializeField, Tooltip("Strafe left/right")]
-        InputActionReference m_horizontalInputActionReference;
-
-        [SerializeField, Tooltip("Jump")]
-        InputActionReference m_JumpInputActionReference;
-
-        [SerializeField, Tooltip("Run")]
-        InputActionReference m_RunInputActionReference;
-
-        [SerializeField, Tooltip("Fire weapon")]
-        InputActionReference m_FireInputActionReference;
-
-        [SerializeField, Tooltip("Reload weapon")]
-        InputActionReference m_ReloadInputActionReference;
-
-        [SerializeField, Tooltip("ADS")]
-        InputActionReference m_ADSInputActionReference;
-
-
-        [SerializeField, Tooltip("Choose slot 1")]
-        InputActionReference m_PrimaryWeaponSelectInputActionReference;
-
-        [SerializeField, Tooltip("Choose slot 2")]
-        InputActionReference m_SecondaryWeaponSelectInputActionReference;
-
-        [SerializeField, Tooltip("Holster")]
-        InputActionReference m_HolsterInputActionReference;
-
-        #endregion
+        InputControls m_InputControls;
 
         private void Awake()
         {
+            m_InputControls = new InputControls();
+
             SubscribeToAllInputActionReferences();
             EnableAllInputActionReferences();
         }
 
+        // Locking cursor in the center of the game view at start of the game
+        // Later need to shift these pre-start configs to a separate script
+        private void Start()
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+
         private void Update()
         {
-            m_MouseXInputData.SetValue(m_MouseXInputActionReference.action.ReadValue<float>());
-            m_MouseYInputData.SetValue(m_MouseYInputActionReference.action.ReadValue<float>());
+            m_MouseXInputData.SetValue(m_InputControls.Player.MouseXAxis.ReadValue<float>());
+            m_MouseYInputData.SetValue(m_InputControls.Player.MouseYAxis.ReadValue<float>());
 
-            m_VerticalMoveInputData.SetValue(m_VerticalInputActionReference.action.ReadValue<float>());
-            m_HorizontalMoveInputData.SetValue(m_horizontalInputActionReference.action.ReadValue<float>());
+            m_VerticalMoveInputData.SetValue(m_InputControls.Player.VerticalMove.ReadValue<float>());
+            m_HorizontalMoveInputData.SetValue(m_InputControls.Player.HorizontalMove.ReadValue<float>());
         }
 
         private void OnDestroy()
@@ -132,7 +105,7 @@ namespace Weapon_System.GameplayObjects.Player
 
         private void OnJumpInputActionPerformed(InputAction.CallbackContext context)
         {
-            m_JumpInputEvent?.SetValue(true);
+            m_JumpInputEvent?.RaiseEvent();
         }
 
         private void OnPrimaryWeaponSelectActionPerformed(InputAction.CallbackContext context)
@@ -160,64 +133,80 @@ namespace Weapon_System.GameplayObjects.Player
             m_FiringWeaponEvent.SetValueAndRaiseEvent(false);
         }
 
-        private void SubscribeToAllInputActionReferences()
+        private void OnToggleInventoryActionStarted(InputAction.CallbackContext obj)
         {
-            m_RunInputActionReference.action.started += OnRunInputActionStarted;
-            m_RunInputActionReference.action.canceled += OnRunInputActionEnded;
-            m_JumpInputActionReference.action.performed += OnJumpInputActionPerformed;
+            m_ToggleInventoryEvent.SetValueAndRaiseEvent(!m_ToggleInventoryEvent.Value);
 
-            m_PrimaryWeaponSelectInputActionReference.action.performed += OnPrimaryWeaponSelectActionPerformed;
-            m_SecondaryWeaponSelectInputActionReference.action.performed += OnSecondaryWeaponSelectActionPerformed;
-            m_HolsterInputActionReference.action.performed += OnHolsterInputActionPerformed;
+            if (m_ToggleInventoryEvent.Value)
+            {
+                m_InputControls.Player.Disable();
+                m_InputControls.Player.VerticalMove.Enable();
+                m_InputControls.Player.HorizontalMove.Enable();
 
-            m_FireInputActionReference.action.started += OnFireInputActionStarted;
-            m_FireInputActionReference.action.canceled += OnFireInputActionCanceled;
+                // enable mouse pointer
+                Cursor.lockState = CursorLockMode.Confined;
+                Cursor.visible = true;
+            }
+            else
+            {
+                m_InputControls.Player.Enable();
+
+                // disable mouse pointer
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
         }
 
-        private void UnsubscribeFromAllInputActionReferences()
+        private void SubscribeToAllInputActionReferences()
         {
-            m_RunInputActionReference.action.performed -= OnRunInputActionStarted;
-            m_RunInputActionReference.action.canceled -= OnRunInputActionEnded;
-            m_JumpInputActionReference.action.performed -= OnJumpInputActionPerformed;
+            m_InputControls.Player.Run.started += OnRunInputActionStarted;
+            m_InputControls.Player.Run.canceled += OnRunInputActionEnded;
 
-            m_PrimaryWeaponSelectInputActionReference.action.performed -= OnPrimaryWeaponSelectActionPerformed;
-            m_SecondaryWeaponSelectInputActionReference.action.performed -= OnSecondaryWeaponSelectActionPerformed;
-            m_HolsterInputActionReference.action.performed -= OnHolsterInputActionPerformed;
+            m_InputControls.Player.Jump.performed += OnJumpInputActionPerformed;
 
-            m_FireInputActionReference.action.started -= OnFireInputActionStarted;
-            m_FireInputActionReference.action.canceled -= OnFireInputActionCanceled;
+            m_InputControls.Player.PrimaryWeapon_Select.performed += OnPrimaryWeaponSelectActionPerformed;
+
+            m_InputControls.Player.SecondaryWeapon_Select.performed += OnSecondaryWeaponSelectActionPerformed;
+
+            m_InputControls.Player.Holster.performed += OnHolsterInputActionPerformed;
+
+            m_InputControls.Player.Fire.started += OnFireInputActionStarted;
+            m_InputControls.Player.Fire.canceled += OnFireInputActionCanceled;
+
+            m_InputControls.Global.Toggle_Inventory.started += OnToggleInventoryActionStarted;
+        }
+
+        
+
+        private void UnsubscribeFromAllInputActionReferences()
+        { 
+            m_InputControls.Player.Run.started -= OnRunInputActionStarted;
+            m_InputControls.Player.Run.canceled -= OnRunInputActionEnded;
+
+            m_InputControls.Player.Jump.performed -= OnJumpInputActionPerformed;
+
+            m_InputControls.Player.PrimaryWeapon_Select.performed -= OnPrimaryWeaponSelectActionPerformed;
+
+            m_InputControls.Player.SecondaryWeapon_Select.performed -= OnSecondaryWeaponSelectActionPerformed;
+
+            m_InputControls.Player.Holster.performed -= OnHolsterInputActionPerformed;
+
+            m_InputControls.Player.Fire.started -= OnFireInputActionStarted;
+            m_InputControls.Player.Fire.canceled -= OnFireInputActionCanceled;
+
+            m_InputControls.Global.Toggle_Inventory.started -= OnToggleInventoryActionStarted;
         }
 
         private void EnableAllInputActionReferences()
         {
-            m_MouseXInputActionReference.action.Enable();
-            m_MouseYInputActionReference.action.Enable();
-
-            m_VerticalInputActionReference.action.Enable();
-            m_horizontalInputActionReference.action.Enable();
-            m_JumpInputActionReference.action.Enable();
-            m_RunInputActionReference.action.Enable();
-
-            m_PrimaryWeaponSelectInputActionReference.action.Enable();
-            m_SecondaryWeaponSelectInputActionReference.action.Enable();
-            m_HolsterInputActionReference.action.Enable();
-            m_FireInputActionReference.action.Enable();
+            m_InputControls.Player.Enable();
+            m_InputControls.Global.Enable();
         }
 
         private void DisableAllInputActionReferences()
         {
-            m_MouseXInputActionReference.action.Disable();
-            m_MouseYInputActionReference.action.Disable();
-
-            m_VerticalInputActionReference.action.Disable();
-            m_horizontalInputActionReference.action.Disable();
-            m_JumpInputActionReference.action.Disable();
-            m_RunInputActionReference.action.Disable();
-
-            m_PrimaryWeaponSelectInputActionReference.action.Disable();
-            m_SecondaryWeaponSelectInputActionReference.action.Disable();
-            m_HolsterInputActionReference.action.Disable();
-            m_FireInputActionReference.action.Disable();
+            m_InputControls.Player.Disable();
+            m_InputControls.Global.Disable();
         }
     }
 }

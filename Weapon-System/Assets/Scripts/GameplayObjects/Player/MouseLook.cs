@@ -51,7 +51,7 @@ namespace Weapon_System.GameplayObjects.Player
             UpdateCursorLock();
         }
 
-        public void SetCursorLock(bool value)
+        /*public void SetCursorLock(bool value)
         {
             lockCursor = value;
             if(!lockCursor)
@@ -59,13 +59,13 @@ namespace Weapon_System.GameplayObjects.Player
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
             }
-        }
+        }*/
 
         public void UpdateCursorLock()
         {
             //if the user set "lockCursor" we check & properly lock the cursos
-            if (lockCursor)
-                InternalLockUpdate();
+            /*if (lockCursor)
+                InternalLockUpdate();*/
         }
 
         private void InternalLockUpdate()
@@ -79,7 +79,7 @@ namespace Weapon_System.GameplayObjects.Player
                 m_cursorIsLocked = true;
             }
 
-            if (m_cursorIsLocked)
+            /*if (m_cursorIsLocked)
             {
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
@@ -88,7 +88,7 @@ namespace Weapon_System.GameplayObjects.Player
             {
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
-            }
+            }*/
         }
 
         Quaternion ClampRotationAroundXAxis(Quaternion q)
