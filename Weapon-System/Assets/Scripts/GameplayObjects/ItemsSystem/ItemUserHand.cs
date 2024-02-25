@@ -10,7 +10,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
     /// It uses Trigger Collider to detect items
     /// It can also use the item in hand
     /// </summary>
-    public class ItemUserHand : MonoBehaviour
+    public class ItemUserHand : MonoBehaviour, ICollector
     {
         [Header("Listens to")]
         [SerializeField, Tooltip("This event notifies the pickup input performed")]
@@ -19,6 +19,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         [SerializeField, Tooltip("This event notifies the firing input performing")]
         BoolEventChannelSO m_FiringInputEvent;
 
+        public Transform Transform => transform;
         public IUsable ItemInHand { get; set; }
 
         [Space(10)]
@@ -70,6 +71,10 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
                 {
                     if (resultColliders[i].TryGetComponent(out ICollectable collectable))
                     {
+                        if (collectable.IsCollected)
+                        {
+                            continue;
+                        }
                         // Add to list of collectables
                         m_CollectablesScanned.Add(collectable);
                     }
@@ -81,13 +86,13 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         {
             if (m_CollectablesScanned.Count > 0)
             {
-                // Add to inventory
-                foreach (ICollectable item in m_CollectablesScanned)
+                for (int i = 0; i < m_CollectablesScanned.Count; i++)
                 {
-                    if (item.Collect())
+                    if (m_CollectablesScanned[i].Collect(this))
                     {
-                        TryStoreCollectableInInventory(item);
-                        Debug.Log("Picked up " + item.Name);
+                        // Add 1st item to inventory
+                        TryStoreCollectableInInventory(m_CollectablesScanned[i]);
+                        return;
                     }
                 }
             }
@@ -101,6 +106,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         private void DisplayAllCollectables()
         {
+            Debug.Log("Total collectables scanned: " + m_CollectablesScanned.Count);
             foreach (ICollectable collectable in m_CollectablesScanned)
             {
                 Debug.Log(collectable);

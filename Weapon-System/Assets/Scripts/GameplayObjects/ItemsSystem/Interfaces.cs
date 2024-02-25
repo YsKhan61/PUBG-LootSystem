@@ -3,28 +3,39 @@ using UnityEngine;
 
 namespace Weapon_System.GameplayObjects.ItemsSystem
 {
-    public interface IName
+    /*public interface IName
     { 
         public string Name { get; }
-    }
+    }*/
 
-    public interface ICollectable : IName
+    public interface ICollector
     {
-        public bool Collect();
+        public Transform Transform { get; }
     }
 
-    public interface IDropable : IName
+    public interface ICollectable
     {
-        public bool Drop(Vector3 location);
+        public bool IsCollected { get; }
+        public bool Collect(ICollector collector);
     }
 
-    public interface IStorable : IName
+    public interface IDropable
+    {
+        public bool Drop();
+    }
+
+    public interface IStorable
     {
         public bool StoreInInventory(Inventory inventory);
     }
 
-    public interface  IUsable : IName
+    public interface  IUsable
     {
         public bool Use();
+    }
+
+    public interface IShooter
+    {
+        public bool Shoot();
     }
 }

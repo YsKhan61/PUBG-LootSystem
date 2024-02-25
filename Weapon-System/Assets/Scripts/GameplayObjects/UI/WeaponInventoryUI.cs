@@ -150,7 +150,6 @@ namespace Weapon_System.GameplayObjects.UI
         private void AddGunItemUIToInventoryUI(GunItem item, int index)
         {
             WeaponItemUI weaponItemUI = m_WeaponItemUISlotUIPairs[index].weaponItemUI;
-
             weaponItemUI.SetItemData(item, this);
             m_WeaponItemUISlotUIPairs[index].weaponSlotUI.TryAddItemUIToSlotUI(weaponItemUI);
         }

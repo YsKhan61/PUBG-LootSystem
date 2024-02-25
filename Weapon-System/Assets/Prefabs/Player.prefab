@@ -556,6 +556,8 @@ MonoBehaviour:
     type: 2}
   m_OnCommonItemRemovedEvent: {fileID: 11400000, guid: 2620e14ce84026742843c989b15d9f86,
     type: 2}
+  m_OnGunItemRemovedEvent: {fileID: 11400000, guid: 192f4dd12ef944f469016a701256cb7d,
+    type: 2}
   m_UserHand: {fileID: 6801109740986997673}
   m_CommonItems: []
   m_ItemGuns: []

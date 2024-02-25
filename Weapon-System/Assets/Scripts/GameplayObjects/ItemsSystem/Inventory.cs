@@ -52,11 +52,12 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         private void Start()
         {
             m_CommonItems = new List<CommonItem>();
-            m_ItemGuns = new GunItem[2];
+            m_ItemGuns = new GunItem[2];                    // For now only 2 guns are allowed
 
             m_PrimaryWeaponSelectInputEvent.OnEventRaised += OnPrimaryWeaponSelect;
             m_SecondaryWeaponSelectInputEvent.OnEventRaised += OnSecondaryWeaponSelect;
             m_OnCommonItemRemovedEvent.OnEventRaised += RemoveCommonItem;
+            m_OnGunItemRemovedEvent.OnEventRaised += RemoveGunItem;
         }
 
         private void OnDestroy()
@@ -64,6 +65,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             m_PrimaryWeaponSelectInputEvent.OnEventRaised -= OnPrimaryWeaponSelect;
             m_SecondaryWeaponSelectInputEvent.OnEventRaised -= OnSecondaryWeaponSelect;
             m_OnCommonItemRemovedEvent.OnEventRaised -= RemoveCommonItem;
+            m_OnGunItemRemovedEvent.OnEventRaised -= RemoveGunItem;
         }
 
         public void AddCommonItem(CommonItem item)
@@ -76,8 +78,8 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         public void RemoveCommonItem(CommonItem item)
         {
             m_CommonItems.Remove(item);
+            item.Drop();
             Debug.Log(item.Name + " removed from inventory!");
-            item.Drop(transform.position + transform.forward * 2f);
         }
 
         public void AddGunToGunSlot(GunItem item)
@@ -113,6 +115,18 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             m_UserHand.ItemInHand = item;                  // Set the gun in hand
             m_OnGunItemAddedEvent.RaiseEvent(item, 0);
             Debug.Log(item.Name + " added to inventory!");
+        }
+
+        private void RemoveGunItem(GunItem item, int index)
+        {
+            if (index < 0 || index >= m_ItemGuns.Length)
+            {
+                Debug.LogError("Index out of range");
+                return;
+            }
+
+            m_ItemGuns[index].Drop();
+            m_ItemGuns[index] = null;
         }
 
         private void OnPrimaryWeaponSelect(bool _)

@@ -33,7 +33,7 @@ namespace Weapon_System.GameplayObjects.UI
             }
         }
 
-        void TryDropItem(GameObject item)
+        public void TryDropItem(GameObject item)
         {
             if (item.TryGetComponent(out WeaponItemUI itemUI))
             {

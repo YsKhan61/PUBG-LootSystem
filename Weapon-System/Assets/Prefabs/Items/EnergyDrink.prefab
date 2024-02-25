@@ -216,3 +216,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ItemData: {fileID: 11400000, guid: 3bf496da2ea72394595bf58820d66bb4, type: 2}
   m_Graphics: {fileID: 6204213063057491244}
+  m_RootGO: {fileID: 8670536539463605843}

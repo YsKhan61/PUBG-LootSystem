@@ -6,7 +6,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
     /// <summary>
     /// The base class for all items
     /// </summary>
-    public abstract class ItemBase : MonoBehaviour, IName
+    public abstract class ItemBase : MonoBehaviour
     {
         [SerializeField]
         protected ItemDataSO m_ItemData;

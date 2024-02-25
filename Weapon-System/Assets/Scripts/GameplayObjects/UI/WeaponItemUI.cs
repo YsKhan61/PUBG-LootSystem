@@ -16,6 +16,9 @@ namespace Weapon_System.GameplayObjects.UI
         [SerializeField]
         TextMeshProUGUI m_NameText;
 
+        /*[SerializeField, Tooltip("The game object that will be toggled on/off")]
+        GameObject m_PanelGO;*/
+
         public ItemDataSO ItemData { get; private set; }
 
         private RectTransform m_RectTransform;
@@ -43,6 +46,11 @@ namespace Weapon_System.GameplayObjects.UI
 
             m_CanvasGroup = GetComponent<CanvasGroup>();
             m_RectTransform = GetComponent<RectTransform>();
+        }
+
+        private void Start()
+        {
+            Hide();
         }
 
         public void OnPointerDown(PointerEventData eventData)
@@ -86,7 +94,7 @@ namespace Weapon_System.GameplayObjects.UI
             {
                 if (m_InventoryUI != null)
                 {
-                    m_InventoryUI.GetWeaponSlotUI(this).OnDrop(eventData);
+                    m_InventoryUI.GetWeaponSlotUI(this).TryDropItem(eventData.pointerDrag);
                 }
             }
         }
@@ -98,16 +106,20 @@ namespace Weapon_System.GameplayObjects.UI
             ItemData = item.ItemData;
             m_Icon.sprite = ItemData.IconSprite;
             m_NameText.text = ItemData.name;
+
+            Show();
         }
 
-        public void Show()
+        private void Show()
         {
-            gameObject.SetActive(true);
+            m_CanvasGroup.alpha = 1;
+            m_CanvasGroup.blocksRaycasts = true;
         }
 
-        public void Hide()
+        private void Hide()
         {
-            gameObject.SetActive(false);
+            m_CanvasGroup.alpha = 0;
+            m_CanvasGroup.blocksRaycasts = false;
         }
     }
 }
