@@ -8,12 +8,18 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
     /// <summary>
     /// Attached to player to collect items and add to inventory (if the item is storable)
     /// It uses Trigger Collider to detect items
+    /// It can also use the item in hand
     /// </summary>
-    public class Collector : MonoBehaviour
+    public class ItemUserHand : MonoBehaviour
     {
         [Header("Listens to")]
-        [SerializeField]
-        BoolEventChannelSO m_PickupItemEvent;
+        [SerializeField, Tooltip("This event notifies the pickup input performed")]
+        BoolEventChannelSO m_PickupInputEvent;
+
+        [SerializeField, Tooltip("This event notifies the firing input performing")]
+        BoolEventChannelSO m_FiringInputEvent;
+
+        public IUsable ItemInHand { get; set; }
 
         [Space(10)]
 
@@ -32,12 +38,43 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         private void Start()
         {
             m_CollectablesScanned = new List<ICollectable>();
-            m_PickupItemEvent.OnEventRaised += OnPickupItems;
+            m_PickupInputEvent.OnEventRaised += OnPickupItems;
+        }
+
+        private void Update()
+        {
+            if (m_FiringInputEvent.Value)
+            {
+                ItemInHand?.Use();
+            }
+
+            CheckForNearbyItems();
+
+            DisplayAllCollectables();
         }
 
         private void OnDestroy()
         {
-            m_PickupItemEvent.OnEventRaised -= OnPickupItems;
+            m_PickupInputEvent.OnEventRaised -= OnPickupItems;
+        }
+
+        private void CheckForNearbyItems()
+        {
+            m_CollectablesScanned.Clear();
+
+            // Do an overlap Sphere to detect items
+            int overlaps = Physics.OverlapSphereNonAlloc(transform.position, m_Radius, resultColliders, m_ItemLayer, QueryTriggerInteraction.Collide);
+            if (overlaps > 0)
+            {
+                for (int i = 0; i < overlaps; i++)
+                {
+                    if (resultColliders[i].TryGetComponent(out ICollectable collectable))
+                    {
+                        // Add to list of collectables
+                        m_CollectablesScanned.Add(collectable);
+                    }
+                }
+            }
         }
 
         private void OnPickupItems(bool _)
@@ -56,34 +93,10 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             }
         }
 
-        private void Update()
-        {
-            m_CollectablesScanned.Clear();
-
-            // Do an overlap Sphere to detect items
-            int overlaps = Physics.OverlapSphereNonAlloc(transform.position, m_Radius, resultColliders, m_ItemLayer, QueryTriggerInteraction.Collide);
-            if (overlaps > 0)
-            {
-                for (int i = 0; i < overlaps; i++)
-                {
-                    if (resultColliders[i].TryGetComponent(out ICollectable collectable))
-                    {
-                        // Add to list of collectables
-                        m_CollectablesScanned.Add(collectable);
-                    }
-                }
-            }
-
-            DisplayAllCollectables();
-        }
-
         void TryStoreCollectableInInventory(ICollectable item)
         {
             IStorable storable = item as IStorable;
-            if (storable != null)
-            {
-                storable.StoreInInventory(m_Inventory);
-            }
+            storable?.StoreInInventory(m_Inventory);
         }
 
         private void DisplayAllCollectables()

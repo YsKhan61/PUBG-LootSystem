@@ -707,7 +707,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cb5dc8408439ce4b8a234b7cc2b52a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_OnItemDroppedEvent: {fileID: 0}
+  m_OnItemUIDroppedInInventoryUIEvent: {fileID: 0}
   m_typeToStore: 
   m_Icon: {fileID: 0}
 --- !u!114 &623450984
@@ -835,7 +835,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cb5dc8408439ce4b8a234b7cc2b52a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_OnItemDroppedEvent: {fileID: 0}
+  m_OnItemUIDroppedInInventoryUIEvent: {fileID: 0}
   m_typeToStore: 
   m_Icon: {fileID: 0}
 --- !u!114 &667621554
@@ -2011,8 +2011,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cb5dc8408439ce4b8a234b7cc2b52a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_OnItemDroppedEvent: {fileID: 11400000, guid: 803a2c849d7878a4f835cdaea9aac986,
-    type: 2}
+  m_OnItemUIDroppedInInventoryUIEvent: {fileID: 0}
   m_typeToStore: 01000000
   m_Icon: {fileID: 1208549719}
 --- !u!1 &1211301516
@@ -2065,7 +2064,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cb5dc8408439ce4b8a234b7cc2b52a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_OnItemDroppedEvent: {fileID: 0}
+  m_OnItemUIDroppedInInventoryUIEvent: {fileID: 0}
   m_typeToStore: 
   m_Icon: {fileID: 0}
 --- !u!114 &1211301519
@@ -2388,8 +2387,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cb5dc8408439ce4b8a234b7cc2b52a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_OnItemDroppedEvent: {fileID: 11400000, guid: 1b3145fbe089fc04e8d02d3b1526a6a2,
-    type: 2}
+  m_OnItemUIDroppedInInventoryUIEvent: {fileID: 0}
   m_typeToStore: 01000000
   m_Icon: {fileID: 1555093683}
 --- !u!114 &1555093683
@@ -2480,8 +2478,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cb5dc8408439ce4b8a234b7cc2b52a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_OnItemDroppedEvent: {fileID: 11400000, guid: 803a2c849d7878a4f835cdaea9aac986,
-    type: 2}
+  m_OnItemUIDroppedInInventoryUIEvent: {fileID: 0}
   m_typeToStore: 02000000
   m_Icon: {fileID: 1576406639}
 --- !u!114 &1576406639
@@ -2572,7 +2569,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cb5dc8408439ce4b8a234b7cc2b52a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_OnItemDroppedEvent: {fileID: 0}
+  m_OnItemUIDroppedInInventoryUIEvent: {fileID: 0}
   m_typeToStore: 
   m_Icon: {fileID: 0}
 --- !u!114 &1597243588
@@ -2663,8 +2660,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cb5dc8408439ce4b8a234b7cc2b52a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_OnItemDroppedEvent: {fileID: 11400000, guid: 803a2c849d7878a4f835cdaea9aac986,
-    type: 2}
+  m_OnItemUIDroppedInInventoryUIEvent: {fileID: 0}
   m_typeToStore: 02000000
   m_Icon: {fileID: 1599139443}
 --- !u!114 &1599139443

@@ -30,7 +30,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         [Space(10)]
 
         [SerializeField]
-        HandToUseItem m_HandToUseItem;
+        ItemUserHand m_UserHand;
 
         [Space(10)]
 
@@ -85,7 +85,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
                 if (m_ItemGuns[i] == null)
                 {
                     m_ItemGuns[i] = item;
-                    m_HandToUseItem.ItemInHand = item;                  // Set the gun in hand
+                    m_UserHand.ItemInHand = item;                  // Set the gun in hand
                     m_OnGunItemAddedEvent.RaiseEvent(item, i);
                     Debug.Log(item.Name + " added to inventory!");
                     return;
@@ -95,10 +95,10 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             // If no empty slot, replace the current gun
             for (int i = 0; i < m_ItemGuns.Length; i++)
             {
-                if (m_ItemGuns[i] as IUsable == m_HandToUseItem.ItemInHand) // (m_ItemGuns[i].IsInHand)
+                if (m_ItemGuns[i] as IUsable == m_UserHand.ItemInHand) // (m_ItemGuns[i].IsInHand)
                 {
                     m_ItemGuns[i] = item;
-                    m_HandToUseItem.ItemInHand = item;                  // Set the gun in hand
+                    m_UserHand.ItemInHand = item;                  // Set the gun in hand
                     m_OnGunItemAddedEvent.RaiseEvent(item, i);
                     Debug.Log(item.Name + " added to inventory!");
                     return;
@@ -107,19 +107,19 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
             // If no empty slot and no gun in hand, replace the first gun
             m_ItemGuns[0] = item;
-            m_HandToUseItem.ItemInHand = item;                  // Set the gun in hand
+            m_UserHand.ItemInHand = item;                  // Set the gun in hand
             m_OnGunItemAddedEvent.RaiseEvent(item, 0);
             Debug.Log(item.Name + " added to inventory!");
         }
 
         private void OnPrimaryWeaponSelect(bool _)
         {
-            m_HandToUseItem.ItemInHand = m_ItemGuns[0];
+            m_UserHand.ItemInHand = m_ItemGuns[0];
         }
 
         private void OnSecondaryWeaponSelect(bool _)
         {
-            m_HandToUseItem.ItemInHand = m_ItemGuns[1];
+            m_UserHand.ItemInHand = m_ItemGuns[1];
         }
     }
 }

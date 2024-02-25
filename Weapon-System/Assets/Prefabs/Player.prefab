@@ -139,7 +139,6 @@ Transform:
   - {fileID: 2460721442636386673}
   - {fileID: 941956903071699302}
   - {fileID: 4696320689157423031}
-  - {fileID: 1022577495333912259}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4960714182652946185
@@ -452,51 +451,6 @@ MonoBehaviour:
   m_PickupItemEvent: {fileID: 11400000, guid: 59e93240b36bad642b18db42ba6fc7f5, type: 2}
   m_ToggleInventoryEvent: {fileID: 11400000, guid: 839a9b09f40946b4589534a87d46908b,
     type: 2}
---- !u!1 &3868803685237106546
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1022577495333912259}
-  - component: {fileID: 6858806595541410018}
-  m_Layer: 0
-  m_Name: Hand
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1022577495333912259
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3868803685237106546}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.198, y: 0.433, z: 0.365}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6111941527781067775}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6858806595541410018
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3868803685237106546}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 11fdd64955d21e24fb73b2bc3a1630a3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_FiringInput: {fileID: 11400000, guid: 483fecb1321d12940ace226f9b5a1409, type: 2}
 --- !u!1 &4659557876642669036
 GameObject:
   m_ObjectHideFlags: 0
@@ -506,10 +460,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2460721442636386673}
-  - component: {fileID: 5162500909238570400}
   - component: {fileID: 6801109740986997673}
   m_Layer: 16
-  m_Name: ItemCollector
+  m_Name: Hand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -530,27 +483,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6111941527781067775}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!135 &5162500909238570400
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4659557876642669036}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &6801109740986997673
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -560,15 +492,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 4659557876642669036}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6864534a62f078d408522f32356381b3, type: 3}
+  m_Script: {fileID: 11500000, guid: 4fe8495bbf3fe944da061ca3db94a24c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_PickupItemEvent: {fileID: 11400000, guid: 59e93240b36bad642b18db42ba6fc7f5, type: 2}
+  m_PickupInputEvent: {fileID: 11400000, guid: 59e93240b36bad642b18db42ba6fc7f5, type: 2}
+  m_FiringInputEvent: {fileID: 11400000, guid: 483fecb1321d12940ace226f9b5a1409, type: 2}
   m_Inventory: {fileID: 6398577312195835515}
   m_ItemLayer:
     serializedVersion: 2
     m_Bits: 65536
-  m_Radius: 2
+  m_Radius: 1
 --- !u!1 &6033397690677499566
 GameObject:
   m_ObjectHideFlags: 0
@@ -623,7 +556,7 @@ MonoBehaviour:
     type: 2}
   m_OnCommonItemRemovedEvent: {fileID: 11400000, guid: 2620e14ce84026742843c989b15d9f86,
     type: 2}
-  m_HandToUseItem: {fileID: 6858806595541410018}
+  m_UserHand: {fileID: 6801109740986997673}
   m_CommonItems: []
   m_ItemGuns: []
 --- !u!1001 &4392950461943648704
