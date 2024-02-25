@@ -5,14 +5,8 @@ using Weapon_System.Utilities;
 
 namespace Weapon_System.GameplayObjects.ItemsSystem
 {
-    [CreateAssetMenu(fileName = "GunItemEventChannel", menuName = "ScriptableObjects/Event Channels/GunItemEventChannelSO")]
-    public class GunItemEventChannelSO : ScriptableObject
+    [CreateAssetMenu(fileName = "GunItemEventCharnnel", menuName = "ScriptableObjects/Event Channels/GunItemEventCharnnelSO")]
+    public class GunItemEventChannelSO : EventChannelBaseSO<GunItem>
     {
-        public event Action<GunItem, int> OnEventRaised;
-
-        public void RaiseEvent(GunItem item, int slotIndex)
-        {
-            OnEventRaised?.Invoke(item, slotIndex);
-        }
     }
 }

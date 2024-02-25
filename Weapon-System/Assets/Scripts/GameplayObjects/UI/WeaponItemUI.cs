@@ -8,7 +8,7 @@ using Weapon_System.GameplayObjects.ItemsSystem;
 namespace Weapon_System.GameplayObjects.UI
 {
     [RequireComponent(typeof(RectTransform), typeof(CanvasGroup))]
-    public class ItemUI : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
+    public class WeaponItemUI : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler
     {
         [SerializeField]
         Image m_Icon;
@@ -24,9 +24,9 @@ namespace Weapon_System.GameplayObjects.UI
 
         private Vector2 m_lastAnchoredPosition;
 
-        private InventoryUI m_InventoryUI;
-        private CommonItem m_Item;
-        public CommonItem Item => m_Item;
+        private WeaponInventoryUI m_InventoryUI;
+        private GunItem m_Item;
+        public GunItem Item => m_Item;
 
         [HideInInspector]
         public bool IsDragSuccess;
@@ -50,8 +50,8 @@ namespace Weapon_System.GameplayObjects.UI
             // Right click to drop item
             if (eventData.button == PointerEventData.InputButton.Right)
             {
-                m_InventoryUI.RemoveCommonItemUIFromInventoryUI(m_Item);
-                Destroy(gameObject);
+                m_InventoryUI.RemoveGunItemUIFromWeaponInventoryUI(m_Item);
+                Hide();
             }
         }
 
@@ -80,13 +80,34 @@ namespace Weapon_System.GameplayObjects.UI
             }
         }
 
-        public void SetItemData(CommonItem item, InventoryUI inventoryUI)
+        public void OnDrop(PointerEventData eventData)
+        {
+            if (eventData.pointerDrag != null)
+            {
+                if (m_InventoryUI != null)
+                {
+                    m_InventoryUI.GetWeaponSlotUI(this).OnDrop(eventData);
+                }
+            }
+        }
+
+        public void SetItemData(GunItem item, WeaponInventoryUI inventoryUI)
         {
             m_InventoryUI = inventoryUI;
             m_Item = item;
             ItemData = item.ItemData;
             m_Icon.sprite = ItemData.IconSprite;
             m_NameText.text = ItemData.name;
+        }
+
+        public void Show()
+        {
+            gameObject.SetActive(true);
+        }
+
+        public void Hide()
+        {
+            gameObject.SetActive(false);
         }
     }
 }

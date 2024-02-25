@@ -15,14 +15,14 @@ namespace Weapon_System.GameplayObjects.UI
     {
         [Header("Listens to")]
 
-        [SerializeField]
+        [SerializeField, Tooltip("The event that will toggle the inventory")]
         BoolEventChannelSO m_ToggleInventoryEvent;
 
-        [SerializeField]
+        [SerializeField, Tooltip("When a common item is added to the inventory, this event is invoked")]
         CommonItemEventChannelSO m_OnCommonItemAddedEvent;
 
-        [SerializeField]
-        GunItemEventChannelSO m_OnGunItemAddedEvent;
+        /*[SerializeField, Tooltip("When a gun item is added to the inventory, this event is invoked")]
+        GunItemIntEventChannelSO m_OnGunItemAddedEvent;*/
 
         [Header("Broadcast to")]
 
@@ -31,23 +31,22 @@ namespace Weapon_System.GameplayObjects.UI
 
         [Space(10)]
 
-        [SerializeField]
+        [SerializeField, Tooltip("The panel to toggle on/off")]
         GameObject m_Panel;
 
-        [SerializeField]
+        [SerializeField, Tooltip("The prefab that will be spawned as child of 'm_ContentGO' when a common item is stored in inventory")]
         ItemUI m_ItemUIPrefab;
 
-        [SerializeField]
+        [SerializeField, Tooltip("The spawned instance of 'm_ItemUIPrefab' will be set as a child of this transform")]
         GameObject m_ContentGO;
 
-        [SerializeField, FormerlySerializedAs("m_WeaponSlots")]
-        ItemSlotUI[] m_GunSlots;
+        /*ItemSlotUI[] m_GunSlots;*/
 
         private void Start()
         {
             m_ToggleInventoryEvent.OnEventRaised += OnToggleInventory;
             m_OnCommonItemAddedEvent.OnEventRaised += AddCommonItemUIToInventoryUI;
-            m_OnGunItemAddedEvent.OnEventRaised += AddGunItemUIToInventoryUI;
+            // m_OnGunItemAddedEvent.OnEventRaised += AddGunItemUIToInventoryUI;
 
             ToggleInventoryUI(false);
         }
@@ -56,10 +55,10 @@ namespace Weapon_System.GameplayObjects.UI
         {
             m_ToggleInventoryEvent.OnEventRaised -= OnToggleInventory;
             m_OnCommonItemAddedEvent.OnEventRaised -= AddCommonItemUIToInventoryUI;
-            m_OnGunItemAddedEvent.OnEventRaised -= AddGunItemUIToInventoryUI;
+            // m_OnGunItemAddedEvent.OnEventRaised -= AddGunItemUIToInventoryUI;
         }
 
-        public void RemoveItemUIFromInventoryUI(CommonItem item)
+        public void RemoveCommonItemUIFromInventoryUI(CommonItem item)
         {
             m_OnCommonItemRemovedEvent?.RaiseEvent(item);
         }
@@ -69,10 +68,10 @@ namespace Weapon_System.GameplayObjects.UI
             Instantiate(m_ItemUIPrefab, m_ContentGO.transform).SetItemData(item, this);
         }
 
-        private void AddGunItemUIToInventoryUI(ItemBase item, int index)
+        /*private void AddGunItemUIToInventoryUI(ItemBase item, int index)
         {
             m_GunSlots[index].TryAddItemToSlotUI(item.ItemData);
-        }
+        }*/
 
         /// <summary>
         /// For scopes, after pickup, we will check if any gun slot has a gun,

@@ -14,7 +14,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         CommonItemEventChannelSO m_OnCommonItemAddedEvent;
 
         [SerializeField]
-        GunItemEventChannelSO m_OnGunItemAddedEvent;
+        GunItemIntEventChannelSO m_OnGunItemAddedEvent;
 
         [Header("Listens to")]
 
@@ -26,6 +26,9 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         [SerializeField]
         CommonItemEventChannelSO m_OnCommonItemRemovedEvent;
+
+        [SerializeField]
+        GunItemIntEventChannelSO m_OnGunItemRemovedEvent;
 
         [Space(10)]
 
