@@ -9,7 +9,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
     /// <summary>
     /// Items that heal the player
     /// </summary>
-    public class HealItem : CommonItem
+    public class HealItem : InventoryItem
     {
 
     }

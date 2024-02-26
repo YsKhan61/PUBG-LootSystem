@@ -4,6 +4,15 @@ using UnityEngine;
 namespace Weapon_System.GameplayObjects.ItemsSystem
 {
     /// <summary>
+    /// Any item in the game, must need to have a name and a reference to the ItemDataSO
+    /// </summary>
+    public interface IItemInfo
+    {
+        public string Name { get; }
+        public ItemDataSO ItemData { get; }
+    }
+
+    /// <summary>
     /// Interface for the collectable items
     /// </summary>
     public interface ICollectable
@@ -18,6 +27,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         public bool Collect(ItemUserHand hand);
     }
 
+
     /// <summary>
     /// Interface for the droppable items
     /// </summary>
@@ -25,6 +35,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
     {
         public bool Drop();
     }
+
 
     /// <summary>
     /// Interface for the storable items
@@ -41,6 +52,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         public bool StoreInInventory(Inventory inventory);
     }
 
+
     /// <summary>
     /// Interface for the usable items - primary use of the item
     /// </summary>
@@ -48,6 +60,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
     {
         public bool PrimaryUse();
     }
+
 
     /// <summary>
     /// Interface for the usable items - secondary use of the item
@@ -57,8 +70,13 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         public bool SecondaryUse();
     }
 
+
     /// <summary>
     /// Interface for the items that can be held in hand
+    /// 
+    /// ------------REMARKS--------------------
+    /// An item that can be hold by the hand, 
+    /// must need to be put away also at some point of time.
     /// </summary>
     public interface IHoldable
     {
@@ -75,11 +93,32 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         public bool PutAway();
     }
 
+
     /// <summary>
     /// Interface for the shooter items (weapons, guns etc)
     /// </summary>
     public interface IShooter
     {
         public bool Shoot();
+    }
+
+
+    /// <summary>
+    /// Interface for the weapon attachment items
+    /// Considering that item can be attached as well as detached from the weapon
+    /// </summary>
+    public interface IWeaponAttachment
+    {
+        public bool AttachToWeapon();
+        public bool DetachFromWeapon();
+    }
+
+
+    /// <summary>
+    /// Interface for the sight attachment items
+    /// </summary>
+    public interface  ISightAttachment : IWeaponAttachment
+    {
+        public bool AimDownSight();
     }
 }

@@ -14,16 +14,14 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
     }
 
     /// <summary>
-    /// Type of the item UI that will be set to the ItemSlotUI
-    /// // Each type has their own ItemSlotUI
-    /// // Common types are stored in the inventory list.
+    /// Type of the item UI that will be set to the ItemSlotUI or ItemUI where other ItemUI can be dropped.
     /// </summary>
     public enum ItemUIType
     {
         Common,
         Gun,
         MuzzleAttachment,
-        ScopeAttachment,
+        SightAttachment,
         MagazineAttachment,
         StockAttachment,
         ForegripAttachment,

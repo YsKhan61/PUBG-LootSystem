@@ -7,6 +7,8 @@ namespace Weapon_System.GameplayObjects.UI
 {
     /// <summary>
     /// The UI of the inventory that will showcase all the picked up items.
+    /// It is the main UI of the game scene. 
+    /// It will be toggled on/off by the player.
     /// </summary>
     public class InventoryUI : MonoBehaviour
     {
@@ -16,7 +18,7 @@ namespace Weapon_System.GameplayObjects.UI
         BoolEventChannelSO m_ToggleInventoryEvent;
 
         [SerializeField, Tooltip("When a common item is added to the inventory, this event is invoked")]
-        CommonItemEventChannelSO m_OnCommonItemAddedEvent;
+        InventoryItemEventChannelSO m_OnCommonItemAddedEvent;
 
         /*[SerializeField, Tooltip("When a gun item is added to the inventory, this event is invoked")]
         GunItemIntEventChannelSO m_OnGunItemAddedEvent;*/
@@ -24,7 +26,7 @@ namespace Weapon_System.GameplayObjects.UI
         [Header("Broadcast to")]
 
         [SerializeField]
-        CommonItemEventChannelSO m_OnCommonItemRemovedEvent;
+        InventoryItemEventChannelSO m_OnCommonItemRemovedEvent;
 
         [Space(10)]
 
@@ -52,12 +54,12 @@ namespace Weapon_System.GameplayObjects.UI
             m_OnCommonItemAddedEvent.OnEventRaised -= AddCommonItemUIToInventoryUI;
         }
 
-        public void RemoveCommonItemUIFromInventoryUI(CommonItem item)
+        public void RemoveCommonItemUIFromInventoryUI(InventoryItem item)
         {
             m_OnCommonItemRemovedEvent?.RaiseEvent(item);
         }
 
-        private void AddCommonItemUIToInventoryUI(CommonItem item)
+        private void AddCommonItemUIToInventoryUI(InventoryItem item)
         {
             Instantiate(m_ItemUIPrefab, m_ContentGO.transform).SetItemData(item, this);
         }

@@ -4,10 +4,20 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 {
     /// <summary>
     ///  The items that can be collected and stored in inventory, and later can be dropped as well.
-    ///  These don't need to be equipped in hand to be used.
-    ///  Left click on it's icon in inventory to use it.
     /// </summary>
-    public class CommonItem : ItemBase, ICollectable, IStorable, IDropable, IP_Usable
+    /// <remarks>
+    ///  This is a general blueprint for the items that can be collected and stored in inventory.
+    ///  If needed to be used, then it can be inherited and used as per the requirement.
+    ///  There is no point of collecting and storing an item that cannot be used.
+    ///  Example - A gift item that can be collected, and stored in the inventory, and passed to other friends, but cannot be used!
+    ///
+    ///  ------------------------ NOTE ------------------------
+    ///  The inventory stores all items as a type of InventoryItem,
+    ///  and then the item is casted to its actual type when used.
+    ///  So, we have to make sure to inherit from InventoryItem, if we want to store the item in Inventory. 
+    /// 
+    /// </remarks>
+    public class InventoryItem : ItemBase, ICollectable, IStorable, IDropable
     {
         public bool IsCollected { get; protected set; }
 
@@ -35,8 +45,8 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         public virtual bool StoreInInventory(Inventory inventory)
         {
-            inventory.AddCommonItem(this);
-            return true;       // in progress ....
+            inventory.AddItemToInventory(this);
+            return true;
         }
 
         public virtual bool Drop()
@@ -51,12 +61,6 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             m_RootGO.transform.position = m_handTransform.position + m_handTransform.forward * 2f;
             ShowGraphics();
             Debug.Log(Name + " is dropped");
-            return true;
-        }
-
-        public virtual bool PrimaryUse()
-        {
-            Debug.Log("Using " + Name);
             return true;
         }
 

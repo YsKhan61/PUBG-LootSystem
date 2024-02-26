@@ -4,6 +4,8 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 {
     /// <summary>
     ///  This class represents the guns in the game.
+    ///  This item is not stored in the Inventory's CommonItems list. Hence we don't need to inherit from CommonItem.
+    ///  It is a carry item, which can be collected, stored in inventory separately, dropped and used.
     ///  This can be later inherited from WeaponItem or UsableItem etc (can contain throwables, melee weapons etc)
     ///  But this is GunItem and only two guns can be collected and stored in inventory.
     /// </summary>
@@ -40,6 +42,8 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         public bool IsCollected { get; protected set; }
 
         public bool IsInHand { get; protected set; }
+
+        public ISightAttachment SightAttachment { get; protected set; }
 
         [SerializeField]
         GameObject m_RootGO;
@@ -105,6 +109,13 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         public virtual bool SecondaryUse()
         {
+            // If there is a sight attachment, then aim down sight through it
+            if (SightAttachment != null)
+            {
+                return SightAttachment.AimDownSight();
+            }
+
+            // If there is no sight attachment, then aim down sight through iron sight
             Debug.Log(Name + " doing ads with iron sight!");
             return true;
         }

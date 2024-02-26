@@ -36,7 +36,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         BoolEventChannelSO m_SecondaryUseInputEvent;
 
         [SerializeField, Tooltip("Listen to this event to remove the respective common item from inventory.")]
-        CommonItemEventChannelSO m_OnCommonItemUIRemovedEvent;
+        InventoryItemEventChannelSO m_OnCommonItemUIRemovedEvent;
 
         [SerializeField, Tooltip("Listen to this event to remove the respective gun item from inventory.")]
         GunItemIntEventChannelSO m_OnGunItemUIRemovedEvent;
@@ -205,7 +205,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             ItemInHand?.Hold();
         }
 
-        private void OnCommonItemUIRemovedEvent(CommonItem item)
+        private void OnCommonItemUIRemovedEvent(InventoryItem item)
         {
             item.Drop();
         }

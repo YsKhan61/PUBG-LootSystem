@@ -15,7 +15,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         [Header("Broadcast to")]
 
         [SerializeField, Tooltip("When a common item is added to the inventory, this event is invoked.")]
-        CommonItemEventChannelSO m_OnCommonItemAddedEvent;
+        InventoryItemEventChannelSO m_OnCommonItemAddedEvent;
 
         [SerializeField, Tooltip("When a gun item is added to the inventory, this event is invoked.")]
         GunItemIntEventChannelSO m_OnGunItemAddedEvent;
@@ -23,7 +23,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         [Header("Listens to")]
 
         [SerializeField, Tooltip("Listen to this event to remove the respective common item from inventory.")]
-        CommonItemEventChannelSO m_OnCommonItemUIRemovedEvent;
+        InventoryItemEventChannelSO m_OnCommonItemUIRemovedEvent;
 
         [SerializeField, Tooltip("Listen to this event to remove the respective gun item from inventory.")]
         GunItemIntEventChannelSO m_OnGunItemUIRemovedEvent;
@@ -42,8 +42,13 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         [Header("Common items")]
 
+
+        /// <summary>
+        /// We are not using IStorable interface rather using CommonItem,
+        /// because we might need informations like Name, Description, ItemDataSO, etc. of the item
+        /// </summary>
         [SerializeField]        // SerializeField is used only for Debug purposes
-        List<CommonItem> m_CommonItems;
+        List<InventoryItem> m_CommonItems;
 
         [Space(10)]
 
@@ -54,7 +59,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         private void Start()
         {
-            m_CommonItems = new List<CommonItem>();
+            m_CommonItems = new List<InventoryItem>();
             m_Guns = new GunItem[2];                    // For now only 2 guns are allowed
 
             
@@ -71,14 +76,14 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             m_OnGunItemUISwappedEvent.OnEventRaised -= SwapGunItems;
         }
 
-        public void AddCommonItem(CommonItem item)
+        public void AddItemToInventory(InventoryItem item)
         {
             m_CommonItems.Add(item);
             m_OnCommonItemAddedEvent.RaiseEvent(item);
             Debug.Log(item.Name + " added to inventory!");
         }
 
-        public void RemoveCommonItem(CommonItem item)
+        public void RemoveCommonItem(InventoryItem item)
         {
             m_CommonItems.Remove(item);
             Debug.Log(item.Name + " removed from inventory!");

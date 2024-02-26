@@ -25,8 +25,8 @@ namespace Weapon_System.GameplayObjects.UI
         private Vector2 m_lastAnchoredPosition;
 
         private InventoryUI m_InventoryUI;
-        private CommonItem m_Item;
-        public CommonItem Item => m_Item;
+        private InventoryItem m_Item;
+        public InventoryItem Item => m_Item;
 
         [HideInInspector]
         public bool IsDragSuccess;
@@ -80,7 +80,7 @@ namespace Weapon_System.GameplayObjects.UI
             }
         }
 
-        public void SetItemData(CommonItem item, InventoryUI inventoryUI)
+        public void SetItemData(InventoryItem item, InventoryUI inventoryUI)
         {
             m_InventoryUI = inventoryUI;
             m_Item = item;

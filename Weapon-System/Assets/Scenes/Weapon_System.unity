@@ -134,14 +134,15 @@ GameObject:
   - component: {fileID: 14023514}
   - component: {fileID: 14023517}
   - component: {fileID: 14023516}
-  - component: {fileID: 14023515}
+  - component: {fileID: 14023518}
+  - component: {fileID: 14023519}
   m_Layer: 5
   m_Name: Sight Item UI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &14023514
 RectTransform:
   m_ObjectHideFlags: 0
@@ -161,20 +162,6 @@ RectTransform:
   m_AnchoredPosition: {x: 220, y: 110}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &14023515
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 14023513}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7cb5dc8408439ce4b8a234b7cc2b52a9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_typeToStore: 03000000
-  m_Icon: {fileID: 14023516}
 --- !u!114 &14023516
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -213,6 +200,34 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 14023513}
   m_CullTransparentMesh: 1
+--- !u!225 &14023518
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 14023513}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &14023519
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 14023513}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34c18a0da3f44394cbf3b0192ab904ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ItemUIType: 0
+  m_Icon: {fileID: 0}
+  m_InventoryUI: {fileID: 0}
+  IsDragSuccess: 0
 --- !u!1 &27002040
 GameObject:
   m_ObjectHideFlags: 0
@@ -387,7 +402,7 @@ GameObject:
   - component: {fileID: 218537250}
   - component: {fileID: 218537252}
   m_Layer: 5
-  m_Name: Weapon Slots
+  m_Name: Item Inventory UI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1231,13 +1246,15 @@ GameObject:
   - component: {fileID: 685930051}
   - component: {fileID: 685930054}
   - component: {fileID: 685930053}
+  - component: {fileID: 685930055}
+  - component: {fileID: 685930056}
   m_Layer: 5
   m_Name: Sight Item UI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &685930051
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1295,6 +1312,34 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 685930050}
   m_CullTransparentMesh: 1
+--- !u!225 &685930055
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 685930050}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &685930056
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 685930050}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34c18a0da3f44394cbf3b0192ab904ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ItemUIType: 0
+  m_Icon: {fileID: 0}
+  m_InventoryUI: {fileID: 0}
+  IsDragSuccess: 0
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -4560,7 +4605,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1991546187}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7968d95d670585245b30e688aab1f756, type: 3}
+  m_Script: {fileID: 11500000, guid: 91a32fd2ed5a0ec4bbca9dc6eb263338, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_ToggleInventoryEvent: {fileID: 11400000, guid: 839a9b09f40946b4589534a87d46908b,
