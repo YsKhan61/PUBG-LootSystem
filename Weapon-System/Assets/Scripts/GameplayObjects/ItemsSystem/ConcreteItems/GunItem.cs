@@ -4,10 +4,10 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 {
     /// <summary>
     ///  This class represents the guns in the game.
-    ///  This can be later inherited from WeaponItem etc (can contain throwables, melee weapons etc)
+    ///  This can be later inherited from WeaponItem or UsableItem etc (can contain throwables, melee weapons etc)
     ///  But this is GunItem and only two guns can be collected and stored in inventory.
     /// </summary>
-    public class GunItem : ItemBase, ICollectable, IStorable, IDropable, IUsable, IHoldable
+    public class GunItem : ItemBase, ICollectable, IStorable, IDropable, IP_Usable, IS_Usable, IHoldable
     {
         /*public enum WeaponType
         {
@@ -97,9 +97,15 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             return true;
         }
 
-        public virtual bool Use()
+        public virtual bool PrimaryUse()
         {
             Shoot();
+            return true;
+        }
+
+        public virtual bool SecondaryUse()
+        {
+            Debug.Log(Name + " doing ads with iron sight!");
             return true;
         }
 

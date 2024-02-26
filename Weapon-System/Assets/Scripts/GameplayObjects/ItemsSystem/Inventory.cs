@@ -106,16 +106,6 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             Debug.Log(gunItem.Name + " added to inventory!");
         }
 
-        public GunItem GetPrimaryGun()
-        {
-            return m_Guns[0];
-        }
-
-        public GunItem GetSecondaryGun()
-        {
-            return m_Guns[1];
-        }
-
         public int GetIndexOfGunItem(GunItem item)
         {
             for (int i = 0; i < m_Guns.Length; i++)

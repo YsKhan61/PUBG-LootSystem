@@ -60,12 +60,13 @@ namespace Weapon_System.GameplayObjects.UI
         /// </summary>
         /// <param name="indexOfDroppedWeaponItemUI">index of the WeaponItemUI that is being dropped</param>
         /// <param name="indexOfWeaponSlotUI">index of the WeaponSlotUI where the WeaponItemUI is being dropped</param>
+        /// <param name="raiseEvent">True - raise an event after swap complete, False - don't raise event</param>
         /// <remarks>
         /// It would be more simpler if we had have only 2 slots,
         /// but if we want more slots, and swap UIs between them,
         /// then this approach is better.
         /// </remarks>
-        public void SwapWeaponItemUIs(int indexOfDroppedWeaponItemUI, int indexOfWeaponSlotUI)
+        public void SwapWeaponItemUIs(int indexOfDroppedWeaponItemUI, int indexOfWeaponSlotUI, bool raiseEvent = true)
         {
             WeaponItemUISlotUIPair leftPair = m_WeaponItemUISlotUIPairs[indexOfDroppedWeaponItemUI];
             WeaponItemUISlotUIPair rightPair = m_WeaponItemUISlotUIPairs[indexOfWeaponSlotUI];
@@ -81,10 +82,16 @@ namespace Weapon_System.GameplayObjects.UI
             leftPair.weaponItemUI = rightPair.weaponItemUI;
             rightPair.weaponItemUI = temp;
 
-            m_OnWeaponItemUISwappedEvent?.RaiseEvent(indexOfDroppedWeaponItemUI, indexOfWeaponSlotUI);
+            if (raiseEvent)
+                m_OnWeaponItemUISwappedEvent?.RaiseEvent(indexOfDroppedWeaponItemUI, indexOfWeaponSlotUI);
         }
 
-        public void RemoveGunItemUIFromWeaponInventoryUI(GunItem item)
+        /// <summary>
+        /// Remove the GunItemUI from the WeaponInventoryUI.
+        /// </summary>
+        /// <param name="item">The GunItem to be removed</param>
+        /// <param name="raiseEvent">True - raise an event after swap complete, False - don't raise event</param>
+        public void RemoveGunItemUIFromWeaponInventoryUI(GunItem item, bool raiseEvent = true)
         {
             int index = GetIndexOfWeaponItemUIFromGunItem(item);
             // if the item is not in the inventory, return
@@ -92,10 +99,12 @@ namespace Weapon_System.GameplayObjects.UI
                 return;
 
             m_WeaponItemUISlotUIPairs[index].weaponSlotUI.TryRemoveItemUIFromSlotUI();
-            m_OnWeaponItemUIRemovedEvent?.RaiseEvent(item, index);
+
+            if (raiseEvent)
+                m_OnWeaponItemUIRemovedEvent?.RaiseEvent(item, index);
         }
 
-        public WeaponSlotUI GetWeaponSlotUI(WeaponItemUI itemUI)
+        /*public WeaponSlotUI GetWeaponSlotUI(WeaponItemUI itemUI)
         {
             return m_WeaponItemUISlotUIPairs[GetIndexOfWeaponItemUI(itemUI)].weaponSlotUI;
         }
@@ -103,9 +112,17 @@ namespace Weapon_System.GameplayObjects.UI
         public int GetIndexOfWeaponItemUI(WeaponItemUI weaponItemUI)
         {
             return GetIndexOfWeaponItemUIFromGunItem(weaponItemUI.Item as GunItem);
+        }*/
+
+        private void AddGunItemUIToInventoryUI(GunItem item, int index)
+        {
+            WeaponItemUI weaponItemUI = m_WeaponItemUISlotUIPairs[index].weaponItemUI;
+            weaponItemUI.SetItemData(item);
+            weaponItemUI.SetSlotIndex(index);
+            m_WeaponItemUISlotUIPairs[index].weaponSlotUI.TryAddItemUIToSlotUI(weaponItemUI);
         }
 
-        public int GetIndexOfWeaponItemUIFromGunItem(GunItem gunItem)
+        private int GetIndexOfWeaponItemUIFromGunItem(GunItem gunItem)
         {
             for (int i = 0, length = m_WeaponItemUISlotUIPairs.Length; i < length; i++)
             {
@@ -116,26 +133,6 @@ namespace Weapon_System.GameplayObjects.UI
             }
 
             return -1;
-        }
-
-        private void AddGunItemUIToInventoryUI(GunItem item, int index)
-        {
-            WeaponItemUI weaponItemUI = m_WeaponItemUISlotUIPairs[index].weaponItemUI;
-            weaponItemUI.SetItemData(item);
-            weaponItemUI.SetSlotIndex(index);
-            m_WeaponItemUISlotUIPairs[index].weaponSlotUI.TryAddItemUIToSlotUI(weaponItemUI);
-        }
-
-        /// <summary>
-        /// For scopes, after pickup, we will check if any gun slot has a gun,
-        /// if yes, we will check if it's scope slot is empty,
-        /// if yes, we will add the pickedup scope to that empty slot,
-        /// other wise, we will do AddCommonItemUIToInventoryUI(itemData);
-        /// </summary>
-        /// <param name="itemData"></param>
-        private void AddScopeItemUIToInventoryUI(ItemDataSO itemData)
-        {
-            
         }
     }
 }

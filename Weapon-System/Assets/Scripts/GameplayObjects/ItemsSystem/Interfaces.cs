@@ -42,12 +42,19 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
     }
 
     /// <summary>
-    /// Interface for the usable items
+    /// Interface for the usable items - primary use of the item
     /// </summary>
-    public interface  IUsable
+    public interface  IP_Usable
     {
-        
-        public bool Use();
+        public bool PrimaryUse();
+    }
+
+    /// <summary>
+    /// Interface for the usable items - secondary use of the item
+    /// </summary>
+    public interface IS_Usable
+    {
+        public bool SecondaryUse();
     }
 
     /// <summary>

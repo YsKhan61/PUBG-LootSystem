@@ -6,7 +6,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
     ///  The items that can be collected and used instantly.
     ///  eg. Backpacks, Costumes, etc.
     /// </summary>
-    public class InstantUsableItem : ItemBase, ICollectable, IUsable
+    public class InstantUsableItem : ItemBase, ICollectable, IP_Usable
     {
         public bool IsCollected { get; protected set; }
 
@@ -16,11 +16,11 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         /// <returns></returns>
         public virtual bool Collect(ItemUserHand _)
         {
-            Use();
+            PrimaryUse();
             return true;
         }
 
-        public virtual bool Use()
+        public virtual bool PrimaryUse()
         {
             Debug.Log(Name + " used!");
             return true;

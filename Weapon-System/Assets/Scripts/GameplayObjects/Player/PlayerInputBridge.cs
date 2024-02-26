@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 using Weapon_System.Utilities;
 
 
@@ -41,20 +42,26 @@ namespace Weapon_System.GameplayObjects.Player
         [SerializeField]
         BoolEventChannelSO m_SecondaryWeaponSelectedEvent;
 
-        [SerializeField]
-        BoolEventChannelSO m_HolsterWeaponEvent = default;
+        [SerializeField, FormerlySerializedAs("m_HolsterWeaponEvent")]
+        BoolEventChannelSO m_HolsterItemEvent;
 
         /// <summary>
-        /// Firing input, Press -> True, Release -> False
+        /// Primary use case - Use, Fire, etc. , Press -> True, Release -> False
         /// </summary>
         [SerializeField]
-        BoolEventChannelSO m_FiringWeaponEvent = default;
+        BoolEventChannelSO m_PrimaryUseInputEvent;
+
+        /// <summary>
+        /// Secondary use case - ADS, Press -> True, Release -> False
+        /// </summary>
+        [SerializeField]
+        BoolEventChannelSO m_SecondaryUseInputEvent;
 
         [SerializeField]
-        BoolEventChannelSO m_PickupItemEvent = default;
+        BoolEventChannelSO m_PickupItemEvent;
 
         [SerializeField]
-        BoolEventChannelSO m_ToggleInventoryEvent = default;
+        BoolEventChannelSO m_ToggleInventoryEvent;
 
         [Space(10)]
 
@@ -64,6 +71,8 @@ namespace Weapon_System.GameplayObjects.Player
         [Space(10)]
 
         InputControls m_InputControls;
+
+
 
         private void Awake()
         {
@@ -96,6 +105,8 @@ namespace Weapon_System.GameplayObjects.Player
             UnsubscribeFromAllInputActionReferences();
         }
 
+
+
         private void OnRunInputActionStarted(InputAction.CallbackContext context)
         {
             m_RunInputEvent?.SetValue(true);
@@ -123,17 +134,27 @@ namespace Weapon_System.GameplayObjects.Player
 
         private void OnHolsterInputActionPerformed(InputAction.CallbackContext context)
         {
-            m_HolsterWeaponEvent.RaiseEvent();
+            m_HolsterItemEvent.RaiseEvent();
         }
 
-        private void OnFireInputActionStarted(InputAction.CallbackContext context)
+        private void OnPrimaryUseInputActionStarted(InputAction.CallbackContext context)
         {
-            m_FiringWeaponEvent.SetValueAndRaiseEvent(true);
+            m_PrimaryUseInputEvent.SetValueAndRaiseEvent(true);
         }
 
-        private void OnFireInputActionCanceled(InputAction.CallbackContext context)
+        private void OnPrimaryUseInputActionCanceled(InputAction.CallbackContext context)
         {
-            m_FiringWeaponEvent.SetValueAndRaiseEvent(false);
+            m_PrimaryUseInputEvent.SetValueAndRaiseEvent(false);
+        }
+
+        private void OnSecondaryUseInputActionStarted(InputAction.CallbackContext context)
+        {
+            m_SecondaryUseInputEvent.SetValueAndRaiseEvent(true);
+        }
+
+        private void OnSecondaryUseInputActionCanceled(InputAction.CallbackContext context)
+        {
+            m_SecondaryUseInputEvent.SetValueAndRaiseEvent(false);
         }
 
         private void OnPickupInputActionPerformed(InputAction.CallbackContext context)
@@ -165,6 +186,9 @@ namespace Weapon_System.GameplayObjects.Player
             }
         }
 
+
+
+
         private void SubscribeToAllInputActionReferences()
         {
             m_InputControls.Player.Run.started += OnRunInputActionStarted;
@@ -178,8 +202,11 @@ namespace Weapon_System.GameplayObjects.Player
 
             m_InputControls.Player.Holster.performed += OnHolsterInputActionPerformed;
 
-            m_InputControls.Player.Fire.started += OnFireInputActionStarted;
-            m_InputControls.Player.Fire.canceled += OnFireInputActionCanceled;
+            m_InputControls.Player.PrimaryUse.started += OnPrimaryUseInputActionStarted;
+            m_InputControls.Player.PrimaryUse.canceled += OnPrimaryUseInputActionCanceled;
+
+            m_InputControls.Player.SecondaryUse.started += OnSecondaryUseInputActionStarted;
+            m_InputControls.Player.SecondaryUse.canceled += OnSecondaryUseInputActionCanceled;
 
             m_InputControls.Player.Pickup.performed += OnPickupInputActionPerformed;
 
@@ -199,8 +226,11 @@ namespace Weapon_System.GameplayObjects.Player
 
             m_InputControls.Player.Holster.performed -= OnHolsterInputActionPerformed;
 
-            m_InputControls.Player.Fire.started -= OnFireInputActionStarted;
-            m_InputControls.Player.Fire.canceled -= OnFireInputActionCanceled;
+            m_InputControls.Player.PrimaryUse.started -= OnPrimaryUseInputActionStarted;
+            m_InputControls.Player.PrimaryUse.canceled -= OnPrimaryUseInputActionCanceled;
+
+            m_InputControls.Player.SecondaryUse.started -= OnSecondaryUseInputActionStarted;
+            m_InputControls.Player.SecondaryUse.canceled -= OnSecondaryUseInputActionCanceled;
 
             m_InputControls.Player.Pickup.performed -= OnPickupInputActionPerformed;
 

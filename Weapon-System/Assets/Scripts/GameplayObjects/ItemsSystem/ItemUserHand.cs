@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Weapon_System.Utilities;
 
 
@@ -21,11 +22,18 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         [SerializeField, Tooltip("Listen to this event to hold the secondary weapon in hand.")]
         BoolEventChannelSO m_SecondaryWeaponSelectInputEvent;
 
+        [SerializeField, Tooltip("Listen to this event to put away the item in hand.")]
+        BoolEventChannelSO m_HolsterItemInputEvent;
+
         [SerializeField, Tooltip("This event notifies the pickup input performed")]
         BoolEventChannelSO m_PickupInputEvent;
 
-        [SerializeField, Tooltip("This event notifies the firing input performing")]
-        BoolEventChannelSO m_FiringInputEvent;
+        [SerializeField, Tooltip("This event notifies the primary use input performing")]
+        [FormerlySerializedAs("m_FiringInputEvent")]
+        BoolEventChannelSO m_PrimaryUseInputEvent;
+
+        [SerializeField, Tooltip("This event notifies the secondary use input performing")]
+        BoolEventChannelSO m_SecondaryUseInputEvent;
 
         [SerializeField, Tooltip("Listen to this event to remove the respective common item from inventory.")]
         CommonItemEventChannelSO m_OnCommonItemUIRemovedEvent;
@@ -66,20 +74,26 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             m_PickupInputEvent.OnEventRaised += CollectItem;
             m_PrimaryWeaponSelectInputEvent.OnEventRaised += OnPrimaryWeaponSelect;
             m_SecondaryWeaponSelectInputEvent.OnEventRaised += OnSecondaryWeaponSelect;
+            m_HolsterItemInputEvent.OnEventRaised += TryPutAwayItem;
             m_OnCommonItemUIRemovedEvent.OnEventRaised += OnCommonItemUIRemovedEvent;
             m_OnGunItemUIRemovedEvent.OnEventRaised += OnGunItemUIRemovedEvent;
         }
 
         private void Update()
         {
-            if (m_FiringInputEvent.Value)
+            if (m_PrimaryUseInputEvent.Value)
             {
-                ItemInHand?.Use();
+                ((IP_Usable)ItemInHand)?.PrimaryUse();
+            }
+
+            if (m_SecondaryUseInputEvent.Value)
+            {
+                ((IS_Usable)ItemInHand)?.SecondaryUse();
             }
 
             CheckForNearbyItems();
 
-            DisplayAllCollectables();
+            // DisplayAllCollectables();            - Debug purposes
         }
 
         private void OnDestroy()
@@ -87,6 +101,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             m_PickupInputEvent.OnEventRaised -= CollectItem;
             m_PrimaryWeaponSelectInputEvent.OnEventRaised -= OnPrimaryWeaponSelect;
             m_SecondaryWeaponSelectInputEvent.OnEventRaised -= OnSecondaryWeaponSelect;
+            m_HolsterItemInputEvent.OnEventRaised -= TryPutAwayItem;
             m_OnCommonItemUIRemovedEvent.OnEventRaised -= OnCommonItemUIRemovedEvent;
             m_OnGunItemUIRemovedEvent.OnEventRaised -= OnGunItemUIRemovedEvent;
         }
@@ -116,28 +131,28 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         private void CollectItem(bool _)
         {
-            if (m_CollectablesScanned.Count > 0)
+            if (m_CollectablesScanned.Count <= 0)
+                return;
+
+            for (int i = 0; i < m_CollectablesScanned.Count; i++)
             {
-                for (int i = 0; i < m_CollectablesScanned.Count; i++)
+                if (!m_CollectablesScanned[i].Collect(this))
                 {
-                    if (m_CollectablesScanned[i].Collect(this))
-                    {
-                        // Add 1st item to inventory
-                        TryStoreCollectableInInventory(m_CollectablesScanned[i]);
-                        TryHoldCollectableInHand(m_CollectablesScanned[i]);
-                        return;
-                    }
+                    continue;
                 }
+
+                // Add 1st item to inventory
+                TryStoreCollectableInInventory(m_CollectablesScanned[i]);
+                TryHoldCollectableInHand(m_CollectablesScanned[i]);
+                return;
             }
         }
 
         void TryStoreCollectableInInventory(ICollectable item)
         {
-            IStorable storable = item as IStorable;
-
             // Each item can be stored in different places in the inventory,
             // hence we send the inventory to the item to store itself in the inventory
-            storable?.StoreInInventory(m_Inventory);
+            ((IStorable)item)?.StoreInInventory(m_Inventory);
         }
 
         void TryHoldCollectableInHand(ICollectable item)
@@ -149,10 +164,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             ItemInHand?.Hold();
         }
 
-        /// <summary>
-        /// Called when HolsterWeaponInputEvent is raised
-        /// </summary>
-        void TryPutAwayItem()
+        void TryPutAwayItem(bool _)
         {
             if (ItemInHand == null)
                 return;
@@ -163,7 +175,11 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         private void OnPrimaryWeaponSelect(bool _)
         {
-            GunItem primaryWeapon = m_Inventory.GetPrimaryGun();
+            GunItem primaryWeapon = m_Inventory.GetGunItem(0);
+
+            if (primaryWeapon == null)
+                return;
+
             if (ItemInHand == null)
             {
                 ItemInHand = primaryWeapon;
@@ -175,7 +191,11 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         private void OnSecondaryWeaponSelect(bool _)
         {
-            GunItem secondaryWeapon = m_Inventory.GetSecondaryGun();
+            GunItem secondaryWeapon = m_Inventory.GetGunItem(1);
+
+            if (secondaryWeapon == null)
+                return;
+
             if (ItemInHand == null)
             {
                 ItemInHand = secondaryWeapon;
@@ -207,6 +227,8 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             }
         }
 
+        #region Debug purposes
+
         private void DisplayAllCollectables()
         {
             Debug.Log("Total collectables scanned: " + m_CollectablesScanned.Count);
@@ -221,6 +243,8 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(transform.position, m_Radius);
         }
+
+        #endregion
     }
 
 }

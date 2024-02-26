@@ -167,8 +167,8 @@ MonoBehaviour:
   m_StickToGroundForce: 10
   m_GravityMultiplier: 2
   m_MouseLook:
-    XSensitivity: 0.5
-    YSensitivity: 0.5
+    XSensitivity: 0.1
+    YSensitivity: 0.1
     clampVerticalRotation: 1
     MinimumX: -90
     MaximumX: 90
@@ -444,9 +444,10 @@ MonoBehaviour:
     type: 2}
   m_SecondaryWeaponSelectedEvent: {fileID: 11400000, guid: 1c582e95f1fc21f49be9e57b930c2dfe,
     type: 2}
-  m_HolsterWeaponEvent: {fileID: 11400000, guid: 87b81da1e3935a442a7117d47e74fa81,
+  m_HolsterItemEvent: {fileID: 11400000, guid: 87b81da1e3935a442a7117d47e74fa81, type: 2}
+  m_PrimaryUseInputEvent: {fileID: 11400000, guid: 483fecb1321d12940ace226f9b5a1409,
     type: 2}
-  m_FiringWeaponEvent: {fileID: 11400000, guid: 483fecb1321d12940ace226f9b5a1409,
+  m_SecondaryUseInputEvent: {fileID: 11400000, guid: f9aae48968a40d94b9ca503df60eff3f,
     type: 2}
   m_PickupItemEvent: {fileID: 11400000, guid: 59e93240b36bad642b18db42ba6fc7f5, type: 2}
   m_ToggleInventoryEvent: {fileID: 11400000, guid: 839a9b09f40946b4589534a87d46908b,
@@ -495,8 +496,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fe8495bbf3fe944da061ca3db94a24c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_PrimaryWeaponSelectInputEvent: {fileID: 11400000, guid: 01efb311019fb6f4f9d25e85d908448e,
+    type: 2}
+  m_SecondaryWeaponSelectInputEvent: {fileID: 11400000, guid: 1c582e95f1fc21f49be9e57b930c2dfe,
+    type: 2}
+  m_HolsterItemInputEvent: {fileID: 11400000, guid: 87b81da1e3935a442a7117d47e74fa81,
+    type: 2}
   m_PickupInputEvent: {fileID: 11400000, guid: 59e93240b36bad642b18db42ba6fc7f5, type: 2}
-  m_FiringInputEvent: {fileID: 11400000, guid: 483fecb1321d12940ace226f9b5a1409, type: 2}
+  m_PrimaryUseInputEvent: {fileID: 11400000, guid: 483fecb1321d12940ace226f9b5a1409,
+    type: 2}
+  m_SecondaryUseInputEvent: {fileID: 11400000, guid: f9aae48968a40d94b9ca503df60eff3f,
+    type: 2}
+  m_OnCommonItemUIRemovedEvent: {fileID: 11400000, guid: 2620e14ce84026742843c989b15d9f86,
+    type: 2}
+  m_OnGunItemUIRemovedEvent: {fileID: 11400000, guid: 192f4dd12ef944f469016a701256cb7d,
+    type: 2}
+  m_OnGunItemUISwappedEvent: {fileID: 11400000, guid: 0f4de236d6d17ca46a8bae2d726da53c,
+    type: 2}
   m_Inventory: {fileID: 6398577312195835515}
   m_ItemLayer:
     serializedVersion: 2
@@ -550,17 +566,14 @@ MonoBehaviour:
     type: 2}
   m_OnGunItemAddedEvent: {fileID: 11400000, guid: e0bc3b9c8a58e6542966ee9c2f16ceb6,
     type: 2}
-  m_PrimaryWeaponSelectInputEvent: {fileID: 11400000, guid: 01efb311019fb6f4f9d25e85d908448e,
+  m_OnCommonItemUIRemovedEvent: {fileID: 11400000, guid: 2620e14ce84026742843c989b15d9f86,
     type: 2}
-  m_SecondaryWeaponSelectInputEvent: {fileID: 11400000, guid: 1c582e95f1fc21f49be9e57b930c2dfe,
+  m_OnGunItemUIRemovedEvent: {fileID: 11400000, guid: 192f4dd12ef944f469016a701256cb7d,
     type: 2}
-  m_OnCommonItemRemovedEvent: {fileID: 11400000, guid: 2620e14ce84026742843c989b15d9f86,
+  m_OnGunItemUISwappedEvent: {fileID: 11400000, guid: 0f4de236d6d17ca46a8bae2d726da53c,
     type: 2}
-  m_OnGunItemRemovedEvent: {fileID: 11400000, guid: 192f4dd12ef944f469016a701256cb7d,
-    type: 2}
-  m_UserHand: {fileID: 6801109740986997673}
   m_CommonItems: []
-  m_ItemGuns: []
+  m_Guns: []
 --- !u!1001 &4392950461943648704
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -24,7 +24,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Fire",
+                    "name": "PrimaryUse",
                     "type": "Button",
                     "id": "b4433e29-da6d-42d2-9eae-0a73b547e6cc",
                     "expectedControlType": "Button",
@@ -33,7 +33,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "ADS",
+                    "name": "SecondaryUse",
                     "type": "Button",
                     "id": "51ddd764-507a-4167-8cb7-9ea0c01e91b3",
                     "expectedControlType": "Button",
@@ -162,7 +162,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Mouse_And_Keyboard",
-                    "action": "Fire",
+                    "action": "PrimaryUse",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -173,7 +173,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Mouse_And_Keyboard",
-                    "action": "ADS",
+                    "action": "SecondaryUse",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

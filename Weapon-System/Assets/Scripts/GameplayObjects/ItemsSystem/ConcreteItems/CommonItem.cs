@@ -4,8 +4,10 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 {
     /// <summary>
     ///  The items that can be collected and stored in inventory, and later can be dropped as well.
+    ///  These don't need to be equipped in hand to be used.
+    ///  Left click on it's icon in inventory to use it.
     /// </summary>
-    public class CommonItem : ItemBase, ICollectable, IStorable, IDropable, IUsable
+    public class CommonItem : ItemBase, ICollectable, IStorable, IDropable, IP_Usable
     {
         public bool IsCollected { get; protected set; }
 
@@ -52,7 +54,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             return true;
         }
 
-        public virtual bool Use()
+        public virtual bool PrimaryUse()
         {
             Debug.Log("Using " + Name);
             return true;

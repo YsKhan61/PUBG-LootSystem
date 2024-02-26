@@ -48,7 +48,7 @@ namespace Weapon_System
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Fire"",
+                    ""name"": ""PrimaryUse"",
                     ""type"": ""Button"",
                     ""id"": ""b4433e29-da6d-42d2-9eae-0a73b547e6cc"",
                     ""expectedControlType"": ""Button"",
@@ -57,7 +57,7 @@ namespace Weapon_System
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""ADS"",
+                    ""name"": ""SecondaryUse"",
                     ""type"": ""Button"",
                     ""id"": ""51ddd764-507a-4167-8cb7-9ea0c01e91b3"",
                     ""expectedControlType"": ""Button"",
@@ -186,7 +186,7 @@ namespace Weapon_System
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Mouse_And_Keyboard"",
-                    ""action"": ""Fire"",
+                    ""action"": ""PrimaryUse"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -197,7 +197,7 @@ namespace Weapon_System
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Mouse_And_Keyboard"",
-                    ""action"": ""ADS"",
+                    ""action"": ""SecondaryUse"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -409,8 +409,8 @@ namespace Weapon_System
             m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
             m_Player_PrimaryWeapon_Select = m_Player.FindAction("PrimaryWeapon_Select", throwIfNotFound: true);
             m_Player_SecondaryWeapon_Select = m_Player.FindAction("SecondaryWeapon_Select", throwIfNotFound: true);
-            m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
-            m_Player_ADS = m_Player.FindAction("ADS", throwIfNotFound: true);
+            m_Player_PrimaryUse = m_Player.FindAction("PrimaryUse", throwIfNotFound: true);
+            m_Player_SecondaryUse = m_Player.FindAction("SecondaryUse", throwIfNotFound: true);
             m_Player_Holster = m_Player.FindAction("Holster", throwIfNotFound: true);
             m_Player_Reload = m_Player.FindAction("Reload", throwIfNotFound: true);
             m_Player_Pickup = m_Player.FindAction("Pickup", throwIfNotFound: true);
@@ -487,8 +487,8 @@ namespace Weapon_System
         private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
         private readonly InputAction m_Player_PrimaryWeapon_Select;
         private readonly InputAction m_Player_SecondaryWeapon_Select;
-        private readonly InputAction m_Player_Fire;
-        private readonly InputAction m_Player_ADS;
+        private readonly InputAction m_Player_PrimaryUse;
+        private readonly InputAction m_Player_SecondaryUse;
         private readonly InputAction m_Player_Holster;
         private readonly InputAction m_Player_Reload;
         private readonly InputAction m_Player_Pickup;
@@ -505,8 +505,8 @@ namespace Weapon_System
             public PlayerActions(@InputControls wrapper) { m_Wrapper = wrapper; }
             public InputAction @PrimaryWeapon_Select => m_Wrapper.m_Player_PrimaryWeapon_Select;
             public InputAction @SecondaryWeapon_Select => m_Wrapper.m_Player_SecondaryWeapon_Select;
-            public InputAction @Fire => m_Wrapper.m_Player_Fire;
-            public InputAction @ADS => m_Wrapper.m_Player_ADS;
+            public InputAction @PrimaryUse => m_Wrapper.m_Player_PrimaryUse;
+            public InputAction @SecondaryUse => m_Wrapper.m_Player_SecondaryUse;
             public InputAction @Holster => m_Wrapper.m_Player_Holster;
             public InputAction @Reload => m_Wrapper.m_Player_Reload;
             public InputAction @Pickup => m_Wrapper.m_Player_Pickup;
@@ -532,12 +532,12 @@ namespace Weapon_System
                 @SecondaryWeapon_Select.started += instance.OnSecondaryWeapon_Select;
                 @SecondaryWeapon_Select.performed += instance.OnSecondaryWeapon_Select;
                 @SecondaryWeapon_Select.canceled += instance.OnSecondaryWeapon_Select;
-                @Fire.started += instance.OnFire;
-                @Fire.performed += instance.OnFire;
-                @Fire.canceled += instance.OnFire;
-                @ADS.started += instance.OnADS;
-                @ADS.performed += instance.OnADS;
-                @ADS.canceled += instance.OnADS;
+                @PrimaryUse.started += instance.OnPrimaryUse;
+                @PrimaryUse.performed += instance.OnPrimaryUse;
+                @PrimaryUse.canceled += instance.OnPrimaryUse;
+                @SecondaryUse.started += instance.OnSecondaryUse;
+                @SecondaryUse.performed += instance.OnSecondaryUse;
+                @SecondaryUse.canceled += instance.OnSecondaryUse;
                 @Holster.started += instance.OnHolster;
                 @Holster.performed += instance.OnHolster;
                 @Holster.canceled += instance.OnHolster;
@@ -578,12 +578,12 @@ namespace Weapon_System
                 @SecondaryWeapon_Select.started -= instance.OnSecondaryWeapon_Select;
                 @SecondaryWeapon_Select.performed -= instance.OnSecondaryWeapon_Select;
                 @SecondaryWeapon_Select.canceled -= instance.OnSecondaryWeapon_Select;
-                @Fire.started -= instance.OnFire;
-                @Fire.performed -= instance.OnFire;
-                @Fire.canceled -= instance.OnFire;
-                @ADS.started -= instance.OnADS;
-                @ADS.performed -= instance.OnADS;
-                @ADS.canceled -= instance.OnADS;
+                @PrimaryUse.started -= instance.OnPrimaryUse;
+                @PrimaryUse.performed -= instance.OnPrimaryUse;
+                @PrimaryUse.canceled -= instance.OnPrimaryUse;
+                @SecondaryUse.started -= instance.OnSecondaryUse;
+                @SecondaryUse.performed -= instance.OnSecondaryUse;
+                @SecondaryUse.canceled -= instance.OnSecondaryUse;
                 @Holster.started -= instance.OnHolster;
                 @Holster.performed -= instance.OnHolster;
                 @Holster.canceled -= instance.OnHolster;
@@ -690,8 +690,8 @@ namespace Weapon_System
         {
             void OnPrimaryWeapon_Select(InputAction.CallbackContext context);
             void OnSecondaryWeapon_Select(InputAction.CallbackContext context);
-            void OnFire(InputAction.CallbackContext context);
-            void OnADS(InputAction.CallbackContext context);
+            void OnPrimaryUse(InputAction.CallbackContext context);
+            void OnSecondaryUse(InputAction.CallbackContext context);
             void OnHolster(InputAction.CallbackContext context);
             void OnReload(InputAction.CallbackContext context);
             void OnPickup(InputAction.CallbackContext context);
