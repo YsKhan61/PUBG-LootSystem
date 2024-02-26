@@ -173,7 +173,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cb5dc8408439ce4b8a234b7cc2b52a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_OnItemUIDroppedInInventoryUIEvent: {fileID: 0}
   m_typeToStore: 03000000
   m_Icon: {fileID: 14023516}
 --- !u!114 &14023516
@@ -350,7 +349,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cb5dc8408439ce4b8a234b7cc2b52a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_OnItemUIDroppedInInventoryUIEvent: {fileID: 0}
   m_typeToStore: 01000000
   m_Icon: {fileID: 50092946}
 --- !u!114 &50092946
@@ -517,9 +515,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f13f56acc84dbe047aeadf6fa8a455cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_OnGunItemAddedEvent: {fileID: 11400000, guid: e0bc3b9c8a58e6542966ee9c2f16ceb6,
+  m_OnGunItemAddedToInventoryEvent: {fileID: 11400000, guid: e0bc3b9c8a58e6542966ee9c2f16ceb6,
     type: 2}
-  m_OnGunItemRemovedEvent: {fileID: 11400000, guid: 192f4dd12ef944f469016a701256cb7d,
+  m_OnWeaponItemUIRemovedEvent: {fileID: 11400000, guid: 192f4dd12ef944f469016a701256cb7d,
+    type: 2}
+  m_OnWeaponItemUISwappedEvent: {fileID: 11400000, guid: 0f4de236d6d17ca46a8bae2d726da53c,
     type: 2}
   m_WeaponItemUISlotUIPairs:
   - weaponItemUI: {fileID: 7993000985656380377}
@@ -817,7 +817,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59b887aa643a7b64bb40d5a4b8056bc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_OnGunItemUIDroppedInWeaponSlotUIEvent: {fileID: 0}
   m_SlotIndex: 1
   m_typeToStore: 01000000
   m_WeaponInventoryUI: {fileID: 218537252}
@@ -909,7 +908,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cb5dc8408439ce4b8a234b7cc2b52a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_OnItemUIDroppedInInventoryUIEvent: {fileID: 0}
   m_typeToStore: 06000000
   m_Icon: {fileID: 541914796}
 --- !u!114 &541914796
@@ -1106,7 +1104,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cb5dc8408439ce4b8a234b7cc2b52a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_OnItemUIDroppedInInventoryUIEvent: {fileID: 0}
   m_typeToStore: 
   m_Icon: {fileID: 0}
 --- !u!114 &623450984
@@ -1234,7 +1231,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cb5dc8408439ce4b8a234b7cc2b52a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_OnItemUIDroppedInInventoryUIEvent: {fileID: 0}
   m_typeToStore: 
   m_Icon: {fileID: 0}
 --- !u!114 &667621554
@@ -1400,7 +1396,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cb5dc8408439ce4b8a234b7cc2b52a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_OnItemUIDroppedInInventoryUIEvent: {fileID: 0}
   m_typeToStore: 03000000
   m_Icon: {fileID: 685930053}
 --- !u!114 &685930053
@@ -1585,7 +1580,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cb5dc8408439ce4b8a234b7cc2b52a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_OnItemUIDroppedInInventoryUIEvent: {fileID: 0}
   m_typeToStore: 06000000
   m_Icon: {fileID: 722403866}
 --- !u!114 &722403866
@@ -1676,7 +1670,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cb5dc8408439ce4b8a234b7cc2b52a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_OnItemUIDroppedInInventoryUIEvent: {fileID: 0}
   m_typeToStore: 05000000
   m_Icon: {fileID: 726412310}
 --- !u!114 &726412310
@@ -1958,7 +1951,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cb5dc8408439ce4b8a234b7cc2b52a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_OnItemUIDroppedInInventoryUIEvent: {fileID: 0}
   m_typeToStore: 03000000
   m_Icon: {fileID: 765129614}
 --- !u!114 &765129614
@@ -2050,7 +2042,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59b887aa643a7b64bb40d5a4b8056bc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_OnGunItemUIDroppedInWeaponSlotUIEvent: {fileID: 0}
   m_SlotIndex: 0
   m_typeToStore: 01000000
   m_WeaponInventoryUI: {fileID: 218537252}
@@ -2232,7 +2223,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cb5dc8408439ce4b8a234b7cc2b52a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_OnItemUIDroppedInInventoryUIEvent: {fileID: 0}
   m_typeToStore: 01000000
   m_Icon: {fileID: 883898481}
 --- !u!114 &883898481
@@ -2555,7 +2545,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cb5dc8408439ce4b8a234b7cc2b52a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_OnItemUIDroppedInInventoryUIEvent: {fileID: 0}
   m_typeToStore: 05000000
   m_Icon: {fileID: 994296637}
 --- !u!114 &994296637
@@ -2933,7 +2922,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cb5dc8408439ce4b8a234b7cc2b52a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_OnItemUIDroppedInInventoryUIEvent: {fileID: 0}
   m_typeToStore: 05000000
   m_Icon: {fileID: 1118106727}
 --- !u!114 &1118106727
@@ -3024,7 +3012,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cb5dc8408439ce4b8a234b7cc2b52a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_OnItemUIDroppedInInventoryUIEvent: {fileID: 0}
   m_typeToStore: 03000000
   m_Icon: {fileID: 1206631511}
 --- !u!114 &1206631511
@@ -3153,7 +3140,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cb5dc8408439ce4b8a234b7cc2b52a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_OnItemUIDroppedInInventoryUIEvent: {fileID: 0}
   m_typeToStore: 01000000
   m_Icon: {fileID: 1208549719}
 --- !u!1 &1211301516
@@ -3206,7 +3192,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cb5dc8408439ce4b8a234b7cc2b52a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_OnItemUIDroppedInInventoryUIEvent: {fileID: 0}
   m_typeToStore: 
   m_Icon: {fileID: 0}
 --- !u!114 &1211301519
@@ -3297,7 +3282,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cb5dc8408439ce4b8a234b7cc2b52a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_OnItemUIDroppedInInventoryUIEvent: {fileID: 0}
   m_typeToStore: 03000000
   m_Icon: {fileID: 1224227111}
 --- !u!114 &1224227111
@@ -3388,7 +3372,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cb5dc8408439ce4b8a234b7cc2b52a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_OnItemUIDroppedInInventoryUIEvent: {fileID: 0}
   m_typeToStore: 01000000
   m_Icon: {fileID: 1322486935}
 --- !u!114 &1322486935
@@ -3481,9 +3464,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf29a2dc4d319d14ea1aee2c57dd2d3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_ItemUIType: 1
   m_Icon: {fileID: 1322486935}
   m_NameText: {fileID: 453972627}
-  m_PanelGO: {fileID: 27002040}
+  m_InventoryUI: {fileID: 218537252}
   IsDragSuccess: 0
 --- !u!225 &1400475446
 CanvasGroup:
@@ -3817,7 +3801,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cb5dc8408439ce4b8a234b7cc2b52a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_OnItemUIDroppedInInventoryUIEvent: {fileID: 0}
   m_typeToStore: 06000000
   m_Icon: {fileID: 1570639777}
 --- !u!114 &1570639777
@@ -3908,7 +3891,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cb5dc8408439ce4b8a234b7cc2b52a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_OnItemUIDroppedInInventoryUIEvent: {fileID: 0}
   m_typeToStore: 03000000
   m_Icon: {fileID: 1576406639}
 --- !u!114 &1576406639
@@ -3999,7 +3981,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cb5dc8408439ce4b8a234b7cc2b52a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_OnItemUIDroppedInInventoryUIEvent: {fileID: 0}
   m_typeToStore: 
   m_Icon: {fileID: 0}
 --- !u!114 &1597243588
@@ -4556,7 +4537,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cb5dc8408439ce4b8a234b7cc2b52a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_OnItemUIDroppedInInventoryUIEvent: {fileID: 0}
   m_typeToStore: 05000000
   m_Icon: {fileID: 1746935686}
 --- !u!114 &1746935686
@@ -4898,7 +4878,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cb5dc8408439ce4b8a234b7cc2b52a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_OnItemUIDroppedInInventoryUIEvent: {fileID: 0}
   m_typeToStore: 03000000
   m_Icon: {fileID: 1848328051}
 --- !u!114 &1848328051
@@ -5195,7 +5174,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cb5dc8408439ce4b8a234b7cc2b52a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_OnItemUIDroppedInInventoryUIEvent: {fileID: 0}
   m_typeToStore: 03000000
   m_Icon: {fileID: 2002654308}
 --- !u!114 &2002654308
@@ -5286,7 +5264,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cb5dc8408439ce4b8a234b7cc2b52a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_OnItemUIDroppedInInventoryUIEvent: {fileID: 0}
   m_typeToStore: 06000000
   m_Icon: {fileID: 2064596990}
 --- !u!114 &2064596990
@@ -5617,6 +5594,54 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6398577312195835515, guid: cbc1839e74f3092489e9d3200098973f,
+        type: 3}
+      propertyPath: m_OnGunItemUIRemovedEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: 192f4dd12ef944f469016a701256cb7d,
+        type: 2}
+    - target: {fileID: 6398577312195835515, guid: cbc1839e74f3092489e9d3200098973f,
+        type: 3}
+      propertyPath: m_OnGunItemUISwappedEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: 0f4de236d6d17ca46a8bae2d726da53c,
+        type: 2}
+    - target: {fileID: 6398577312195835515, guid: cbc1839e74f3092489e9d3200098973f,
+        type: 3}
+      propertyPath: m_OnCommonItemUIRemovedEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: 2620e14ce84026742843c989b15d9f86,
+        type: 2}
+    - target: {fileID: 6801109740986997673, guid: cbc1839e74f3092489e9d3200098973f,
+        type: 3}
+      propertyPath: m_OnGunItemUIRemovedEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: 192f4dd12ef944f469016a701256cb7d,
+        type: 2}
+    - target: {fileID: 6801109740986997673, guid: cbc1839e74f3092489e9d3200098973f,
+        type: 3}
+      propertyPath: m_OnGunItemUISwappedEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: 0f4de236d6d17ca46a8bae2d726da53c,
+        type: 2}
+    - target: {fileID: 6801109740986997673, guid: cbc1839e74f3092489e9d3200098973f,
+        type: 3}
+      propertyPath: m_OnCommonItemUIRemovedEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: 2620e14ce84026742843c989b15d9f86,
+        type: 2}
+    - target: {fileID: 6801109740986997673, guid: cbc1839e74f3092489e9d3200098973f,
+        type: 3}
+      propertyPath: m_PrimaryWeaponSelectInputEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: 01efb311019fb6f4f9d25e85d908448e,
+        type: 2}
+    - target: {fileID: 6801109740986997673, guid: cbc1839e74f3092489e9d3200098973f,
+        type: 3}
+      propertyPath: m_SecondaryWeaponSelectInputEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: 1c582e95f1fc21f49be9e57b930c2dfe,
+        type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5800,9 +5825,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf29a2dc4d319d14ea1aee2c57dd2d3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_ItemUIType: 1
   m_Icon: {fileID: 50092946}
   m_NameText: {fileID: 1733270343}
-  m_PanelGO: {fileID: 1666136573}
+  m_InventoryUI: {fileID: 218537252}
   IsDragSuccess: 0
 --- !u!1001 &9171122600840810886
 PrefabInstance:

@@ -11,15 +11,17 @@ namespace Weapon_System.GameplayObjects.UI
     public class WeaponItemUI : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler
     {
         [SerializeField]
+        ItemUIType m_ItemUIType;
+        public ItemUIType ItemUIType => m_ItemUIType;
+
+        [SerializeField]
         Image m_Icon;
 
         [SerializeField]
         TextMeshProUGUI m_NameText;
 
-        /*[SerializeField, Tooltip("The game object that will be toggled on/off")]
-        GameObject m_PanelGO;*/
-
         public ItemDataSO ItemData { get; private set; }
+        public int SlotIndex { get; private set; }
 
         private RectTransform m_RectTransform;
         private Canvas m_Canvas;
@@ -27,7 +29,9 @@ namespace Weapon_System.GameplayObjects.UI
 
         private Vector2 m_lastAnchoredPosition;
 
+        [SerializeField]
         private WeaponInventoryUI m_InventoryUI;
+
         private GunItem m_Item;
         public GunItem Item => m_Item;
 
@@ -46,11 +50,14 @@ namespace Weapon_System.GameplayObjects.UI
 
             m_CanvasGroup = GetComponent<CanvasGroup>();
             m_RectTransform = GetComponent<RectTransform>();
-        }
 
-        private void Start()
-        {
-            Hide();
+            ///<remarks>
+            /// Hide the item by default in awake,
+            /// as WeaponInventoryUI's ToggleInventoryUI(false) is called in Start
+            /// So if Hide() is called in start,
+            /// It will call Hide() after Show() in SetItemData
+            /// </remarks>
+            Hide();     
         }
 
         public void OnPointerDown(PointerEventData eventData)
@@ -58,7 +65,8 @@ namespace Weapon_System.GameplayObjects.UI
             // Right click to drop item
             if (eventData.button == PointerEventData.InputButton.Right)
             {
-                m_InventoryUI.RemoveGunItemUIFromWeaponInventoryUI(m_Item);
+                m_InventoryUI?.RemoveGunItemUIFromWeaponInventoryUI(m_Item);
+                ResetItemData();
                 Hide();
             }
         }
@@ -90,18 +98,27 @@ namespace Weapon_System.GameplayObjects.UI
 
         public void OnDrop(PointerEventData eventData)
         {
-            if (eventData.pointerDrag != null)
+            if (eventData.pointerDrag == null)
+                return;
+
+            if (!eventData.pointerDrag.TryGetComponent(out WeaponItemUI itemUI))
             {
-                if (m_InventoryUI != null)
-                {
-                    m_InventoryUI.GetWeaponSlotUI(this).TryDropItem(eventData.pointerDrag);
-                }
+                return;
+            }
+
+            if (itemUI.ItemUIType == m_ItemUIType)
+            {
+                m_InventoryUI.SwapWeaponItemUIs(itemUI.SlotIndex, SlotIndex);
             }
         }
 
-        public void SetItemData(GunItem item, WeaponInventoryUI inventoryUI)
+        public void SetSlotIndex(int index)
         {
-            m_InventoryUI = inventoryUI;
+            SlotIndex = index;
+        }
+
+        public void SetItemData(GunItem item)
+        {
             m_Item = item;
             ItemData = item.ItemData;
             m_Icon.sprite = ItemData.IconSprite;
@@ -110,16 +127,22 @@ namespace Weapon_System.GameplayObjects.UI
             Show();
         }
 
+        void ResetItemData()
+        {
+            m_Item = null;
+            ItemData = null;
+            m_Icon.sprite = null;
+            m_NameText.text = "";
+        }
+
         private void Show()
         {
             m_CanvasGroup.alpha = 1;
-            m_CanvasGroup.blocksRaycasts = true;
         }
 
         private void Hide()
         {
             m_CanvasGroup.alpha = 0;
-            m_CanvasGroup.blocksRaycasts = false;
         }
     }
 }

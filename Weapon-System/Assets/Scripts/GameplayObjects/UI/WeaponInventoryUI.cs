@@ -1,8 +1,5 @@
 using System;
-using TMPro;
-using UnityEditor.Graphs;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Weapon_System.GameplayObjects.ItemsSystem;
 using Weapon_System.Utilities;
 
@@ -26,97 +23,76 @@ namespace Weapon_System.GameplayObjects.UI
 
         [Header("Listens to")]
 
-        /*[SerializeField, Tooltip("The event that will toggle the inventory")]
-        BoolEventChannelSO m_ToggleInventoryEvent;*/
-
-        /*[SerializeField, Tooltip("When a common item is added to the inventory, this event is invoked")]
-        CommonItemEventChannelSO m_OnCommonItemAddedEvent;*/
-
-        [SerializeField, Tooltip("When a gun item is added to the inventory, this event is invoked")]
-        GunItemIntEventChannelSO m_OnGunItemAddedEvent;
+        [SerializeField, Tooltip("When a gun item is added to the inventory, this event is invoked, Listen to this event to add a WeaponItemUI in respective WeaponSlotUI")]
+        GunItemIntEventChannelSO m_OnGunItemAddedToInventoryEvent;
 
         [Header("Broadcast to")]
 
-        [SerializeField]
-        GunItemIntEventChannelSO m_OnGunItemRemovedEvent;
+        [SerializeField, Tooltip("When an WeaponItemUI is removed from WeaponInventoryUI, this event is invoked")]
+        GunItemIntEventChannelSO m_OnWeaponItemUIRemovedEvent;
+
+        [SerializeField, Tooltip("When two WeaponItemUI's are swapped with each other, this event is invoked")]
+        IntIntEventChannelSO m_OnWeaponItemUISwappedEvent;
 
         [Space(10)]
-
-        /*[SerializeField, Tooltip("The panel to toggle on/off")]
-        GameObject m_Panel;*/
-
-        /*[SerializeField, Tooltip("The prefab that will be spawned as child of 'm_ContentGO' when a common item is stored in inventory")]
-        ItemUI m_ItemUIPrefab;
-
-        [SerializeField, Tooltip("The spawned instance of 'm_ItemUIPrefab' will be set as a child of this transform")]
-        GameObject m_ContentGO;*/
-
-        // ItemSlotUI[] m_GunSlots;
-        /*[SerializeField]
-        WeaponItemUI[] m_WaponItemUIs;*/
 
         [SerializeField]
         WeaponItemUISlotUIPair[] m_WeaponItemUISlotUIPairs;
 
         private void Start()
         {
-            // m_ToggleInventoryEvent.OnEventRaised += OnToggleInventory;
-            // m_OnCommonItemAddedEvent.OnEventRaised += AddCommonItemUIToInventoryUI;
-            m_OnGunItemAddedEvent.OnEventRaised += AddGunItemUIToInventoryUI;
+            for (int i = 0; i < m_WeaponItemUISlotUIPairs.Length; i++)
+            {
+                m_WeaponItemUISlotUIPairs[i].weaponItemUI.SetSlotIndex(i);
+            }
 
-            // ToggleInventoryUI(false);
+            m_OnGunItemAddedToInventoryEvent.OnEventRaised += AddGunItemUIToInventoryUI;
         }
 
         private void OnDestroy()
         {
-            // m_ToggleInventoryEvent.OnEventRaised -= OnToggleInventory;
-            // m_OnCommonItemAddedEvent.OnEventRaised -= AddCommonItemUIToInventoryUI;
-            m_OnGunItemAddedEvent.OnEventRaised -= AddGunItemUIToInventoryUI;
+            m_OnGunItemAddedToInventoryEvent.OnEventRaised -= AddGunItemUIToInventoryUI;
         }
 
 
         /// <summary>
         /// Swap the weapon item UIs in the weapon inventory UI's weapon slots.
         /// </summary>
-        /// <param name="leftIndex"></param>
-        /// <param name="rightIndex"></param>
-        public void SwapWeaponItemUIs(int leftIndex, int rightIndex)
+        /// <param name="indexOfDroppedWeaponItemUI">index of the WeaponItemUI that is being dropped</param>
+        /// <param name="indexOfWeaponSlotUI">index of the WeaponSlotUI where the WeaponItemUI is being dropped</param>
+        /// <remarks>
+        /// It would be more simpler if we had have only 2 slots,
+        /// but if we want more slots, and swap UIs between them,
+        /// then this approach is better.
+        /// </remarks>
+        public void SwapWeaponItemUIs(int indexOfDroppedWeaponItemUI, int indexOfWeaponSlotUI)
         {
-            WeaponItemUISlotUIPair leftPair = m_WeaponItemUISlotUIPairs[leftIndex];
-            WeaponItemUISlotUIPair rightPair = m_WeaponItemUISlotUIPairs[rightIndex];
+            WeaponItemUISlotUIPair leftPair = m_WeaponItemUISlotUIPairs[indexOfDroppedWeaponItemUI];
+            WeaponItemUISlotUIPair rightPair = m_WeaponItemUISlotUIPairs[indexOfWeaponSlotUI];
 
             // return if the weaponItemUIToDrop is the same one as in the slot
             if (leftPair.weaponItemUI == rightPair.weaponItemUI)
                 return;
 
-            // if the slot is empty, just add the weaponItemUIToDrop to the slot
-            if (rightPair.weaponItemUI == null)
-            {
-                RemoveGunItemUIFromWeaponInventoryUI(leftPair.weaponItemUI.Item, leftIndex);
-                AddGunItemUIToInventoryUI(leftPair.weaponItemUI.Item, rightIndex);
-                return;
-            }
+            rightPair.weaponSlotUI.TryAddItemUIToSlotUI(leftPair.weaponItemUI);
+            leftPair.weaponSlotUI.TryAddItemUIToSlotUI(rightPair.weaponItemUI);
 
-            // if the slot is not empty, swap the weaponItemUIToDrop with the slot's weaponItemUI
-            GunItem leftPairItem = leftPair.weaponItemUI.Item;
-            GunItem rightPairItem = rightPair.weaponItemUI.Item;
+            WeaponItemUI temp = leftPair.weaponItemUI;
+            leftPair.weaponItemUI = rightPair.weaponItemUI;
+            rightPair.weaponItemUI = temp;
 
-            RemoveGunItemUIFromWeaponInventoryUI(leftPairItem, leftIndex);
-            RemoveGunItemUIFromWeaponInventoryUI(rightPairItem, rightIndex);
-
-            AddGunItemUIToInventoryUI(leftPairItem, rightIndex);
-            AddGunItemUIToInventoryUI(rightPairItem, leftIndex);
-        }
-
-        public void RemoveGunItemUIFromWeaponInventoryUI(GunItem item, int index)
-        {
-            m_WeaponItemUISlotUIPairs[index].weaponSlotUI.TryRemoveItemUIFromSlotUI();
-            m_OnGunItemRemovedEvent?.RaiseEvent(item, index);
+            m_OnWeaponItemUISwappedEvent?.RaiseEvent(indexOfDroppedWeaponItemUI, indexOfWeaponSlotUI);
         }
 
         public void RemoveGunItemUIFromWeaponInventoryUI(GunItem item)
         {
-            RemoveGunItemUIFromWeaponInventoryUI(item, GetIndexOfWeaponItemUIFromGunItem(item));
+            int index = GetIndexOfWeaponItemUIFromGunItem(item);
+            // if the item is not in the inventory, return
+            if (index < 0 && index >= m_WeaponItemUISlotUIPairs.Length)
+                return;
+
+            m_WeaponItemUISlotUIPairs[index].weaponSlotUI.TryRemoveItemUIFromSlotUI();
+            m_OnWeaponItemUIRemovedEvent?.RaiseEvent(item, index);
         }
 
         public WeaponSlotUI GetWeaponSlotUI(WeaponItemUI itemUI)
@@ -142,15 +118,11 @@ namespace Weapon_System.GameplayObjects.UI
             return -1;
         }
 
-        /*private void AddCommonItemUIToInventoryUI(CommonItem item)
-        {
-            Instantiate(m_ItemUIPrefab, m_ContentGO.transform).SetItemData(item, this);
-        }*/
-
         private void AddGunItemUIToInventoryUI(GunItem item, int index)
         {
             WeaponItemUI weaponItemUI = m_WeaponItemUISlotUIPairs[index].weaponItemUI;
-            weaponItemUI.SetItemData(item, this);
+            weaponItemUI.SetItemData(item);
+            weaponItemUI.SetSlotIndex(index);
             m_WeaponItemUISlotUIPairs[index].weaponSlotUI.TryAddItemUIToSlotUI(weaponItemUI);
         }
 
@@ -165,15 +137,5 @@ namespace Weapon_System.GameplayObjects.UI
         {
             
         }
-
-        /*private void OnToggleInventory(bool value)
-        {
-            ToggleInventoryUI(value);
-        }
-
-        private void ToggleInventoryUI(bool value)
-        {
-            m_Panel.SetActive(value);
-        }*/
     }
 }

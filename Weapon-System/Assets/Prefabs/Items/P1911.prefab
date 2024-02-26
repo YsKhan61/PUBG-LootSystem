@@ -46,6 +46,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: P1911_GFX
       objectReference: {fileID: 0}
+    - target: {fileID: 6948823204885919263, guid: 3d66c5231f0adc94ca1546100a03ea42,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: aeceda898e6dddf4eb0c2ce393f7d2d1, type: 2}
     - target: {fileID: 7124021158810985638, guid: 3d66c5231f0adc94ca1546100a03ea42,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -216,3 +221,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ItemData: {fileID: 11400000, guid: e129e6037b66fc247a35ad04dd97a5d8, type: 2}
   m_RootGO: {fileID: 7880611331590958776}
+  m_Graphics: {fileID: 1130804910419150788}

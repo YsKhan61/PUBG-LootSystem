@@ -1,7 +1,4 @@
-using TMPro;
-using UnityEditor.Graphs;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Weapon_System.GameplayObjects.ItemsSystem;
 using Weapon_System.Utilities;
 
@@ -40,13 +37,11 @@ namespace Weapon_System.GameplayObjects.UI
         [SerializeField, Tooltip("The spawned instance of 'm_ItemUIPrefab' will be set as a child of this transform")]
         GameObject m_ContentGO;
 
-        /*ItemSlotUI[] m_GunSlots;*/
 
         private void Start()
         {
             m_ToggleInventoryEvent.OnEventRaised += OnToggleInventory;
             m_OnCommonItemAddedEvent.OnEventRaised += AddCommonItemUIToInventoryUI;
-            // m_OnGunItemAddedEvent.OnEventRaised += AddGunItemUIToInventoryUI;
 
             ToggleInventoryUI(false);
         }
@@ -55,7 +50,6 @@ namespace Weapon_System.GameplayObjects.UI
         {
             m_ToggleInventoryEvent.OnEventRaised -= OnToggleInventory;
             m_OnCommonItemAddedEvent.OnEventRaised -= AddCommonItemUIToInventoryUI;
-            // m_OnGunItemAddedEvent.OnEventRaised -= AddGunItemUIToInventoryUI;
         }
 
         public void RemoveCommonItemUIFromInventoryUI(CommonItem item)
@@ -67,11 +61,6 @@ namespace Weapon_System.GameplayObjects.UI
         {
             Instantiate(m_ItemUIPrefab, m_ContentGO.transform).SetItemData(item, this);
         }
-
-        /*private void AddGunItemUIToInventoryUI(ItemBase item, int index)
-        {
-            m_GunSlots[index].TryAddItemToSlotUI(item.ItemData);
-        }*/
 
         /// <summary>
         /// For scopes, after pickup, we will check if any gun slot has a gun,

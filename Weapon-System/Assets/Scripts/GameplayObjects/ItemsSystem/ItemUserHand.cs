@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Weapon_System.Utilities;
@@ -10,22 +11,44 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
     /// It uses Trigger Collider to detect items
     /// It can also use the item in hand
     /// </summary>
-    public class ItemUserHand : MonoBehaviour, ICollector
+    public class ItemUserHand : MonoBehaviour
     {
         [Header("Listens to")]
+
+        [SerializeField, Tooltip("Listen to this event to hold the primary weapon in hand.")]
+        BoolEventChannelSO m_PrimaryWeaponSelectInputEvent;
+
+        [SerializeField, Tooltip("Listen to this event to hold the secondary weapon in hand.")]
+        BoolEventChannelSO m_SecondaryWeaponSelectInputEvent;
+
         [SerializeField, Tooltip("This event notifies the pickup input performed")]
         BoolEventChannelSO m_PickupInputEvent;
 
         [SerializeField, Tooltip("This event notifies the firing input performing")]
         BoolEventChannelSO m_FiringInputEvent;
 
+        [SerializeField, Tooltip("Listen to this event to remove the respective common item from inventory.")]
+        CommonItemEventChannelSO m_OnCommonItemUIRemovedEvent;
+
+        [SerializeField, Tooltip("Listen to this event to remove the respective gun item from inventory.")]
+        GunItemIntEventChannelSO m_OnGunItemUIRemovedEvent;
+
+        [SerializeField, Tooltip("Listen to this event to swap the respective guns in inventory.")]
+        IntIntEventChannelSO m_OnGunItemUISwappedEvent;
+
         public Transform Transform => transform;
-        public IUsable ItemInHand { get; set; }
+        
+        /// <remarks>
+        /// For now we use GunItem, later we can use a base class for all items
+        /// We need to have IHoldable and IUsable interfaces for the items
+        /// </remarks>
+        public GunItem ItemInHand { get; private set; }
 
         [Space(10)]
 
         [SerializeField]
         Inventory m_Inventory;
+        public Inventory Inventory => m_Inventory;
 
         [SerializeField]
         LayerMask m_ItemLayer;
@@ -39,7 +62,12 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         private void Start()
         {
             m_CollectablesScanned = new List<ICollectable>();
-            m_PickupInputEvent.OnEventRaised += OnPickupItems;
+
+            m_PickupInputEvent.OnEventRaised += CollectItem;
+            m_PrimaryWeaponSelectInputEvent.OnEventRaised += OnPrimaryWeaponSelect;
+            m_SecondaryWeaponSelectInputEvent.OnEventRaised += OnSecondaryWeaponSelect;
+            m_OnCommonItemUIRemovedEvent.OnEventRaised += OnCommonItemUIRemovedEvent;
+            m_OnGunItemUIRemovedEvent.OnEventRaised += OnGunItemUIRemovedEvent;
         }
 
         private void Update()
@@ -56,7 +84,11 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         private void OnDestroy()
         {
-            m_PickupInputEvent.OnEventRaised -= OnPickupItems;
+            m_PickupInputEvent.OnEventRaised -= CollectItem;
+            m_PrimaryWeaponSelectInputEvent.OnEventRaised -= OnPrimaryWeaponSelect;
+            m_SecondaryWeaponSelectInputEvent.OnEventRaised -= OnSecondaryWeaponSelect;
+            m_OnCommonItemUIRemovedEvent.OnEventRaised -= OnCommonItemUIRemovedEvent;
+            m_OnGunItemUIRemovedEvent.OnEventRaised -= OnGunItemUIRemovedEvent;
         }
 
         private void CheckForNearbyItems()
@@ -82,7 +114,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             }
         }
 
-        private void OnPickupItems(bool _)
+        private void CollectItem(bool _)
         {
             if (m_CollectablesScanned.Count > 0)
             {
@@ -92,6 +124,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
                     {
                         // Add 1st item to inventory
                         TryStoreCollectableInInventory(m_CollectablesScanned[i]);
+                        TryHoldCollectableInHand(m_CollectablesScanned[i]);
                         return;
                     }
                 }
@@ -101,7 +134,77 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         void TryStoreCollectableInInventory(ICollectable item)
         {
             IStorable storable = item as IStorable;
+
+            // Each item can be stored in different places in the inventory,
+            // hence we send the inventory to the item to store itself in the inventory
             storable?.StoreInInventory(m_Inventory);
+        }
+
+        void TryHoldCollectableInHand(ICollectable item)
+        {
+            if (ItemInHand != null)
+                return;
+
+            ItemInHand = item as GunItem;
+            ItemInHand?.Hold();
+        }
+
+        /// <summary>
+        /// Called when HolsterWeaponInputEvent is raised
+        /// </summary>
+        void TryPutAwayItem()
+        {
+            if (ItemInHand == null)
+                return;
+
+            ItemInHand.PutAway();
+            ItemInHand = null;
+        }
+
+        private void OnPrimaryWeaponSelect(bool _)
+        {
+            GunItem primaryWeapon = m_Inventory.GetPrimaryGun();
+            if (ItemInHand == null)
+            {
+                ItemInHand = primaryWeapon;
+            }
+            ItemInHand.PutAway();
+            ItemInHand = primaryWeapon;
+            ItemInHand?.Hold();
+        }
+
+        private void OnSecondaryWeaponSelect(bool _)
+        {
+            GunItem secondaryWeapon = m_Inventory.GetSecondaryGun();
+            if (ItemInHand == null)
+            {
+                ItemInHand = secondaryWeapon;
+            }
+            ItemInHand.PutAway();
+            ItemInHand = secondaryWeapon;
+            ItemInHand?.Hold();
+        }
+
+        private void OnCommonItemUIRemovedEvent(CommonItem item)
+        {
+            item.Drop();
+        }
+
+        /// <summary>
+        /// When the WeaponItemUI is removed from WeaponInventoryUI,
+        /// Drop the item,
+        /// if it was in hand, remove it from hand as well
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="_"></param>
+        private void OnGunItemUIRemovedEvent(GunItem item, int _)
+        {
+            item.Drop();
+
+            if (ItemInHand == item)
+            {
+                ItemInHand = null;
+            }
         }
 
         private void DisplayAllCollectables()

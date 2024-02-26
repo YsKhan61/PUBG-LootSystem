@@ -15,9 +15,9 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         [SerializeField]
         GameObject m_RootGO;
 
-        Transform m_CollectorTransform;
+        Transform m_handTransform;
 
-        public virtual bool Collect(ICollector collector)
+        public virtual bool Collect(ItemUserHand hand)
         {
             if (IsCollected)
             {
@@ -26,7 +26,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
             IsCollected = true;
             HideGraphics();
-            m_CollectorTransform = collector.Transform;
+            m_handTransform = hand.Transform;
             Debug.Log(Name + " is collected");
             return true;
         }
@@ -46,7 +46,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
             IsCollected = false;
 
-            m_RootGO.transform.position = m_CollectorTransform.position + m_CollectorTransform.forward * 2f;
+            m_RootGO.transform.position = m_handTransform.position + m_handTransform.forward * 2f;
             ShowGraphics();
             Debug.Log(Name + " is dropped");
             return true;

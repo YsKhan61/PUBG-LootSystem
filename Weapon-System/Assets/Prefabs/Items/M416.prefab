@@ -130,6 +130,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ItemData: {fileID: 11400000, guid: 8094637332a63b745bd3ba33c401079e, type: 2}
   m_RootGO: {fileID: 4210785308608106674}
+  m_Graphics: {fileID: 8087991231554445608}
 --- !u!4 &1682517029724781771 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 976934747929668969, guid: 1c379bbaeeba73c4d8a45fc167e94da0,

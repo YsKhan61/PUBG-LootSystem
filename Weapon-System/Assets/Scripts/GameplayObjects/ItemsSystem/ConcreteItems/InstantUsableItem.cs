@@ -14,7 +14,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         /// For now we just destroy the entire gameobject
         /// </summary>
         /// <returns></returns>
-        public virtual bool Collect(ICollector collector)
+        public virtual bool Collect(ItemUserHand _)
         {
             Use();
             return true;
@@ -24,11 +24,6 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         {
             Debug.Log(Name + " used!");
             return true;
-        }
-
-        bool ICollectable.Collect(ICollector collector)
-        {
-            throw new System.NotImplementedException();
         }
     }
 }

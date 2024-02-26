@@ -2,7 +2,12 @@ using UnityEngine;
 
 namespace Weapon_System.GameplayObjects.ItemsSystem
 {
-    public class GunItem : ItemBase, ICollectable, IStorable, IDropable, IUsable
+    /// <summary>
+    ///  This class represents the guns in the game.
+    ///  This can be later inherited from WeaponItem etc (can contain throwables, melee weapons etc)
+    ///  But this is GunItem and only two guns can be collected and stored in inventory.
+    /// </summary>
+    public class GunItem : ItemBase, ICollectable, IStorable, IDropable, IUsable, IHoldable
     {
         /*public enum WeaponType
         {
@@ -34,12 +39,17 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         public bool IsCollected { get; protected set; }
 
+        public bool IsInHand { get; protected set; }
+
         [SerializeField]
         GameObject m_RootGO;
 
+        [SerializeField]
+        GameObject m_Graphics;
+
         Transform m_CollectorTransform;
 
-        public virtual bool Collect(ICollector collector)
+        public virtual bool Collect(ItemUserHand hand)
         {
             if (IsCollected)
             {
@@ -48,11 +58,14 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
             IsCollected = true;
             
-            m_RootGO.transform.position = collector.Transform.position;
-            m_RootGO.transform.forward = collector.Transform.forward;
-            m_RootGO.transform.SetParent(collector.Transform);
+            m_RootGO.transform.position = hand.Transform.position;
+            m_RootGO.transform.forward = hand.Transform.forward;
+            m_RootGO.transform.SetParent(hand.Transform);
 
-            m_CollectorTransform = collector.Transform;
+            m_CollectorTransform = hand.Transform;
+
+            IsInHand = false;
+            Hide();
 
             Debug.Log(Name + " is collected");
             return true;
@@ -60,7 +73,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         public virtual bool StoreInInventory(Inventory inventory)
         {
-            inventory.AddGunToGunSlot(this);
+            inventory.AddGunToGunInventory(this);
             return true;
         }
 
@@ -76,6 +89,10 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             m_RootGO.transform.position = m_CollectorTransform.position + m_CollectorTransform.forward * 2f;
             m_RootGO.transform.SetParent(null);
 
+            IsInHand = false;
+
+            Show();
+
             Debug.Log(Name + " is dropped");
             return true;
         }
@@ -86,10 +103,34 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             return true;
         }
 
+        public virtual bool Hold()
+        {
+            IsInHand = true;
+            Show();
+            return true;
+        }
+
+        public virtual bool PutAway()
+        {
+            IsInHand = false;
+            Hide();
+            return true;
+        }
+
         public virtual bool Shoot()
         {
             Debug.Log(Name + " shooting....!");
             return true;
+        }
+
+        public virtual void Show()
+        {
+            m_Graphics.SetActive(true);
+        }
+
+        public virtual void Hide()
+        {
+            m_Graphics.SetActive(false);
         }
     }
 

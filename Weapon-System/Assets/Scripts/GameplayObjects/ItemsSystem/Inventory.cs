@@ -1,41 +1,44 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Weapon_System.Utilities;
 
 
 namespace Weapon_System.GameplayObjects.ItemsSystem
 {
+    /// <summary>
+    ///  Need to create an HashSet of all the items that will be stored in the inventory
+    /// </summary>
     public class Inventory : MonoBehaviour
     {
         [Header("Broadcast to")]
 
-        [SerializeField]
+        [SerializeField, Tooltip("When a common item is added to the inventory, this event is invoked.")]
         CommonItemEventChannelSO m_OnCommonItemAddedEvent;
 
-        [SerializeField]
+        [SerializeField, Tooltip("When a gun item is added to the inventory, this event is invoked.")]
         GunItemIntEventChannelSO m_OnGunItemAddedEvent;
 
         [Header("Listens to")]
 
-        [SerializeField]
-        BoolEventChannelSO m_PrimaryWeaponSelectInputEvent;
+        [SerializeField, Tooltip("Listen to this event to remove the respective common item from inventory.")]
+        CommonItemEventChannelSO m_OnCommonItemUIRemovedEvent;
 
-        [SerializeField]
-        BoolEventChannelSO m_SecondaryWeaponSelectInputEvent;
+        [SerializeField, Tooltip("Listen to this event to remove the respective gun item from inventory.")]
+        GunItemIntEventChannelSO m_OnGunItemUIRemovedEvent;
 
-        [SerializeField]
-        CommonItemEventChannelSO m_OnCommonItemRemovedEvent;
-
-        [SerializeField]
-        GunItemIntEventChannelSO m_OnGunItemRemovedEvent;
+        [SerializeField, Tooltip("Listen to this event to swap the respective guns in inventory.")]
+        IntIntEventChannelSO m_OnGunItemUISwappedEvent;
 
         [Space(10)]
 
-        [SerializeField]
-        ItemUserHand m_UserHand;
+        /*[SerializeField]
+        ItemUserHand m_UserHand;*/
 
         [Space(10)]
+
+        [Header("---------Debug purposes----------")]
 
         [Header("Common items")]
 
@@ -47,25 +50,25 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         [Header("Gun items")]
 
         [SerializeField]        // SerializeField is used only for Debug purposes
-        GunItem[] m_ItemGuns;
+        GunItem[] m_Guns;       // Only primary and secondary gun. For now only 2 guns are allowed
 
         private void Start()
         {
             m_CommonItems = new List<CommonItem>();
-            m_ItemGuns = new GunItem[2];                    // For now only 2 guns are allowed
+            m_Guns = new GunItem[2];                    // For now only 2 guns are allowed
 
-            m_PrimaryWeaponSelectInputEvent.OnEventRaised += OnPrimaryWeaponSelect;
-            m_SecondaryWeaponSelectInputEvent.OnEventRaised += OnSecondaryWeaponSelect;
-            m_OnCommonItemRemovedEvent.OnEventRaised += RemoveCommonItem;
-            m_OnGunItemRemovedEvent.OnEventRaised += RemoveGunItem;
+            
+            m_OnCommonItemUIRemovedEvent.OnEventRaised += RemoveCommonItem;
+            m_OnGunItemUIRemovedEvent.OnEventRaised += RemoveGunItem;
+            m_OnGunItemUISwappedEvent.OnEventRaised += SwapGunItems;
         }
 
         private void OnDestroy()
         {
-            m_PrimaryWeaponSelectInputEvent.OnEventRaised -= OnPrimaryWeaponSelect;
-            m_SecondaryWeaponSelectInputEvent.OnEventRaised -= OnSecondaryWeaponSelect;
-            m_OnCommonItemRemovedEvent.OnEventRaised -= RemoveCommonItem;
-            m_OnGunItemRemovedEvent.OnEventRaised -= RemoveGunItem;
+            
+            m_OnCommonItemUIRemovedEvent.OnEventRaised -= RemoveCommonItem;
+            m_OnGunItemUIRemovedEvent.OnEventRaised -= RemoveGunItem;
+            m_OnGunItemUISwappedEvent.OnEventRaised -= SwapGunItems;
         }
 
         public void AddCommonItem(CommonItem item)
@@ -78,65 +81,102 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         public void RemoveCommonItem(CommonItem item)
         {
             m_CommonItems.Remove(item);
-            item.Drop();
             Debug.Log(item.Name + " removed from inventory!");
         }
 
-        public void AddGunToGunSlot(GunItem item)
+        public void AddGunToGunInventory(GunItem gunItem)
         {
             // Add to the first empty slot
-            for (int i = 0; i < m_ItemGuns.Length; i++)
+            for (int i = 0; i < m_Guns.Length; i++)
             {
-                if (m_ItemGuns[i] == null)
+                if (m_Guns[i] == null)
                 {
-                    m_ItemGuns[i] = item;
-                    m_UserHand.ItemInHand = item;                  // Set the gun in hand
-                    m_OnGunItemAddedEvent.RaiseEvent(item, i);
-                    Debug.Log(item.Name + " added to inventory!");
-                    return;
-                }
-            }
-
-            // If no empty slot, replace the current gun
-            for (int i = 0; i < m_ItemGuns.Length; i++)
-            {
-                if (m_ItemGuns[i] as IUsable == m_UserHand.ItemInHand) // (m_ItemGuns[i].IsInHand)
-                {
-                    m_ItemGuns[i] = item;
-                    m_UserHand.ItemInHand = item;                  // Set the gun in hand
-                    m_OnGunItemAddedEvent.RaiseEvent(item, i);
-                    Debug.Log(item.Name + " added to inventory!");
+                    m_Guns[i] = gunItem;
+                    // m_UserHand.ItemInHand = item;                  // Set the gun in hand
+                    m_OnGunItemAddedEvent.RaiseEvent(gunItem, i);
+                    Debug.Log(gunItem.Name + " added to inventory!");
                     return;
                 }
             }
 
             // If no empty slot and no gun in hand, replace the first gun
-            m_ItemGuns[0] = item;
-            m_UserHand.ItemInHand = item;                  // Set the gun in hand
-            m_OnGunItemAddedEvent.RaiseEvent(item, 0);
-            Debug.Log(item.Name + " added to inventory!");
+            m_Guns[0] = gunItem;
+            // m_UserHand.ItemInHand = gunItem;                  // Set the gun in hand
+            m_OnGunItemAddedEvent.RaiseEvent(gunItem, 0);
+            Debug.Log(gunItem.Name + " added to inventory!");
         }
 
-        private void RemoveGunItem(GunItem item, int index)
+        public GunItem GetPrimaryGun()
         {
-            if (index < 0 || index >= m_ItemGuns.Length)
+            return m_Guns[0];
+        }
+
+        public GunItem GetSecondaryGun()
+        {
+            return m_Guns[1];
+        }
+
+        public int GetIndexOfGunItem(GunItem item)
+        {
+            for (int i = 0; i < m_Guns.Length; i++)
+            {
+                if (m_Guns[i] == item)
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
+        public GunItem GetGunItem(int index)
+        {
+            if (index < 0 || index >= m_Guns.Length)
+            {
+                Debug.LogError("Index out of range");
+                return null;
+            }
+
+            return m_Guns[index];
+        }
+
+        private void RemoveGunItem(GunItem item, int _)
+        {
+
+            int index = GetIndexOfGunItem(item);
+            if (index < 0 || index >= m_Guns.Length)
             {
                 Debug.LogError("Index out of range");
                 return;
             }
 
-            m_ItemGuns[index].Drop();
-            m_ItemGuns[index] = null;
+            if (m_Guns[index] == null)
+            {
+                Debug.LogError("UI was present, but gun is not present in the inventory!");
+                return;
+            }
+
+            m_Guns[index].Drop();
+            m_Guns[index] = null;
         }
 
-        private void OnPrimaryWeaponSelect(bool _)
+        /// <summary>
+        /// Swap the gun items in the inventory
+        /// And set the new gun in hand matching the previous gun's index
+        /// </summary>
+        /// <param name="leftIndex"></param>
+        /// <param name="rightIndex"></param>
+        private void SwapGunItems(int leftIndex, int rightIndex)
         {
-            m_UserHand.ItemInHand = m_ItemGuns[0];
-        }
+            if (leftIndex < 0 || leftIndex >= m_Guns.Length || rightIndex < 0 || rightIndex >= m_Guns.Length)
+            {
+                Debug.LogError("Index out of range");
+                return;
+            }
 
-        private void OnSecondaryWeaponSelect(bool _)
-        {
-            m_UserHand.ItemInHand = m_ItemGuns[1];
+            GunItem temp = m_Guns[leftIndex];
+            m_Guns[leftIndex] = m_Guns[rightIndex];
+            m_Guns[rightIndex] = temp;
         }
     }
 }
