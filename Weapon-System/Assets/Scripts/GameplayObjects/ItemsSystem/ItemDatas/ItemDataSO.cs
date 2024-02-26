@@ -27,17 +27,21 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         ForegripAttachment,
     }
 
+    /// <summary>
+    /// Data container of the Item that will not change at runtime.
+    /// It will be same across all the instances of the item.
+    /// </summary>
     public abstract class ItemDataSO : ScriptableObject
     {
-        [SerializeField]
+        [SerializeField, Tooltip("The type of this item")]
         ItemType m_Type;
         public ItemType Type => m_Type;
 
-        [SerializeField]
+        [SerializeField, Tooltip("The UI type of this item")]
         ItemUIType m_UIType;
         public ItemUIType UIType => m_UIType;
 
-        [SerializeField]
+        [SerializeField, Tooltip("The UI icon of this item")]
         Sprite m_IconSprite;
         public Sprite IconSprite => m_IconSprite;
     }

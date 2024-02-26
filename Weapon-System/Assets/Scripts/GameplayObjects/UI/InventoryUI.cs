@@ -20,8 +20,7 @@ namespace Weapon_System.GameplayObjects.UI
         [SerializeField, Tooltip("When a common item is added to the inventory, this event is invoked")]
         InventoryItemEventChannelSO m_OnCommonItemAddedEvent;
 
-        /*[SerializeField, Tooltip("When a gun item is added to the inventory, this event is invoked")]
-        GunItemIntEventChannelSO m_OnGunItemAddedEvent;*/
+        [Space(10)]
 
         [Header("Broadcast to")]
 

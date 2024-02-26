@@ -39,6 +39,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
     /// <summary>
     /// Interface for the storable items
+    /// eg: Ammo, Heals, Attachments, etc.
     /// </summary>
     public interface IStorable
     {
@@ -55,6 +56,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
     /// <summary>
     /// Interface for the usable items - primary use of the item
+    /// Fire, Punch, Throw, etc.
     /// </summary>
     public interface  IP_Usable
     {
@@ -64,6 +66,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
     /// <summary>
     /// Interface for the usable items - secondary use of the item
+    /// eg: ADS
     /// </summary>
     public interface IS_Usable
     {
@@ -77,6 +80,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
     /// ------------REMARKS--------------------
     /// An item that can be hold by the hand, 
     /// must need to be put away also at some point of time.
+    /// eg: Guns, Melee weapons, Throwable items, etc.
     /// </summary>
     public interface IHoldable
     {
@@ -95,27 +99,38 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
 
     /// <summary>
-    /// Interface for the shooter items (weapons, guns etc)
-    /// </summary>
-    public interface IShooter
-    {
-        public bool Shoot();
-    }
-
-
-    /// <summary>
     /// Interface for the weapon attachment items
     /// Considering that item can be attached as well as detached from the weapon
+    /// eg: Muzzle attachments, Magazine attachments, Sight attachments, Foregrip attachments, Stock attachments etc.
     /// </summary>
     public interface IWeaponAttachment
     {
-        public bool AttachToWeapon();
+        /// <summary>
+        /// This method is used to attach the attachment to the weapon
+        /// </summary>
+        /// <param name="gun">the gun on which the attachment will be attached</param>
+        /// <returns></returns>
+        public bool AttachToWeapon(ISightHolder sightHolder);
         public bool DetachFromWeapon();
     }
 
 
     /// <summary>
-    /// Interface for the sight attachment items
+    /// Interface for the holder of the sight attachment.
+    /// eg: Guns
+    /// </summary>
+    public interface ISightHolder
+    {
+        public ISightAttachment SightAttachment { get; }        // needed in the AttachToWeapon method of the ISightAttachment
+        public Transform SightHolderTransform { get; }          // needed in the AttachToWeapon method of the ISightAttachment
+        public void AttachSight(ISightAttachment sight);
+        public void DetachSight();
+    }
+
+
+    /// <summary>
+    /// Interface for the sight attachment items. 
+    /// eg: Red dot sight, Holographic sight, 2x, 4x, 8x scopes etc.
     /// </summary>
     public interface  ISightAttachment : IWeaponAttachment
     {

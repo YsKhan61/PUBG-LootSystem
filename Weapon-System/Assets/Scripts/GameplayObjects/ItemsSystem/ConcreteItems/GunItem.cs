@@ -1,3 +1,4 @@
+using System.Text;
 using UnityEngine;
 
 namespace Weapon_System.GameplayObjects.ItemsSystem
@@ -8,49 +9,29 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
     ///  It is a carry item, which can be collected, stored in inventory separately, dropped and used.
     ///  This can be later inherited from WeaponItem or UsableItem etc (can contain throwables, melee weapons etc)
     ///  But this is GunItem and only two guns can be collected and stored in inventory.
+    ///  ---------------------- NOIE----------------------
+    ///  This Gun item can attach a sight attachment to it.
     /// </summary>
-    public class GunItem : ItemBase, ICollectable, IStorable, IDropable, IP_Usable, IS_Usable, IHoldable
+    public class GunItem : ItemBase, ICollectable, IStorable, IDropable, IP_Usable, IS_Usable, IHoldable, ISightHolder
     {
-        /*public enum WeaponType
-        {
-            AR,
-            DMR,
-            SMG,
-            SR,
-            Shotgun,
-            Handgun,
-            Melee,
-            Throwable,
-            Misselaneous
-        }
-
-        [SerializeField, Tooltip("Type of the weapon")]
-        WeaponType m_WeaponType;
-
-        [SerializeField, Tooltip("Damage done by the weapon")]
-        int m_Damage;
-
-        [SerializeField, Tooltip("The range upto which this weapon can register damage")]
-        int m_Range;
-
-        [SerializeField, Tooltip("Rate of firing per second")]
-        float m_FireRate;
-
-        [SerializeField, Tooltip("Force produced by firing from this weapon")]
-        float m_Force;*/
-
         public bool IsCollected { get; protected set; }
 
         public bool IsInHand { get; protected set; }
 
         public ISightAttachment SightAttachment { get; protected set; }
 
-        [SerializeField]
+        [SerializeField, Tooltip("The root game object of this item")]
         GameObject m_RootGO;
 
-        [SerializeField]
+        [SerializeField, Tooltip("The graphics model of this gun")]
         GameObject m_Graphics;
 
+        [SerializeField, Tooltip("The sight will become a child of this game object with same position")]
+        Transform m_SightHolderTransform;
+        public Transform SightHolderTransform => m_SightHolderTransform;
+
+        // The transform of the collector, who collected this item
+        // It is saved to drop the item at the same position and rotation
         Transform m_CollectorTransform;
 
         public virtual bool Collect(ItemUserHand hand)
@@ -69,7 +50,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             m_CollectorTransform = hand.Transform;
 
             IsInHand = false;
-            Hide();
+            HideGraphics();
 
             Debug.Log(Name + " is collected");
             return true;
@@ -95,7 +76,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
             IsInHand = false;
 
-            Show();
+            ShowGraphics();
 
             Debug.Log(Name + " is dropped");
             return true;
@@ -109,6 +90,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         public virtual bool SecondaryUse()
         {
+            Debug.Log(Name);
             // If there is a sight attachment, then aim down sight through it
             if (SightAttachment != null)
             {
@@ -116,36 +98,60 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             }
 
             // If there is no sight attachment, then aim down sight through iron sight
-            Debug.Log(Name + " doing ads with iron sight!");
+            Debug.Log("Aiming down sight through iron sight!");
             return true;
         }
 
         public virtual bool Hold()
         {
             IsInHand = true;
-            Show();
+            ShowGraphics();
             return true;
         }
 
         public virtual bool PutAway()
         {
             IsInHand = false;
-            Hide();
+            HideGraphics();
             return true;
         }
 
-        public virtual bool Shoot()
+        public void AttachSight(ISightAttachment sight)
+        {
+            if (SightAttachment != null)
+            {
+                Debug.LogError("Sight already attached: Sight need to be removed by UI Drag Drop");
+                return;
+            }
+
+            SightAttachment = sight;
+            sight.AttachToWeapon(this);
+        }
+
+        public void DetachSight()
+        {
+            if (SightAttachment == null)
+            {
+                Debug.LogError("No sight attached: Sight must be attached if Detach sight is called!");
+                return;
+            }
+
+            SightAttachment.DetachFromWeapon();
+            SightAttachment = null;
+        }
+
+        bool Shoot()
         {
             Debug.Log(Name + " shooting....!");
             return true;
         }
 
-        public virtual void Show()
+        void ShowGraphics()
         {
             m_Graphics.SetActive(true);
         }
 
-        public virtual void Hide()
+        void HideGraphics()
         {
             m_Graphics.SetActive(false);
         }

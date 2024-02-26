@@ -24,8 +24,8 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         [SerializeField]
         GameObject m_Graphics;
 
-        [SerializeField]
-        GameObject m_RootGO;
+        [SerializeField, Tooltip("The root game object of this item")]
+        protected GameObject m_RootGO;
 
         Transform m_handTransform;
 
@@ -64,12 +64,12 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             return true;
         }
 
-        void ShowGraphics()
+        protected void ShowGraphics()
         {
             m_Graphics.SetActive(true);
         }
 
-        void HideGraphics()
+        protected void HideGraphics()
         {
             m_Graphics.SetActive(false);
         }
