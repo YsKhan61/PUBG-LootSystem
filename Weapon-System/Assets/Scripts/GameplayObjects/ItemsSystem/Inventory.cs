@@ -15,7 +15,8 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         [Header("Broadcast to")]
 
         [SerializeField, Tooltip("When a common item is added to the inventory, this event is invoked.")]
-        InventoryItemEventChannelSO m_OnCommonItemAddedEvent;
+        [FormerlySerializedAs("m_OnCommonItemAddedEvent")]
+        InventoryItemEventChannelSO m_InventoryItemAddedEvent;
 
         [SerializeField, Tooltip("When a gun item is added to the inventory, this event is invoked.")]
         GunItemIntEventChannelSO m_OnGunItemAddedEvent;
@@ -23,7 +24,8 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         [Header("Listens to")]
 
         [SerializeField, Tooltip("Listen to this event to remove the respective common item from inventory.")]
-        InventoryItemEventChannelSO m_OnCommonItemUIRemovedEvent;
+        [FormerlySerializedAs("m_OnCommonItemUIRemovedEvent")]
+        InventoryItemEventChannelSO m_OnInventoryItemUIRemovedEvent;
 
         [SerializeField, Tooltip("Listen to this event to remove the respective gun item from inventory.")]
         GunItemIntEventChannelSO m_OnGunItemUIRemovedEvent;
@@ -40,15 +42,15 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         [Header("---------Debug purposes----------")]
 
-        [Header("Common items")]
+        [Header("Inventory items")]
 
 
         /// <summary>
-        /// We are not using IStorable interface rather using CommonItem,
+        /// We are not using IStorable interface rather using InventoryItem,
         /// because we might need informations like Name, Description, ItemDataSO, etc. of the item
         /// </summary>
         [SerializeField]        // SerializeField is used only for Debug purposes
-        List<InventoryItem> m_CommonItems;
+        List<InventoryItem> m_InventoryItems;
 
         [Space(10)]
 
@@ -59,11 +61,11 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         private void Start()
         {
-            m_CommonItems = new List<InventoryItem>();
+            m_InventoryItems = new List<InventoryItem>();
             m_Guns = new GunItem[2];                    // For now only 2 guns are allowed
 
             
-            m_OnCommonItemUIRemovedEvent.OnEventRaised += RemoveCommonItem;
+            m_OnInventoryItemUIRemovedEvent.OnEventRaised += RemoveInventoryItem;
             m_OnGunItemUIRemovedEvent.OnEventRaised += RemoveGunItem;
             m_OnGunItemUISwappedEvent.OnEventRaised += SwapGunItems;
         }
@@ -71,21 +73,21 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         private void OnDestroy()
         {
             
-            m_OnCommonItemUIRemovedEvent.OnEventRaised -= RemoveCommonItem;
+            m_OnInventoryItemUIRemovedEvent.OnEventRaised -= RemoveInventoryItem;
             m_OnGunItemUIRemovedEvent.OnEventRaised -= RemoveGunItem;
             m_OnGunItemUISwappedEvent.OnEventRaised -= SwapGunItems;
         }
 
         public void AddItemToInventory(InventoryItem item)
         {
-            m_CommonItems.Add(item);
-            m_OnCommonItemAddedEvent.RaiseEvent(item);
+            m_InventoryItems.Add(item);
+            m_InventoryItemAddedEvent.RaiseEvent(item);
             Debug.Log(item.Name + " added to inventory!");
         }
 
-        public void RemoveCommonItem(InventoryItem item)
+        public void RemoveInventoryItem(InventoryItem item)
         {
-            m_CommonItems.Remove(item);
+            m_InventoryItems.Remove(item);
             Debug.Log(item.Name + " removed from inventory!");
         }
 
@@ -137,7 +139,6 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         private void RemoveGunItem(GunItem item, int _)
         {
-
             int index = GetIndexOfGunItem(item);
             if (index < 0 || index >= m_Guns.Length)
             {

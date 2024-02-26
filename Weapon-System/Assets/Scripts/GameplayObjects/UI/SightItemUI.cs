@@ -38,6 +38,8 @@ namespace Weapon_System.GameplayObjects.UI
         [HideInInspector]
         public bool IsDragSuccess;
 
+        private ItemUI m_ItemUI;
+
         private void Awake()
         {
             m_Canvas = GetComponentInParent<Canvas>();
@@ -65,9 +67,9 @@ namespace Weapon_System.GameplayObjects.UI
             // Right click to drop item
             if (eventData.button == PointerEventData.InputButton.Right)
             {
-                // m_InventoryUI?.RemoveGunItemUIFromWeaponInventoryUI(m_SightItem);
-                ResetItemData();
-                Hide();
+                // Store back the SightItem in the inventory by invoking an event
+                // Make sure to reset the ItemUI's position to the last anchored position
+                ResetItemDataAndHide();
             }
         }
 
@@ -118,8 +120,15 @@ namespace Weapon_System.GameplayObjects.UI
             else if (eventData.pointerDrag.TryGetComponent(out ItemUI itemUI))
             {
                 // an ItemUI is being dropped on this SightItemUI
+                // Check WeaponInventoryUI for 
                 // Check if the ItemUI is of the same type as this SightItemUI
-                //If yes, then replace the 
+                // if yes,
+                // Get GunItemData from the WeaponInventoryUI, and check if this SightItem can be attached to the GunItem
+                // if yes,
+                // then remove this SightItem from the inventory
+                // Then hide the ItemUI and store it in a member variable
+                // then set the ItemUI's datas to this SightItemUI and Show it
+                // then set this attachment to the GunItem
             }
         }
 
@@ -128,7 +137,7 @@ namespace Weapon_System.GameplayObjects.UI
             SlotIndex = index;
         }
 
-        public void SetItemData(GunItem item)
+        public void SetItemDataAndShow(GunItem item)
         {
             // m_SightItem = item;
             ItemData = item.ItemData;
@@ -137,11 +146,13 @@ namespace Weapon_System.GameplayObjects.UI
             Show();
         }
 
-        void ResetItemData()
+        void ResetItemDataAndHide()
         {
             m_SightItem = null;
             ItemData = null;
             m_Icon.sprite = null;
+
+            Hide();
         }
 
         private void Show()

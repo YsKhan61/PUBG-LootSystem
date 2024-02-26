@@ -66,8 +66,7 @@ namespace Weapon_System.GameplayObjects.UI
             if (eventData.button == PointerEventData.InputButton.Right)
             {
                 m_InventoryUI?.RemoveGunItemUIFromWeaponInventoryUI(m_Item);
-                ResetItemData();
-                Hide();
+                ResetItemDataAndHide();
             }
         }
 
@@ -117,7 +116,7 @@ namespace Weapon_System.GameplayObjects.UI
             SlotIndex = index;
         }
 
-        public void SetItemData(GunItem item)
+        public void SetItemDataAndShow(GunItem item)
         {
             m_Item = item;
             ItemData = item.ItemData;
@@ -127,12 +126,14 @@ namespace Weapon_System.GameplayObjects.UI
             Show();
         }
 
-        void ResetItemData()
+        void ResetItemDataAndHide()
         {
             m_Item = null;
             ItemData = null;
             m_Icon.sprite = null;
             m_NameText.text = "";
+
+            Hide();
         }
 
         private void Show()
