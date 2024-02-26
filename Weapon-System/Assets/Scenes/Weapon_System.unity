@@ -226,7 +226,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ItemUIType: 0
   m_Icon: {fileID: 0}
-  m_InventoryUI: {fileID: 0}
+  m_WeaponInventoryUI: {fileID: 0}
   IsDragSuccess: 0
 --- !u!1 &27002040
 GameObject:
@@ -1338,7 +1338,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ItemUIType: 0
   m_Icon: {fileID: 0}
-  m_InventoryUI: {fileID: 0}
+  m_WeaponInventoryUI: {fileID: 0}
   IsDragSuccess: 0
 --- !u!1 &705507993
 GameObject:
@@ -3140,7 +3140,7 @@ MonoBehaviour:
   m_ItemUIType: 1
   m_Icon: {fileID: 1322486935}
   m_NameText: {fileID: 453972627}
-  m_InventoryUI: {fileID: 218537252}
+  m_WeaponInventoryUI: {fileID: 218537252}
   IsDragSuccess: 0
 --- !u!225 &1400475446
 CanvasGroup:
@@ -5274,7 +5274,7 @@ MonoBehaviour:
   m_ItemUIType: 1
   m_Icon: {fileID: 50092946}
   m_NameText: {fileID: 1733270343}
-  m_InventoryUI: {fileID: 218537252}
+  m_WeaponInventoryUI: {fileID: 218537252}
   IsDragSuccess: 0
 --- !u!1001 &9171122600840810886
 PrefabInstance:

@@ -25,6 +25,7 @@ namespace Weapon_System.GameplayObjects.UI
         private Vector2 m_lastAnchoredPosition;
 
         private InventoryUI m_InventoryUI;
+
         private InventoryItem m_Item;
         public InventoryItem Item => m_Item;
 

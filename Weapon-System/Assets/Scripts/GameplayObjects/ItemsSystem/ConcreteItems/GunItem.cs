@@ -56,9 +56,8 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             return true;
         }
 
-        public virtual bool StoreInInventory(Inventory inventory)
+        public virtual bool StoreInInventory()
         {
-            inventory.AddGunToGunInventory(this);
             return true;
         }
 

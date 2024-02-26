@@ -45,12 +45,9 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
     {
         /// <summary>
         /// Store the item in the inventory
-        /// Each item can be stored in different places in inventory,
-        /// hence we send the inventory to the item to store itself in the inventory
         /// </summary>
-        /// <param name="inventory"></param>
         /// <returns></returns>
-        public bool StoreInInventory(Inventory inventory);
+        public bool StoreInInventory();
     }
 
 

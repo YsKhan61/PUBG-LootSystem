@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Weapon_System.GameplayObjects.ItemsSystem;
 
@@ -26,8 +27,8 @@ namespace Weapon_System.GameplayObjects.UI
 
         private Vector2 m_lastAnchoredPosition;
 
-        [SerializeField]
-        private WeaponInventoryUI m_InventoryUI;
+        [SerializeField, FormerlySerializedAs("m_InventoryUI")]
+        private WeaponInventoryUI m_WeaponInventoryUI;
 
         private ISightAttachment m_SightItem;
         public ISightAttachment Item => m_SightItem;
@@ -120,12 +121,21 @@ namespace Weapon_System.GameplayObjects.UI
             else if (eventData.pointerDrag.TryGetComponent(out ItemUI itemUI))
             {
                 // an ItemUI is being dropped on this SightItemUI
-                // Check WeaponInventoryUI for 
+
                 // Check if the ItemUI is of the same type as this SightItemUI
+                if (itemUI.ItemData.UIType != ItemUIType)
+                {
+                    return;
+                }
+
                 // if yes,
                 // Get GunItemData from the WeaponInventoryUI, and check if this SightItem can be attached to the GunItem
-                // if yes,
-                // then remove this SightItem from the inventory
+                if (!m_WeaponInventoryUI.TryGetGunItemFromWeaponInventoryUI(SlotIndex, out GunItem gun))
+                {
+                    return;
+                }
+
+                // if yes, then remove this SightItem from the inventory using an event
                 // Then hide the ItemUI and store it in a member variable
                 // then set the ItemUI's datas to this SightItemUI and Show it
                 // then set this attachment to the GunItem

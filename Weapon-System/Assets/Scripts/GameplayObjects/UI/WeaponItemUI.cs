@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Weapon_System.GameplayObjects.ItemsSystem;
 
@@ -29,8 +30,8 @@ namespace Weapon_System.GameplayObjects.UI
 
         private Vector2 m_lastAnchoredPosition;
 
-        [SerializeField]
-        private WeaponInventoryUI m_InventoryUI;
+        [SerializeField, FormerlySerializedAs("m_InventoryUI")]
+        private WeaponInventoryUI m_WeaponInventoryUI;
 
         private GunItem m_Item;
         public GunItem Item => m_Item;
@@ -65,7 +66,7 @@ namespace Weapon_System.GameplayObjects.UI
             // Right click to drop item
             if (eventData.button == PointerEventData.InputButton.Right)
             {
-                m_InventoryUI?.RemoveGunItemUIFromWeaponInventoryUI(m_Item);
+                m_WeaponInventoryUI?.RemoveGunItemUIFromWeaponInventoryUI(m_Item);
                 ResetItemDataAndHide();
             }
         }
@@ -100,15 +101,26 @@ namespace Weapon_System.GameplayObjects.UI
             if (eventData.pointerDrag == null)
                 return;
 
-            if (!eventData.pointerDrag.TryGetComponent(out WeaponItemUI itemUI))
+            if (eventData.pointerDrag.TryGetComponent(out WeaponItemUI weaponItemUI))
             {
-                return;
+                if (weaponItemUI.ItemUIType == m_ItemUIType)
+                {
+                    m_WeaponInventoryUI.SwapWeaponItemUIs(weaponItemUI.SlotIndex, SlotIndex);
+                }
             }
-
-            if (itemUI.ItemUIType == m_ItemUIType)
+            else if (eventData.pointerDrag.TryGetComponent(out ItemUI itemUI))
             {
-                m_InventoryUI.SwapWeaponItemUIs(itemUI.SlotIndex, SlotIndex);
+                if (itemUI.ItemData.UIType == m_ItemUIType)
+                {
+                    // This is an ItemUI of a Gun Item,
+                    // If the index of this ItemUI matches with the index of ItemUI of the currently held Gun Item, then put away the gun from hand.
+                    // Drop the Gun Item from the Inventory matchin the index of this ItemUI
+                    // Replace the current Gun Item UI datas with the new Gun Item UI datas
+                    // Add the new Gun Item to the inventory
+                    // If the previous gun was in hand, then add the new gun to the hand
+                }
             }
+            
         }
 
         public void SetSlotIndex(int index)

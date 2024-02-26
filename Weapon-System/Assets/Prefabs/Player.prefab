@@ -513,6 +513,10 @@ MonoBehaviour:
     type: 2}
   m_OnGunItemUISwappedEvent: {fileID: 11400000, guid: 0f4de236d6d17ca46a8bae2d726da53c,
     type: 2}
+  m_InventoryItemAddedEvent: {fileID: 11400000, guid: 259c3b4dd8a97a74d81fd063a3ef2b08,
+    type: 2}
+  m_OnGunItemAddedEvent: {fileID: 11400000, guid: e0bc3b9c8a58e6542966ee9c2f16ceb6,
+    type: 2}
   m_Inventory: {fileID: 6398577312195835515}
   m_ItemLayer:
     serializedVersion: 2
@@ -562,17 +566,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4bfafc705cbf8d4b9449da700825fd3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_OnCommonItemAddedEvent: {fileID: 11400000, guid: 259c3b4dd8a97a74d81fd063a3ef2b08,
-    type: 2}
-  m_OnGunItemAddedEvent: {fileID: 11400000, guid: e0bc3b9c8a58e6542966ee9c2f16ceb6,
-    type: 2}
-  m_OnCommonItemUIRemovedEvent: {fileID: 11400000, guid: 2620e14ce84026742843c989b15d9f86,
+  m_OnInventoryItemUIRemovedEvent: {fileID: 11400000, guid: 2620e14ce84026742843c989b15d9f86,
     type: 2}
   m_OnGunItemUIRemovedEvent: {fileID: 11400000, guid: 192f4dd12ef944f469016a701256cb7d,
     type: 2}
   m_OnGunItemUISwappedEvent: {fileID: 11400000, guid: 0f4de236d6d17ca46a8bae2d726da53c,
     type: 2}
-  m_CommonItems: []
+  m_InventoryItems: []
   m_Guns: []
 --- !u!1001 &4392950461943648704
 PrefabInstance:

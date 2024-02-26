@@ -1,3 +1,5 @@
+#if false
+
 using System;
 using UnityEngine;
 using Weapon_System.GameplayObjects.ItemsSystem;
@@ -7,24 +9,24 @@ using Weapon_System.Utilities;
 namespace Weapon_System.GameplayObjects.UI
 {
     /// <summary>
-    /// Manages the Weapon related UIs (WeaponItemUIs and WeaponSlotUIs) in the WeaponSlotUIs.
+    /// Manages the sight attachment UIs (SightItemUIs and SightSlotUIs) in the WeaponSlotUIs.
     /// </summary>
-    public class WeaponInventoryUI : MonoBehaviour
+    public class SightInventoryUI : MonoBehaviour
     {
         [Serializable]
-        class WeaponItemUISlotUIPair
+        class SightItemUISlotUIPair
         {
             [SerializeField]
-            internal WeaponItemUI weaponItemUI;
+            internal SightItemUI sightItemUI;
             [SerializeField]
-            internal WeaponSlotUI weaponSlotUI;
+            internal SightSlotUI sightSlotUI;
         }
 
 
-        [Header("Listens to")]
+        /*[Header("Listens to")]
 
         [SerializeField, Tooltip("When a gun item is added to the inventory, this event is invoked, Listen to this event to add a WeaponItemUI in respective WeaponSlotUI")]
-        GunItemIntEventChannelSO m_OnGunItemAddedToInventoryEvent;
+        GunItemIntEventChannelSO m_OnGunItemAddedToInventoryEvent;*/
 
         [Header("Broadcast to")]
 
@@ -37,13 +39,13 @@ namespace Weapon_System.GameplayObjects.UI
         [Space(10)]
 
         [SerializeField]
-        WeaponItemUISlotUIPair[] m_WeaponItemUISlotUIPairs;
+        SightItemUISlotUIPair[] m_WeaponItemUISlotUIPairs;
 
         private void Start()
         {
             for (int i = 0; i < m_WeaponItemUISlotUIPairs.Length; i++)
             {
-                m_WeaponItemUISlotUIPairs[i].weaponItemUI.SetSlotIndex(i);
+                m_WeaponItemUISlotUIPairs[i].sightItemUI.SetSlotIndex(i);
             }
 
             m_OnGunItemAddedToInventoryEvent.OnEventRaised += AddGunItemUIToInventoryUI;
@@ -68,19 +70,19 @@ namespace Weapon_System.GameplayObjects.UI
         /// </remarks>
         public void SwapWeaponItemUIs(int indexOfDroppedWeaponItemUI, int indexOfWeaponSlotUI, bool raiseEvent = true)
         {
-            WeaponItemUISlotUIPair leftPair = m_WeaponItemUISlotUIPairs[indexOfDroppedWeaponItemUI];
-            WeaponItemUISlotUIPair rightPair = m_WeaponItemUISlotUIPairs[indexOfWeaponSlotUI];
+            SightItemUISlotUIPair leftPair = m_WeaponItemUISlotUIPairs[indexOfDroppedWeaponItemUI];
+            SightItemUISlotUIPair rightPair = m_WeaponItemUISlotUIPairs[indexOfWeaponSlotUI];
 
             // return if the weaponItemUIToDrop is the same one as in the slot
-            if (leftPair.weaponItemUI == rightPair.weaponItemUI)
+            if (leftPair.sightItemUI == rightPair.sightItemUI)
                 return;
 
-            rightPair.weaponSlotUI.TryAddItemUIToSlotUI(leftPair.weaponItemUI);
-            leftPair.weaponSlotUI.TryAddItemUIToSlotUI(rightPair.weaponItemUI);
+            rightPair.sightSlotUI.TryAddItemUIToSlotUI(leftPair.sightItemUI);
+            leftPair.sightSlotUI.TryAddItemUIToSlotUI(rightPair.sightItemUI);
 
-            WeaponItemUI temp = leftPair.weaponItemUI;
-            leftPair.weaponItemUI = rightPair.weaponItemUI;
-            rightPair.weaponItemUI = temp;
+            WeaponItemUI temp = leftPair.sightItemUI;
+            leftPair.sightItemUI = rightPair.sightItemUI;
+            rightPair.sightItemUI = temp;
 
             if (raiseEvent)
                 m_OnWeaponItemUISwappedEvent?.RaiseEvent(indexOfDroppedWeaponItemUI, indexOfWeaponSlotUI);
@@ -96,7 +98,7 @@ namespace Weapon_System.GameplayObjects.UI
             if (!TryGetIndexOfWeaponItemUIFromGunItem(item, out int index))
                 return;
 
-            m_WeaponItemUISlotUIPairs[index].weaponSlotUI.TryRemoveItemUIFromSlotUI();
+            m_WeaponItemUISlotUIPairs[index].sightSlotUI.TryRemoveItemUIFromSlotUI();
 
             if (raiseEvent)
                 m_OnWeaponItemUIRemovedEvent?.RaiseEvent(item, index);
@@ -112,16 +114,16 @@ namespace Weapon_System.GameplayObjects.UI
                 return false;
             }
 
-            gun = m_WeaponItemUISlotUIPairs[index].weaponItemUI.Item;
+            gun = m_WeaponItemUISlotUIPairs[index].sightItemUI.Item;
             return gun != null;
         }
 
         private void AddGunItemUIToInventoryUI(GunItem item, int index)
         {
-            WeaponItemUI weaponItemUI = m_WeaponItemUISlotUIPairs[index].weaponItemUI;
+            WeaponItemUI weaponItemUI = m_WeaponItemUISlotUIPairs[index].sightItemUI;
             weaponItemUI.SetItemDataAndShow(item);
             weaponItemUI.SetSlotIndex(index);
-            m_WeaponItemUISlotUIPairs[index].weaponSlotUI.TryAddItemUIToSlotUI(weaponItemUI);
+            m_WeaponItemUISlotUIPairs[index].sightSlotUI.TryAddItemUIToSlotUI(weaponItemUI);
         }
 
         private bool TryGetIndexOfWeaponItemUIFromGunItem(GunItem gunItem, out int index)
@@ -129,7 +131,7 @@ namespace Weapon_System.GameplayObjects.UI
             index = -1;
             for (int i = 0, length = m_WeaponItemUISlotUIPairs.Length; i < length; i++)
             {
-                if (m_WeaponItemUISlotUIPairs[i].weaponItemUI.Item == gunItem)
+                if (m_WeaponItemUISlotUIPairs[i].sightItemUI.Item == gunItem)
                 {
                     index = i;
                     return true;
@@ -139,3 +141,5 @@ namespace Weapon_System.GameplayObjects.UI
         }
     }
 }
+
+#endif

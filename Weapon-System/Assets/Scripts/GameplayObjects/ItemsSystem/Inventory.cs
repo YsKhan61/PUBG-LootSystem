@@ -8,19 +8,12 @@ using Weapon_System.Utilities;
 namespace Weapon_System.GameplayObjects.ItemsSystem
 {
     /// <summary>
-    ///  Need to create an HashSet of all the items that will be stored in the inventory
+    /// The main Inventory of the Game, where player will store all collected and storable items
+    /// This will be only listening to events, and will not be broadcasting any event.
+    /// It will listen to directly collected item event, or when event is raised by ItemUI added to the InventoryUI
     /// </summary>
     public class Inventory : MonoBehaviour
     {
-        [Header("Broadcast to")]
-
-        [SerializeField, Tooltip("When a common item is added to the inventory, this event is invoked.")]
-        [FormerlySerializedAs("m_OnCommonItemAddedEvent")]
-        InventoryItemEventChannelSO m_InventoryItemAddedEvent;
-
-        [SerializeField, Tooltip("When a gun item is added to the inventory, this event is invoked.")]
-        GunItemIntEventChannelSO m_OnGunItemAddedEvent;
-
         [Header("Listens to")]
 
         [SerializeField, Tooltip("Listen to this event to remove the respective common item from inventory.")]
@@ -32,11 +25,6 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         [SerializeField, Tooltip("Listen to this event to swap the respective guns in inventory.")]
         IntIntEventChannelSO m_OnGunItemUISwappedEvent;
-
-        [Space(10)]
-
-        /*[SerializeField]
-        ItemUserHand m_UserHand;*/
 
         [Space(10)]
 
@@ -81,7 +69,6 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         public void AddItemToInventory(InventoryItem item)
         {
             m_InventoryItems.Add(item);
-            m_InventoryItemAddedEvent.RaiseEvent(item);
             Debug.Log(item.Name + " added to inventory!");
         }
 
@@ -91,7 +78,12 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             Debug.Log(item.Name + " removed from inventory!");
         }
 
-        public void AddGunToGunInventory(GunItem gunItem)
+        /// <summary>
+        /// Stores the gun item in separate array.
+        /// </summary>
+        /// <param name="gunItem">The gun item to store</param>
+        /// <returns>Returns the index of the GunItem array where the gun is stored</returns>
+        public int AddGunToGunInventory(GunItem gunItem)
         {
             // Add to the first empty slot
             for (int i = 0; i < m_Guns.Length; i++)
@@ -99,18 +91,15 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
                 if (m_Guns[i] == null)
                 {
                     m_Guns[i] = gunItem;
-                    // m_UserHand.ItemInHand = item;                  // Set the gun in hand
-                    m_OnGunItemAddedEvent.RaiseEvent(gunItem, i);
                     Debug.Log(gunItem.Name + " added to inventory!");
-                    return;
+                    return i;
                 }
             }
 
             // If no empty slot and no gun in hand, replace the first gun
             m_Guns[0] = gunItem;
-            // m_UserHand.ItemInHand = gunItem;                  // Set the gun in hand
-            m_OnGunItemAddedEvent.RaiseEvent(gunItem, 0);
             Debug.Log(gunItem.Name + " added to inventory!");
+            return 0;
         }
 
         public int GetIndexOfGunItem(GunItem item)
