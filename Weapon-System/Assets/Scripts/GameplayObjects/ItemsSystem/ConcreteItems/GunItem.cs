@@ -12,14 +12,14 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
     ///  ---------------------- NOIE----------------------
     ///  This Gun item can attach a sight attachment to it.
     /// </summary>
-    public class GunItem : ItemBase, ICollectable, IStorable, IDropable, IP_Usable, IS_Usable, IHoldable, ISightHolder
+    public class GunItem : ItemBase, ICollectable, IStorable, IDropable, IP_Usable, IS_Usable, IHoldable
     {
         public GunDataSO GunData => m_ItemData as GunDataSO;
         public bool IsCollected { get; protected set; }
 
         public bool IsInHand { get; protected set; }
 
-        public ISightAttachment SightAttachment { get; protected set; }
+        public SightAttachmentItem SightAttachment { get; protected set; }
 
         [SerializeField, Tooltip("The root game object of this item")]
         GameObject m_RootGO;
@@ -116,7 +116,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             return true;
         }
 
-        public void AttachSight(ISightAttachment sight)
+        public void AttachSight(SightAttachmentItem sight)
         {
             if (SightAttachment != null)
             {

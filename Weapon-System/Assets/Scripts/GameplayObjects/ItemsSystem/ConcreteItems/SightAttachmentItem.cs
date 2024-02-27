@@ -4,9 +4,9 @@ using UnityEngine;
 namespace Weapon_System.GameplayObjects.ItemsSystem
 {
     /// <summary>
-    /// The sight item that can be attached to the gun
+    /// The sight item that can be attached to any ISightHolder
     /// </summary>
-    public class SightAttachmentItem : InventoryItem, ISightAttachment
+    public class SightAttachmentItem : InventoryItem, IWeaponAttachment
     {
         public SightAttachmentDataSO SightAttachmentData => m_ItemData as SightAttachmentDataSO;
 
@@ -19,15 +19,15 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             return true;
         }
 
-        public bool AttachToWeapon(ISightHolder sightHolder)
+        public bool AttachToWeapon(GunItem gun)
         {
-            if (sightHolder.SightAttachment != this as ISightAttachment)
+            if (gun.SightAttachment != this)
             {
                 Debug.LogError("First sight need to be attached by ISightHolder, then this method can be called from ISightHolder only!");
                 return false;
             }
 
-            m_RootGO.transform.SetParent(sightHolder.SightHolderTransform);
+            m_RootGO.transform.SetParent(gun.SightHolderTransform);
             m_RootGO.transform.localPosition = Vector3.zero;
             m_RootGO.transform.localRotation = Quaternion.identity;
 

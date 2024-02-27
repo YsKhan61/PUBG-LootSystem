@@ -17,7 +17,7 @@ namespace Weapon_System.GameplayObjects.UI
         [SerializeField]
         Image m_Icon;
 
-        [SerializeField, FormerlySerializedAs("m_SightInventoryUI")]
+        [SerializeField]
         SightInventoryUIMediator m_SightInventoryUIMediator;
 
         [SerializeField]
@@ -168,7 +168,7 @@ namespace Weapon_System.GameplayObjects.UI
                 //then check if the GunItem of this slot already has a SightItem attached to it (also SightItem can be present in this class)
                 if (isSightPresentInThisSlot)
                 {
-                    if (gunInThisSlot.SightAttachment != m_StoredSightItem as ISightAttachment)
+                    if (gunInThisSlot.SightAttachment != m_StoredSightItem)
                     {
                         Debug.LogError("This should not happen as the Gun's sight attachment must match with the stored Sight Attachment Item");
                         return;
@@ -242,7 +242,7 @@ namespace Weapon_System.GameplayObjects.UI
                 // then check if the GunItem already has a SightItem attached to it (also SightItem can be present in this class)
                 if (gunInThisSlot.SightAttachment != null || StoredSightItem != null)
                 {
-                    if (gunInThisSlot.SightAttachment != StoredSightItem as ISightAttachment)
+                    if (gunInThisSlot.SightAttachment != StoredSightItem)
                     {
                         Debug.LogError("This should not happen as the Gun's sight attachment must match with the stored Sight Attachment Item");
                         return;

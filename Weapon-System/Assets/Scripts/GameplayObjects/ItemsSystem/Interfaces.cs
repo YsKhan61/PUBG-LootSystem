@@ -107,47 +107,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         /// </summary>
         /// <param name="gun">the gun on which the attachment will be attached</param>
         /// <returns></returns>
-        public bool AttachToWeapon(ISightHolder sightHolder);
+        public bool AttachToWeapon(GunItem gun);
         public bool DetachFromWeapon();
-    }
-
-
-    /// <summary>
-    /// Interface for the holder of the sight attachment.
-    /// eg: Guns
-    /// </summary>
-    public interface ISightHolder
-    {
-        /// <summary>
-        /// Check if the type of the ISightAttachment is allowed to be attached to the ISightHolder
-        /// </summary>
-        /// <param name="tagToCheck">type of the ISightAttachment to check</param>
-        /// <returns></returns>
-        public bool IsSightTypeCompatible(ItemTagSO tagToCheck);
-        public ISightAttachment SightAttachment { get; }        // needed in the AttachToWeapon method of the ISightAttachment
-        public Transform SightHolderTransform { get; }          // needed in the AttachToWeapon method of the ISightAttachment
-        public void AttachSight(ISightAttachment sight);
-        public void DetachSight();
-    }
-
-
-    /// <summary>
-    /// ---------------------------NOTE------------------------------------
-    /// We don't need this interface, as the sight item types are really not that different.
-    /// We can use the IWeaponAttachment interface for the sight attachment items.
-    /// 
-    /// from each other, also there are only a few sight types.
-    /// A base SightAttachmentItem class can be used, and inherited by the different sight items.
-    /// SightAttachmentItemDataSO can be used to store the different sight attachment data.
-    /// IronSight can be a default sight attachment item, and can be attached to the gun by default.
-    /// It don't need to have a graphics.
-    /// Other sights will have graphics.
-    /// -------------------------------------------------------------------------
-    /// Interface for the sight attachment items. 
-    /// eg: Red dot sight, Holographic sight, 2x, 4x, 8x scopes etc.
-    /// </summary>
-    public interface  ISightAttachment : IWeaponAttachment
-    {
-        public bool AimDownSight();
     }
 }
