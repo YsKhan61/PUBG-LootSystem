@@ -72,7 +72,7 @@ namespace Weapon_System.GameplayObjects.UI
                 if (!m_SightInventoryUI.WeaponInventoryUI.TryGetGunItemFromWeaponInventoryUI(
                     SlotIndex, out GunItem gun))
                 {
-                    Debug.LogError("This should not happen, as a SightItemUI can only be present in the inventory if it is attached to a GunItem");
+                    // right clicked on an empty SightItemUI
                     return;
                 }
 
@@ -82,7 +82,7 @@ namespace Weapon_System.GameplayObjects.UI
                 m_SightInventoryUI.AddSightItemToInventory(m_StoredSightItem);
 
                 // Make sure to reset the ItemUI's position to the last anchored position
-                ResetAndShowItemUI();
+                ShowItemUIAndResetItsPosition();
 
                 ResetDataAndHideSightItemUI();
             }
@@ -202,7 +202,7 @@ namespace Weapon_System.GameplayObjects.UI
                         m_SightInventoryUI.AddSightItemToInventory(droppedSightItemUI.StoredSightItem);
 
                         // Make sure to reset the droppedSightItemUI's ItemUI's position to the last anchored position
-                        ResetAndShowItemUI();
+                        ShowItemUIAndResetItsPosition();
 
                         ResetDataAndHideSightItemUI();
                     }
@@ -265,7 +265,7 @@ namespace Weapon_System.GameplayObjects.UI
                     else
                     {
                         // Show the ItemUI if it is not null, and block raycast, and fallback to last position
-                        ResetAndShowItemUI();
+                        ShowItemUIAndResetItsPosition();
                     }
                 }
 
@@ -315,12 +315,13 @@ namespace Weapon_System.GameplayObjects.UI
             m_ItemUI = itemUI;
         }
 
-        void ResetAndShowItemUI()
+        void ShowItemUIAndResetItsPosition()
         {
             if (m_ItemUI == null)
             {
                 // If the ItemUI is null, then throw an error as every SightItemUI should have an ItemUI
                 Debug.LogError("This should not be null");
+                return;
             }
             else
             {
