@@ -1,13 +1,16 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Weapon_System.GameplayObjects.ItemsSystem;
 
 
 namespace Weapon_System.GameplayObjects.UI
 {
+
+    /// <summary>
+    /// Manages the UIs of the guns in the inventory. [ Drag drop, swap, remove, add etc ]
+    /// </summary>
     [RequireComponent(typeof(RectTransform), typeof(CanvasGroup))]
     public class WeaponItemUI : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler
     {
@@ -21,24 +24,24 @@ namespace Weapon_System.GameplayObjects.UI
         [SerializeField]
         TextMeshProUGUI m_NameText;
 
-        public ItemDataSO ItemData { get; private set; }            // not needed, as we are storing the reference to the GunItem in m_GunItem
-        public int SlotIndex { get; private set; }
+        [SerializeField]
+        WeaponInventoryUIMediator m_WeaponInventoryUIMediator;
+
+        [SerializeField]
+        int m_SlotIndex;
+        public int SlotIndex => m_SlotIndex;
 
         private RectTransform m_RectTransform;
         private Canvas m_Canvas;
         private CanvasGroup m_CanvasGroup;
 
         private Vector2 m_lastAnchoredPosition;
-
-        [SerializeField, FormerlySerializedAs("m_InventoryUI")]
-        private WeaponInventoryUIMediator m_WeaponInventoryUI;
-
         
         private GunItem m_StoredGunItem;
         /// <summary>
         /// This stores the GunItem data of this ItemUI, from the Inventory
         /// </summary>
-        public GunItem GunItem => m_StoredGunItem;
+        public GunItem StoredGunItem => m_StoredGunItem;
 
         [HideInInspector]
         public bool IsDragSuccess;
@@ -70,8 +73,12 @@ namespace Weapon_System.GameplayObjects.UI
             // Right click to drop item
             if (eventData.button == PointerEventData.InputButton.Right)
             {
-                m_WeaponInventoryUI?.RemoveGunItemUIFromGunSlotUI(m_StoredGunItem);
-                ResetItemDataAndHide();
+                // Check if GunItem is present in the ItemUI
+                if (m_StoredGunItem == null)
+                    return;
+
+                m_WeaponInventoryUIMediator.BroadcastWeaponItemUIRemovedEvent(m_StoredGunItem, m_SlotIndex);
+                ResetDataAndHideGunItemUI();
             }
         }
 
@@ -105,17 +112,24 @@ namespace Weapon_System.GameplayObjects.UI
             if (eventData.pointerDrag == null)
                 return;
 
-            if (eventData.pointerDrag.TryGetComponent(out WeaponItemUI weaponItemUI))
+            if (eventData.pointerDrag.TryGetComponent(out WeaponItemUI droppedWeaponItemUI))
             {
-                if (weaponItemUI.ItemUIType == m_ItemUIType)
+                if (droppedWeaponItemUI.ItemUIType == m_ItemUIType)
                 {
                     // Check if the GunItem Type of dropped WeaponItemUI is same as this WeaponItemUI
-                    if (weaponItemUI.ItemData.ItemTag == ItemData.ItemTag)
+                    if (droppedWeaponItemUI.StoredGunItem.ItemData.ItemTag == StoredGunItem.ItemData.ItemTag)
                     {
                         return;
                     }
 
-                    m_WeaponInventoryUI.SwapWeaponItemUIs(weaponItemUI.SlotIndex, SlotIndex);
+                    Transform parentOfDroppedItemUI = droppedWeaponItemUI.transform.parent;
+                    int slotIndexOfDroppedItemUI = droppedWeaponItemUI.SlotIndex;
+                    int slotIndexOfThisItemUI = m_SlotIndex;
+
+                    m_WeaponInventoryUIMediator.DropWeaponItemUIToSlot(droppedWeaponItemUI, transform.parent, m_SlotIndex);
+                    m_WeaponInventoryUIMediator.DropWeaponItemUIToSlot(this, parentOfDroppedItemUI, slotIndexOfDroppedItemUI);
+
+                    m_WeaponInventoryUIMediator.BroadcastWeaponItemUIsSwappedEvent(slotIndexOfDroppedItemUI, slotIndexOfThisItemUI);
                 }
             }
             else if (eventData.pointerDrag.TryGetComponent(out ItemUI itemUI))
@@ -135,23 +149,21 @@ namespace Weapon_System.GameplayObjects.UI
 
         public void SetSlotIndex(int index)
         {
-            SlotIndex = index;
+            m_SlotIndex = index;
         }
 
         public void SetItemDataAndShow(GunItem item)
         {
             m_StoredGunItem = item;
-            ItemData = item.ItemData;
-            m_Icon.sprite = ItemData.IconSprite;
-            m_NameText.text = ItemData.name;
+            m_Icon.sprite = StoredGunItem.ItemData.IconSprite;
+            m_NameText.text = StoredGunItem.ItemData.name;
 
             Show();
         }
 
-        void ResetItemDataAndHide()
+        void ResetDataAndHideGunItemUI()
         {
             m_StoredGunItem = null;
-            ItemData = null;
             m_Icon.sprite = null;
             m_NameText.text = "";
 

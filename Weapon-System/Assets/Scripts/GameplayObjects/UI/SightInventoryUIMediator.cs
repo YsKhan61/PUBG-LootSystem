@@ -6,7 +6,7 @@ using Weapon_System.GameplayObjects.ItemsSystem;
 namespace Weapon_System.GameplayObjects.UI
 {
     /// <summary>
-    /// Manages the sight attachment UIs (SightItemUIs and SightSlotUIs) in the WeaponSlotUIs.
+    /// Manages the sight attachment UIs in the WeaponSlotUIs. [Drag drop, swap, remove, add etc]
     /// </summary>
     public class SightInventoryUIMediator : MonoBehaviour
     {
@@ -17,12 +17,12 @@ namespace Weapon_System.GameplayObjects.UI
         WeaponInventoryUIMediator m_WeaponInventoryUI;
         public WeaponInventoryUIMediator WeaponInventoryUI => m_WeaponInventoryUI;
 
-        public void AddSightItemToInventory(InventoryItem item)
+        public void AddItemToInventory(InventoryItem item)
         {
             m_Inventory.AddItemToInventory(item);
         }
 
-        public void RemoveSightItemFromInventory(InventoryItem item)
+        public void RemoveItemFromInventory(InventoryItem item)
         {
             m_Inventory.RemoveInventoryItem(item);
         }
@@ -31,7 +31,7 @@ namespace Weapon_System.GameplayObjects.UI
         /// Drop the other SightItemUI to this SightItemUI
         /// </summary>
         /// <param name="itemUI">the other SightItemUI</param>
-        public void DropOtherSightItemUIToSlot(SightItemUI itemUI, Transform slotTransform, int slotIndex)
+        public void DropSightItemUIToSlot(SightItemUI itemUI, Transform slotTransform, int slotIndex)
         {
             itemUI.transform.SetParent(slotTransform);
             itemUI.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;

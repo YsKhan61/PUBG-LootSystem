@@ -11,16 +11,6 @@ namespace Weapon_System.GameplayObjects.UI
     /// </summary>
     public class WeaponInventoryUIMediator : MonoBehaviour
     {
-        [Serializable]
-        class WeaponItemUISlotUIPair
-        {
-            [SerializeField]
-            internal WeaponItemUI weaponItemUI;
-            [SerializeField]
-            internal WeaponSlotUI weaponSlotUI;
-        }
-
-
         [Header("Listens to")]
 
         [SerializeField, Tooltip("When a gun item is added to the inventory, this event is invoked, Listen to this event to add a WeaponItemUI in respective WeaponSlotUI")]
@@ -37,15 +27,13 @@ namespace Weapon_System.GameplayObjects.UI
         [Space(10)]
 
         [SerializeField]
-        WeaponItemUISlotUIPair[] m_WeaponItemUISlotUIPairs;
+        WeaponItemUI[] m_WeaponItemUIs;
+
+        [SerializeField]
+        Inventory m_Inventory;
 
         private void Start()
         {
-            for (int i = 0; i < m_WeaponItemUISlotUIPairs.Length; i++)
-            {
-                m_WeaponItemUISlotUIPairs[i].weaponItemUI.SetSlotIndex(i);
-            }
-
             m_OnGunItemAddedToInventoryEvent.OnEventRaised += AddGunItemUIToInventoryUI;
         }
 
@@ -54,87 +42,71 @@ namespace Weapon_System.GameplayObjects.UI
             m_OnGunItemAddedToInventoryEvent.OnEventRaised -= AddGunItemUIToInventoryUI;
         }
 
-
-        /// <summary>
-        /// Swap the weapon item UIs in the weapon inventory UI's weapon slots.
-        /// </summary>
-        /// <param name="indexOfDroppedWeaponItemUI">index of the WeaponItemUI that is being dropped</param>
-        /// <param name="indexOfWeaponSlotUI">index of the WeaponSlotUI where the WeaponItemUI is being dropped</param>
-        /// <param name="raiseEvent">True - raise an event after swap complete, False - don't raise event</param>
-        /// <remarks>
-        /// It would be more simpler if we had have only 2 slots,
-        /// but if we want more slots, and swap UIs between them,
-        /// then this approach is better.
-        /// </remarks>
-        public void SwapWeaponItemUIs(int indexOfDroppedWeaponItemUI, int indexOfWeaponSlotUI, bool raiseEvent = true)
+        public void BroadcastWeaponItemUIRemovedEvent(GunItem item, int slotIndex)
         {
-            WeaponItemUISlotUIPair leftPair = m_WeaponItemUISlotUIPairs[indexOfDroppedWeaponItemUI];
-            WeaponItemUISlotUIPair rightPair = m_WeaponItemUISlotUIPairs[indexOfWeaponSlotUI];
-
-            // return if the weaponItemUIToDrop is the same one as in the slot
-            if (leftPair.weaponItemUI == rightPair.weaponItemUI)
-                return;
-
-            rightPair.weaponSlotUI.TryAddItemUIToSlotUI(leftPair.weaponItemUI);
-            leftPair.weaponSlotUI.TryAddItemUIToSlotUI(rightPair.weaponItemUI);
-
-            WeaponItemUI temp = leftPair.weaponItemUI;
-            leftPair.weaponItemUI = rightPair.weaponItemUI;
-            rightPair.weaponItemUI = temp;
-
-            if (raiseEvent)
-                m_OnWeaponItemUISwappedEvent?.RaiseEvent(indexOfDroppedWeaponItemUI, indexOfWeaponSlotUI);
+            m_OnWeaponItemUIRemovedEvent?.RaiseEvent(item, slotIndex);
         }
 
-        /// <summary>
-        /// Remove the GunItemUI from the GunSlotUI and raise an event.
-        /// </summary>
-        /// <param name="item">The GunItem to be removed</param>
-        /// <param name="raiseEvent">True - raise an event after swap complete, False - don't raise event</param>
-        public void RemoveGunItemUIFromGunSlotUI(GunItem item, bool raiseEvent = true)
+        public void BroadcastWeaponItemUIsSwappedEvent(int indexOfDroppedWeaponItemUI, int indexOfWeaponSlotUI)
         {
-            if (!TryGetIndexOfWeaponItemUIFromGunItem(item, out int index))
-                return;
-
-            m_WeaponItemUISlotUIPairs[index].weaponSlotUI.TryRemoveItemUIFromSlotUI();
-
-            if (raiseEvent)
-                m_OnWeaponItemUIRemovedEvent?.RaiseEvent(item, index);
+            m_OnWeaponItemUISwappedEvent?.RaiseEvent(indexOfDroppedWeaponItemUI, indexOfWeaponSlotUI);
         }
 
         public bool TryGetGunItemFromWeaponInventoryUI(int index, out GunItem gun)
         {
             gun = null;
 
-            if (index < 0 || index >= m_WeaponItemUISlotUIPairs.Length)
+            if (index < 0 || index >= m_WeaponItemUIs.Length)
             {
                 Debug.LogError("Index out of range");
                 return false;
             }
 
-            gun = m_WeaponItemUISlotUIPairs[index].weaponItemUI.GunItem;
+            gun = m_WeaponItemUIs[index].StoredGunItem;
             return gun != null;
+        }
+
+        public void DropWeaponItemUIToSlot(WeaponItemUI itemUI, Transform slotTransform, int slotIndex)
+        {
+            itemUI.transform.SetParent(slotTransform);
+            itemUI.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+            itemUI.IsDragSuccess = true;
+
+            itemUI.SetSlotIndex(slotIndex);
         }
 
         private void AddGunItemUIToInventoryUI(GunItem item, int index)
         {
-            WeaponItemUI weaponItemUI = m_WeaponItemUISlotUIPairs[index].weaponItemUI;
+            // If the gun is already in the inventory, then return for now.
+            // This is a temporary solution, as we are not removing the gun from the inventory.
+            // We are just adding the gun to the inventory.
+            // Later, we gonna implement the mechanics applied in PUBG
+            if (TryGetGunItemFromWeaponInventoryUI(index, out GunItem _))
+            {
+                return;
+            }
+
+            if (!TryGetWeaponItemUIFromSlotIndex(index, out WeaponItemUI weaponItemUI))
+            {
+                Debug.LogError("WeaponItemUI not found for the index: " + index);
+                return;
+            }
+
             weaponItemUI.SetItemDataAndShow(item);
-            weaponItemUI.SetSlotIndex(index);
-            m_WeaponItemUISlotUIPairs[index].weaponSlotUI.TryAddItemUIToSlotUI(weaponItemUI);
         }
 
-        private bool TryGetIndexOfWeaponItemUIFromGunItem(GunItem gunItem, out int index)
+        private bool TryGetWeaponItemUIFromSlotIndex(int index, out WeaponItemUI itemUI)
         {
-            index = -1;
-            for (int i = 0, length = m_WeaponItemUISlotUIPairs.Length; i < length; i++)
+            itemUI = null;
+            foreach (WeaponItemUI weaponItemUI in m_WeaponItemUIs)
             {
-                if (m_WeaponItemUISlotUIPairs[i].weaponItemUI.GunItem == gunItem)
+                if (weaponItemUI.SlotIndex == index)
                 {
-                    index = i;
+                    itemUI = weaponItemUI;
                     return true;
                 }
             }
+
             return false;
         }
     }

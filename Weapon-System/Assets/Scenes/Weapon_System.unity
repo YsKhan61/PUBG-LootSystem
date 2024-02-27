@@ -226,7 +226,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ItemUIType: 3
   m_Icon: {fileID: 14023516}
-  m_SightInventoryUI: {fileID: 218537253}
+  m_SightInventoryUIMediator: {fileID: 218537253}
   m_SlotIndex: 1
   IsDragSuccess: 0
 --- !u!1 &27002040
@@ -486,11 +486,10 @@ MonoBehaviour:
     type: 2}
   m_OnWeaponItemUISwappedEvent: {fileID: 11400000, guid: 0f4de236d6d17ca46a8bae2d726da53c,
     type: 2}
-  m_WeaponItemUISlotUIPairs:
-  - weaponItemUI: {fileID: 7993000985656380377}
-    weaponSlotUI: {fileID: 769999982}
-  - weaponItemUI: {fileID: 1400475445}
-    weaponSlotUI: {fileID: 517517692}
+  m_WeaponItemUIs:
+  - {fileID: 7993000985656380377}
+  - {fileID: 1400475445}
+  m_Inventory: {fileID: 2114519427}
 --- !u!114 &218537253
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -503,11 +502,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9f4d51645a18984d9aea341be8649c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_SightItemUISlotUIPairs:
-  - sightItemUI: {fileID: 685930056}
-    sightSlotUI: {fileID: 0}
-  - sightItemUI: {fileID: 14023519}
-    sightSlotUI: {fileID: 0}
   m_Inventory: {fileID: 2114519427}
   m_WeaponInventoryUI: {fileID: 218537252}
 --- !u!1 &453972625
@@ -760,7 +754,6 @@ GameObject:
   m_Component:
   - component: {fileID: 517517691}
   - component: {fileID: 517517694}
-  - component: {fileID: 517517692}
   - component: {fileID: 517517693}
   m_Layer: 5
   m_Name: Weapon Slot 2 Panel
@@ -789,21 +782,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -45}
   m_SizeDelta: {x: 730, y: 350}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &517517692
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 517517690}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 59b887aa643a7b64bb40d5a4b8056bc8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SlotIndex: 1
-  m_typeToStore: 01000000
-  m_WeaponInventoryUI: {fileID: 218537252}
 --- !u!222 &517517693
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1358,7 +1336,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ItemUIType: 3
   m_Icon: {fileID: 685930053}
-  m_SightInventoryUI: {fileID: 218537253}
+  m_SightInventoryUIMediator: {fileID: 218537253}
   m_SlotIndex: 0
   IsDragSuccess: 0
 --- !u!1 &705507993
@@ -1896,7 +1874,6 @@ GameObject:
   m_Component:
   - component: {fileID: 769999981}
   - component: {fileID: 769999983}
-  - component: {fileID: 769999982}
   - component: {fileID: 769999984}
   m_Layer: 5
   m_Name: Weapon Slot 1 Panel
@@ -1925,21 +1902,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 350}
   m_SizeDelta: {x: 730, y: 350}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &769999982
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 769999980}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 59b887aa643a7b64bb40d5a4b8056bc8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SlotIndex: 0
-  m_typeToStore: 01000000
-  m_WeaponInventoryUI: {fileID: 218537252}
 --- !u!114 &769999983
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3170,7 +3132,8 @@ MonoBehaviour:
   m_ItemUIType: 1
   m_Icon: {fileID: 1322486935}
   m_NameText: {fileID: 453972627}
-  m_WeaponInventoryUI: {fileID: 218537252}
+  m_WeaponInventoryUIMediator: {fileID: 218537252}
+  m_SlotIndex: 1
   IsDragSuccess: 0
 --- !u!225 &1400475446
 CanvasGroup:
@@ -5384,7 +5347,8 @@ MonoBehaviour:
   m_ItemUIType: 1
   m_Icon: {fileID: 50092946}
   m_NameText: {fileID: 1733270343}
-  m_WeaponInventoryUI: {fileID: 218537252}
+  m_WeaponInventoryUIMediator: {fileID: 218537252}
+  m_SlotIndex: 0
   IsDragSuccess: 0
 --- !u!1001 &9171122600840810886
 PrefabInstance:
