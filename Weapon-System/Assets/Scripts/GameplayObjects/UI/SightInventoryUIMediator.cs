@@ -35,14 +35,14 @@ namespace Weapon_System.GameplayObjects.UI
 
         private void Start()
         {
-            for (int i = 0; i < m_SightItemUISlotUIPairs.Length; i++)
+            /*for (int i = 0; i < m_SightItemUISlotUIPairs.Length; i++)
             {
                 m_SightItemUISlotUIPairs[i].sightItemUI.SetSlotIndex(i);
-            }
+            }*/
         }
 
 
-        /// <summary>
+        /*/// <summary>
         /// Swap the weapon item UIs in the weapon inventory UI's weapon slots.
         /// </summary>
         /// <param name="indexOfDroppedWeaponItemUI">index of the WeaponItemUI that is being dropped</param>
@@ -71,6 +71,21 @@ namespace Weapon_System.GameplayObjects.UI
         }
 
         /// <summary>
+        /// Add the SightItemUI to the SightSlotUI of the slotIndex given.
+        /// </summary>
+        /// <param name="item">The SightItemUI need to be added</param>
+        /// <param name="slotIndex">Index of the destination SightSlotUI</param>
+        public void AddSightItemUIToSightSlotUI(SightItemUI itemUI, int slotIndex)
+        {
+            if (!TryGetSightSlotUIFromIndex(slotIndex, out SightSlotUI slotUI))
+            {
+                return;
+            }
+
+            slotUI.TryAddItemUIToSlotUI(itemUI);
+        }
+
+        /// <summary>
         /// Remove the SightItemUI from it's SightSlotUI
         /// </summary>
         /// <param name="item">The GunItem to be removed</param>
@@ -80,7 +95,7 @@ namespace Weapon_System.GameplayObjects.UI
                 return;
 
             m_SightItemUISlotUIPairs[index].sightSlotUI.TryRemoveItemUIFromSlotUI();
-        }
+        }*/
 
         public void AddSightItemToInventory(InventoryItem item)
         {
@@ -92,7 +107,20 @@ namespace Weapon_System.GameplayObjects.UI
             m_Inventory.RemoveInventoryItem(item);
         }
 
-        private bool TryGetIndexOfSightItemUIFromGunItem(SightAttachmentItem item, out int index)
+        /// <summary>
+        /// Drop the other SightItemUI to this SightItemUI
+        /// </summary>
+        /// <param name="itemUI">the other SightItemUI</param>
+        public void DropOtherSightItemUIToSlot(SightItemUI itemUI, Transform slotTransform, int slotIndex)
+        {
+            itemUI.transform.SetParent(slotTransform);
+            itemUI.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+            itemUI.IsDragSuccess = true;
+
+            itemUI.SetSlotIndex(slotIndex);
+        }
+
+        /*private bool TryGetIndexOfSightItemUIFromGunItem(SightAttachmentItem item, out int index)
         {
             index = -1;
             for (int i = 0, length = m_SightItemUISlotUIPairs.Length; i < length; i++)
@@ -105,5 +133,17 @@ namespace Weapon_System.GameplayObjects.UI
             }
             return false;
         }
+
+        private bool TryGetSightSlotUIFromIndex(int index, out SightSlotUI slotUI)
+        {
+            slotUI = null;
+            if (index < 0 || index >= m_SightItemUISlotUIPairs.Length)
+            {
+                Debug.LogError("Index out of range");
+                return false;
+            }
+            slotUI = m_SightItemUISlotUIPairs[index].sightSlotUI;
+            return slotUI != null;
+        }*/
     }
 }

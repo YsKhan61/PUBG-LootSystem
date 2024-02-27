@@ -109,6 +109,12 @@ namespace Weapon_System.GameplayObjects.UI
             {
                 if (weaponItemUI.ItemUIType == m_ItemUIType)
                 {
+                    // Check if the GunItem Type of dropped WeaponItemUI is same as this WeaponItemUI
+                    if (weaponItemUI.ItemData.ItemTag == ItemData.ItemTag)
+                    {
+                        return;
+                    }
+
                     m_WeaponInventoryUI.SwapWeaponItemUIs(weaponItemUI.SlotIndex, SlotIndex);
                 }
             }

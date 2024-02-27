@@ -142,11 +142,6 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         public bool IsSightTypeCompatible(ItemTagSO tagToCheck)
         {
-            if (SightAttachment != null)
-            {
-                return false;
-            }
-
             foreach (ItemTagSO type in GunData.AllowedSightAttachments)
             {
                 if (tagToCheck == type)
