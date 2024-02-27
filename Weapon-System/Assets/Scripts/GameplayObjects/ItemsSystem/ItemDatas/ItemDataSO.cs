@@ -3,30 +3,29 @@ using UnityEngine;
 
 namespace Weapon_System.GameplayObjects.ItemsSystem
 {
-    // ---------------- NOTE ----------------
-    // Dont make enums, rather make scriptable objects for each type of item.
+    /*// Detailed type of the items
     public enum ItemType
     {
-        Gun,
-        Ammo,
-        Armor,
-        Heal,
-        Throwables,
-        SightAttachment,
-    }
+        M416,
+
+        P1911,
+
+        EnergyDrink,
+
+    }*/
 
     /// <summary>
-    /// Type of the item UI that will be set to the ItemSlotUI or ItemUI where other ItemUI can be dropped.
+    /// These types are used to determine where the respective item can be dropped in the UI
     /// </summary>
     public enum ItemUIType
     {
-        Common,
-        Gun,
-        MuzzleAttachment,
-        SightAttachment,
-        MagazineAttachment,
-        StockAttachment,
-        ForegripAttachment,
+        Common,                 // These items can be stored in the Inventory Bag Panel
+        Gun,                    // These items can be stored in the Weapon Slots
+        MuzzleAttachment,       // These items can be stored either in the Inventory Bag Panel or in the Muzzle Attachment Slots
+        SightAttachment,        // These items can be stored either in the Inventory Bag Panel or in the Sight Attachment Slots
+        MagazineAttachment,     // These items can be stored either in the Inventory Bag Panel or in the Magazine Attachment Slots
+        StockAttachment,        // These items can be stored either in the Inventory Bag Panel or in the Stock Attachment Slots
+        ForegripAttachment,     // These items can be stored either in the Inventory Bag Panel or in the Foregrip Attachment Slots
     }
 
     /// <summary>
@@ -35,9 +34,9 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
     /// </summary>
     public abstract class ItemDataSO : ScriptableObject
     {
-        [SerializeField, Tooltip("The type of this item")]
-        ItemType m_Type;
-        public ItemType Type => m_Type;
+        [SerializeField]
+        ItemTagSO m_ItemTag;
+        public ItemTagSO ItemTag => m_ItemTag;
 
         [SerializeField, Tooltip("The UI type of this item")]
         ItemUIType m_UIType;

@@ -9,10 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b40f0ad59e9942c4ab58cb52674cdac2, type: 3}
-  m_Name: 4xScope
+  m_Script: {fileID: 11500000, guid: bd4a5b3eeab0981408b58dde0eff5179, type: 3}
+  m_Name: EnergyDrink_Tag
   m_EditorClassIdentifier: 
-  m_Type: 5
-  m_UIType: 3
-  m_IconSprite: {fileID: 21300000, guid: 705f080618e4b584793c9b64e9f97104, type: 3}
-  m_ADSZoomValue: 4

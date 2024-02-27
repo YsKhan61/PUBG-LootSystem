@@ -140,16 +140,16 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             SightAttachment = null;
         }
 
-        public bool IsSightTypeCompatible(ItemType typeToCheck)
+        public bool IsSightTypeCompatible(ItemTagSO tagToCheck)
         {
             if (SightAttachment != null)
             {
                 return false;
             }
 
-            foreach (ItemType type in GunData.AllowedSightAttachments)
+            foreach (ItemTagSO type in GunData.AllowedSightAttachments)
             {
-                if (typeToCheck == type)
+                if (tagToCheck == type)
                 {
                     return true;
                 }

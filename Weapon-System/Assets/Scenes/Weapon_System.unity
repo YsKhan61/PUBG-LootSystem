@@ -326,7 +326,7 @@ GameObject:
   - component: {fileID: 50092947}
   - component: {fileID: 50092946}
   m_Layer: 5
-  m_Name: Gun Item UI
+  m_Name: Gun Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2998,7 +2998,7 @@ GameObject:
   - component: {fileID: 1322486936}
   - component: {fileID: 1322486935}
   m_Layer: 5
-  m_Name: Gun Item UI
+  m_Name: Gun Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -151,7 +151,7 @@ namespace Weapon_System.GameplayObjects.UI
                 }
 
                 // if GunItem is found, check if the SightItem of dropped SightItemUI can be attached to the GunItem
-                if (!gun.IsSightTypeCompatible(itemUI.ItemData.Type))
+                if (!gun.IsSightTypeCompatible(itemUI.ItemData.ItemTag))
                 {
                     return;
                 }

@@ -112,6 +112,12 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 4206116047313777204}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &1755077732641988665 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2451200253301871117, guid: 3d66c5231f0adc94ca1546100a03ea42,
+    type: 3}
+  m_PrefabInstance: {fileID: 4206116047313777204}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6377865894512465554 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7124021158810985638, guid: 3d66c5231f0adc94ca1546100a03ea42,
@@ -222,3 +228,4 @@ MonoBehaviour:
   m_ItemData: {fileID: 11400000, guid: e129e6037b66fc247a35ad04dd97a5d8, type: 2}
   m_RootGO: {fileID: 7880611331590958776}
   m_Graphics: {fileID: 1130804910419150788}
+  m_SightHolderTransform: {fileID: 1755077732641988665}

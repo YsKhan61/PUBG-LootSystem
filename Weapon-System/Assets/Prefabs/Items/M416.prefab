@@ -131,6 +131,7 @@ MonoBehaviour:
   m_ItemData: {fileID: 11400000, guid: 8094637332a63b745bd3ba33c401079e, type: 2}
   m_RootGO: {fileID: 4210785308608106674}
   m_Graphics: {fileID: 8087991231554445608}
+  m_SightHolderTransform: {fileID: 7273612954819769655}
 --- !u!4 &1682517029724781771 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 976934747929668969, guid: 1c379bbaeeba73c4d8a45fc167e94da0,
@@ -205,6 +206,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dccd2405c8598c24b9699ff712add0d5, type: 3}
+--- !u!4 &7273612954819769655 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3191144228832640308, guid: dccd2405c8598c24b9699ff712add0d5,
+    type: 3}
+  m_PrefabInstance: {fileID: 5239982925359695875}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7607641413261131169 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2390264868412831138, guid: dccd2405c8598c24b9699ff712add0d5,

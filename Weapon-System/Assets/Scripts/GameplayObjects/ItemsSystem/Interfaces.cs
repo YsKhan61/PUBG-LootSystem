@@ -121,9 +121,9 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         /// <summary>
         /// Check if the type of the ISightAttachment is allowed to be attached to the ISightHolder
         /// </summary>
-        /// <param name="typeToCheck">type of the ISightAttachment to check</param>
+        /// <param name="tagToCheck">type of the ISightAttachment to check</param>
         /// <returns></returns>
-        public bool IsSightTypeCompatible(ItemType typeToCheck);
+        public bool IsSightTypeCompatible(ItemTagSO tagToCheck);
         public ISightAttachment SightAttachment { get; }        // needed in the AttachToWeapon method of the ISightAttachment
         public Transform SightHolderTransform { get; }          // needed in the AttachToWeapon method of the ISightAttachment
         public void AttachSight(ISightAttachment sight);

@@ -15,7 +15,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         public float ADSZoomValue => m_ADSZoomValue;
 
         [SerializeField, Tooltip("The sight items allowed to be attached to this gun")]
-        ItemType[] m_AllowedSightAttachments;
-        public ItemType[] AllowedSightAttachments => m_AllowedSightAttachments;
+        ItemTagSO[] m_AllowedSightAttachments;
+        public ItemTagSO[] AllowedSightAttachments => m_AllowedSightAttachments;
     }
 }
