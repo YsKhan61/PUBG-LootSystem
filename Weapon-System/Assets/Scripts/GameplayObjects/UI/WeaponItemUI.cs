@@ -21,7 +21,7 @@ namespace Weapon_System.GameplayObjects.UI
         [SerializeField]
         TextMeshProUGUI m_NameText;
 
-        public ItemDataSO ItemData { get; private set; }
+        public ItemDataSO ItemData { get; private set; }            // not needed, as we are storing the reference to the GunItem in m_GunItem
         public int SlotIndex { get; private set; }
 
         private RectTransform m_RectTransform;
@@ -31,10 +31,14 @@ namespace Weapon_System.GameplayObjects.UI
         private Vector2 m_lastAnchoredPosition;
 
         [SerializeField, FormerlySerializedAs("m_InventoryUI")]
-        private WeaponInventoryUI m_WeaponInventoryUI;
+        private WeaponInventoryUIMediator m_WeaponInventoryUI;
 
-        private GunItem m_Item;
-        public GunItem Item => m_Item;
+        
+        private GunItem m_StoredGunItem;
+        /// <summary>
+        /// This stores the GunItem data of this ItemUI, from the Inventory
+        /// </summary>
+        public GunItem GunItem => m_StoredGunItem;
 
         [HideInInspector]
         public bool IsDragSuccess;
@@ -66,7 +70,7 @@ namespace Weapon_System.GameplayObjects.UI
             // Right click to drop item
             if (eventData.button == PointerEventData.InputButton.Right)
             {
-                m_WeaponInventoryUI?.RemoveGunItemUIFromWeaponInventoryUI(m_Item);
+                m_WeaponInventoryUI?.RemoveGunItemUIFromGunSlotUI(m_StoredGunItem);
                 ResetItemDataAndHide();
             }
         }
@@ -130,7 +134,7 @@ namespace Weapon_System.GameplayObjects.UI
 
         public void SetItemDataAndShow(GunItem item)
         {
-            m_Item = item;
+            m_StoredGunItem = item;
             ItemData = item.ItemData;
             m_Icon.sprite = ItemData.IconSprite;
             m_NameText.text = ItemData.name;
@@ -140,7 +144,7 @@ namespace Weapon_System.GameplayObjects.UI
 
         void ResetItemDataAndHide()
         {
-            m_Item = null;
+            m_StoredGunItem = null;
             ItemData = null;
             m_Icon.sprite = null;
             m_NameText.text = "";

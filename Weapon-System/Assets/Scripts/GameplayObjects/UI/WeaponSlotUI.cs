@@ -17,7 +17,7 @@ namespace Weapon_System.GameplayObjects.UI
         ItemUIType[] m_typeToStore;
 
         [SerializeField]
-        WeaponInventoryUI m_WeaponInventoryUI;
+        WeaponInventoryUIMediator m_WeaponInventoryUI;
         public WeaponItemUI StoredWeaponItemUI { get; private set; }
         
         public void OnDrop(PointerEventData eventData)
@@ -66,6 +66,12 @@ namespace Weapon_System.GameplayObjects.UI
             StoredWeaponItemUI = null;
         }
 
+        /// <summary>
+        /// This is never called, as we are not dropping the item in the slot directly.
+        /// We are dropping the ItemUI of GunItem on the WeaponItemUI
+        /// or, a WeaponItemUI on another WeaponItemUI.
+        /// </summary>
+        /// <param name="item"></param>
         void TryDropItem(GameObject item)
         {
             if (item.TryGetComponent(out ItemUI itemUI))

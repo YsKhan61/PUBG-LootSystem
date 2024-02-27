@@ -3,6 +3,8 @@ using UnityEngine;
 
 namespace Weapon_System.GameplayObjects.ItemsSystem
 {
+    // ---------------- NOTE ----------------
+    // Dont make enums, rather make scriptable objects for each type of item.
     public enum ItemType
     {
         Gun,
@@ -10,7 +12,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         Armor,
         Heal,
         Throwables,
-        GunAttachment,
+        SightAttachment,
     }
 
     /// <summary>

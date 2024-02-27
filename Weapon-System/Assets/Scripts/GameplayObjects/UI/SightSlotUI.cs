@@ -5,33 +5,26 @@ using Weapon_System.GameplayObjects.ItemsSystem;
 
 namespace Weapon_System.GameplayObjects.UI
 {
-    public class SightSlotUI : MonoBehaviour, IDropHandler
+    public class SightSlotUI : MonoBehaviour
     {
         [Space(10)]
 
-        [SerializeField, Tooltip("The index number of this slot. 0 - Primary weapon, 1 - Secondary weapon etc.")]
+        [SerializeField, Tooltip("The index number of this slot. 0 - Primary weapon's sight, 1 - Secondary weapon's sight.")]
         int m_SlotIndex;
 
         [SerializeField, Tooltip("The items UI types that are allowed to drop in here")]
         ItemUIType[] m_typeToStore;
 
         [SerializeField]
-        WeaponInventoryUI m_WeaponInventoryUI;
-        public WeaponItemUI StoredWeaponItemUI { get; private set; }
-        
-        public void OnDrop(PointerEventData eventData)
-        {
-            if (eventData.pointerDrag != null)
-            {
-                TryDropItem(eventData.pointerDrag);
-            }
-        }
+        WeaponInventoryUIMediator m_WeaponInventoryUI;
+        public SightItemUI StoredSightItemUI { get; private set; }
+
 
         /// <summary>
         /// This method is used to add ItemUI to slot directly after pickup.
         /// </summary>
         /// <param name="item"></param>
-        public void TryAddItemUIToSlotUI(WeaponItemUI itemUI)
+        public void TryAddItemUIToSlotUI(SightItemUI itemUI)
         {
             foreach (ItemUIType type in m_typeToStore)
             {
@@ -41,8 +34,8 @@ namespace Weapon_System.GameplayObjects.UI
                     itemUI.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
                     itemUI.IsDragSuccess = true;
 
-                    StoredWeaponItemUI = itemUI;
-                    StoredWeaponItemUI.SetSlotIndex(m_SlotIndex);
+                    StoredSightItemUI = itemUI;
+                    StoredSightItemUI.SetSlotIndex(m_SlotIndex);
 
                     // ------------------------- NOTE ---------------------------------
                     // This event is raised, for different occasions.
@@ -57,23 +50,12 @@ namespace Weapon_System.GameplayObjects.UI
 
         public void TryRemoveItemUIFromSlotUI()
         {
-            if (StoredWeaponItemUI == null)
+            if (StoredSightItemUI == null)
             {
                 return;
             }
 
-            StoredWeaponItemUI = null;
-        }
-
-        void TryDropItem(GameObject item)
-        {
-            if (item.TryGetComponent(out ItemUI itemUI))
-            {
-                // This is ItemUI that contains weapon item.
-                // Later if we implement a feature to showcase items nearby in inventory,
-                // then if a weapon is nearby, a itemUI will be created and added to the Nearby Panel (it is not implemented yet).
-                // Then we can drag and drop the weapon Item UI(ItemUI) to the weapon slot.
-            }
+            StoredSightItemUI = null;
         }
     }
 }

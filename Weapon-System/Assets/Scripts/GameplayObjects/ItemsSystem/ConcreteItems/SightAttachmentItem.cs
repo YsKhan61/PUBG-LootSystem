@@ -8,12 +8,14 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
     /// </summary>
     public class SightAttachmentItem : InventoryItem, ISightAttachment
     {
+        public SightAttachmentDataSO SightAttachmentData => m_ItemData as SightAttachmentDataSO;
+
         bool m_IsAttached = false;
         public bool IsAttached => m_IsAttached;
 
         public bool AimDownSight()
         {
-            Debug.Log("Aiming down sight through " + Name);
+            Debug.Log("Aiming down sight through " + Name + " with ADS Zoom value of " + SightAttachmentData.ADSZoomValue);
             return true;
         }
 

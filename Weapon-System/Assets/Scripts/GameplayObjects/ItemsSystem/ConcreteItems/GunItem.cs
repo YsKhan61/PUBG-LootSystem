@@ -14,6 +14,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
     /// </summary>
     public class GunItem : ItemBase, ICollectable, IStorable, IDropable, IP_Usable, IS_Usable, IHoldable, ISightHolder
     {
+        public GunDataSO GunData => m_ItemData as GunDataSO;
         public bool IsCollected { get; protected set; }
 
         public bool IsInHand { get; protected set; }
@@ -97,7 +98,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             }
 
             // If there is no sight attachment, then aim down sight through iron sight
-            Debug.Log("Aiming down sight through iron sight!");
+            Debug.Log("Aiming down sight through iron sight with ADS Zoom value of " + GunData.ADSZoomValue);
             return true;
         }
 
@@ -137,6 +138,24 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
             SightAttachment.DetachFromWeapon();
             SightAttachment = null;
+        }
+
+        public bool IsSightTypeCompatible(ItemType typeToCheck)
+        {
+            if (SightAttachment != null)
+            {
+                return false;
+            }
+
+            foreach (ItemType type in GunData.AllowedSightAttachments)
+            {
+                if (typeToCheck == type)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         bool Shoot()

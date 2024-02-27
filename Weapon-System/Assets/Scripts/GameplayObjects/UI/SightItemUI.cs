@@ -1,4 +1,3 @@
-using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
@@ -18,27 +17,29 @@ namespace Weapon_System.GameplayObjects.UI
         [SerializeField]
         Image m_Icon;
 
-        public ItemDataSO ItemData { get; private set; }
+        [SerializeField]
+        SightInventoryUIMediator m_SightInventoryUI;
+
+        /*[SerializeField, FormerlySerializedAs("m_InventoryUI")]
+        private WeaponInventoryUI m_WeaponInventoryUI;*/
+
         public int SlotIndex { get; private set; }
 
-        private RectTransform m_RectTransform;
-        private Canvas m_Canvas;
-        private CanvasGroup m_CanvasGroup;
-
-        private Vector2 m_lastAnchoredPosition;
-
-        [SerializeField, FormerlySerializedAs("m_InventoryUI")]
-        private WeaponInventoryUI m_WeaponInventoryUI;
-
-        private ISightAttachment m_SightItem;
-        public ISightAttachment Item => m_SightItem;
-
-        /*private GunItem m_Item;
-        public GunItem Item => m_Item;*/
+        private SightAttachmentItem m_StoredSightItem;
+        public SightAttachmentItem StoredSightItem => m_StoredSightItem;
 
         [HideInInspector]
         public bool IsDragSuccess;
 
+        private RectTransform m_RectTransform;
+        private Canvas m_Canvas;
+        private CanvasGroup m_CanvasGroup;
+        private Vector2 m_lastAnchoredPosition;
+
+        /// <summary>
+        /// The ItemUI of the SightItem that is being dragged and dropped on this SightItemUI
+        /// We need to store this, and later we use it to add the SightItem to the inventory
+        /// </summary>
         private ItemUI m_ItemUI;
 
         private void Awake()
@@ -68,8 +69,22 @@ namespace Weapon_System.GameplayObjects.UI
             // Right click to drop item
             if (eventData.button == PointerEventData.InputButton.Right)
             {
-                // Store back the SightItem in the inventory by invoking an event
+                // Remove the SightItem from the gun
+                if (!m_SightInventoryUI.WeaponInventoryUI.TryGetGunItemFromWeaponInventoryUI(
+                    SlotIndex, out GunItem gun))
+                {
+                    Debug.LogError("This should not happen, as a SightItemUI can only be present in the inventory if it is attached to a GunItem");
+                    return;
+                }
+
+                gun.DetachSight();
+
+                // Store back the SightItem in the inventory
+                m_SightInventoryUI.AddSightItemToInventory(m_StoredSightItem);
+
                 // Make sure to reset the ItemUI's position to the last anchored position
+                ResetAndShowItemUI();
+
                 ResetItemDataAndHide();
             }
         }
@@ -104,23 +119,22 @@ namespace Weapon_System.GameplayObjects.UI
             if (eventData.pointerDrag == null)
                 return;
 
-            /*if (!eventData.pointerDrag.TryGetComponent(out WeaponItemUI itemUI))
-            {
-                return;
-            }
-
-            if (itemUI.ItemUIType == m_ItemUIType)
-            {
-                m_InventoryUI.SwapWeaponItemUIs(itemUI.SlotIndex, SlotIndex);
-            }*/
-
             if (eventData.pointerDrag.TryGetComponent(out SightItemUI sightItemUI))
             {
                 // another SightItemUI is being dropped on this SightItemUI
+                if (sightItemUI.ItemUIType != ItemUIType)
+                {
+                    return;
+                }
+                m_SightInventoryUI.SwapSightItemUIs(sightItemUI.SlotIndex, SlotIndex);
             }
             else if (eventData.pointerDrag.TryGetComponent(out ItemUI itemUI))
             {
                 // an ItemUI is being dropped on this SightItemUI
+
+                // NOTE - We need to do two checks here -
+                // 1. Check if the ItemUI is of the same type as this SightItemUI -> SightItemUI can be dropped on another SightItemUI or SightSlotUI
+                // 2. Check if the SightItem can be attached to the GunItem -> 8x scope (SightItem) cannot be attached to a Pistol (GunItem)
 
                 // Check if the ItemUI is of the same type as this SightItemUI
                 if (itemUI.ItemData.UIType != ItemUIType)
@@ -129,16 +143,61 @@ namespace Weapon_System.GameplayObjects.UI
                 }
 
                 // if yes,
-                // Get GunItemData from the WeaponInventoryUI, and check if this SightItem can be attached to the GunItem
-                if (!m_WeaponInventoryUI.TryGetGunItemFromWeaponInventoryUI(SlotIndex, out GunItem gun))
+                // Try to get GunItemData from the WeaponInventoryUI
+                if (!m_SightInventoryUI.WeaponInventoryUI.TryGetGunItemFromWeaponInventoryUI(
+                    SlotIndex, out GunItem gun))
                 {
                     return;
                 }
 
-                // if yes, then remove this SightItem from the inventory using an event
+                // if GunItem is found, check if the SightItem of dropped SightItemUI can be attached to the GunItem
+                if (!gun.IsSightTypeCompatible(itemUI.ItemData.Type))
+                {
+                    return;
+                }
+
+                // if yes,
+                // then check if the GunItem already has a SightItem attached to it (also SightItem can be present in this class)
+                if (gun.SightAttachment != null || StoredSightItem != null)
+                {
+                    if (gun.SightAttachment != StoredSightItem as ISightAttachment)
+                    {
+                        Debug.LogError("This should not happen as the Gun's sight attachment must match with the stored Sight Attachment Item");
+                        return;
+                    }
+
+                    // detach it from GunItem
+                    gun.DetachSight();
+
+                    // remove the SightItemUI from SightSlotUI through SightInventoryUI
+                    m_SightInventoryUI.RemoveSightItemUIFromSightSlotUI(m_StoredSightItem);
+
+                    // add the SightItem to the inventory
+                    m_SightInventoryUI.AddSightItemToInventory(m_StoredSightItem);
+                    
+                    if (m_ItemUI == null)
+                    {
+                        // If the ItemUI is null, then throw an error as every SightItemUI should have an ItemUI
+                        Debug.LogError("This should not be null");
+                    }
+                    else
+                    {
+                        // Show the ItemUI if it is not null, and block raycast, and fallback to last position
+                        ResetAndShowItemUI();
+                    }
+                }
+
+                // Then remove the SightItem of dropped ItemUI from the inventory using an event
+                m_SightInventoryUI.RemoveSightItemFromInventory(itemUI.Item);
+
                 // Then hide the ItemUI and store it in a member variable
+                HideItemUI(itemUI);
+                
                 // then set the ItemUI's datas to this SightItemUI and Show it
+                SetItemDataAndShow(itemUI.Item as SightAttachmentItem);
+
                 // then set this attachment to the GunItem
+                gun.AttachSight(itemUI.Item as SightAttachmentItem);
             }
         }
 
@@ -147,22 +206,44 @@ namespace Weapon_System.GameplayObjects.UI
             SlotIndex = index;
         }
 
-        public void SetItemDataAndShow(GunItem item)
+        public void SetItemDataAndShow(SightAttachmentItem item)
         {
-            // m_SightItem = item;
-            ItemData = item.ItemData;
-            m_Icon.sprite = ItemData.IconSprite;
+            m_StoredSightItem = item;
+            m_Icon.sprite = item.ItemData.IconSprite;
 
             Show();
         }
 
         void ResetItemDataAndHide()
         {
-            m_SightItem = null;
-            ItemData = null;
+            m_StoredSightItem = null;
             m_Icon.sprite = null;
 
             Hide();
+        }
+
+        void HideItemUI(ItemUI itemUI)
+        {
+            itemUI.IsDragSuccess = true;            // Set the drag success to true, so that the OnEndDrag of ItemUI doesn't make it visible again or fallback to last position
+            itemUI.Hide();
+            itemUI.UnblockRaycast();
+            m_ItemUI = itemUI;
+        }
+
+        void ResetAndShowItemUI()
+        {
+            if (m_ItemUI == null)
+            {
+                // If the ItemUI is null, then throw an error as every SightItemUI should have an ItemUI
+                Debug.LogError("This should not be null");
+            }
+            else
+            {
+                // Show the ItemUI if it is not null, and block raycast, and fallback to last position
+                m_ItemUI.Show();
+                m_ItemUI.BlockRaycast();
+                m_ItemUI.FallbackToLastPosition();
+            }
         }
 
         private void Show()

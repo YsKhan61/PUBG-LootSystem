@@ -40,6 +40,8 @@ namespace Weapon_System.GameplayObjects.UI
                         item.transform.SetParent(transform);
                         item.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
                         itemUI.IsDragSuccess = true;
+                        itemUI.Show();
+                        itemUI.BlockRaycast();
 
                         m_Icon.sprite = itemUI.ItemData.IconSprite;
 
@@ -48,7 +50,9 @@ namespace Weapon_System.GameplayObjects.UI
                         // The event will be raised, and the gun icon will be added to the Gun Slot Panel.
                         // Also the respective gun will be added to User's hand.
                         // m_OnItemUIDroppedInInventoryUIEvent?.SetValueAndRaiseEvent(itemUI.Item);
-                        Destroy(itemUI);
+                        
+                        
+                        // Destroy(itemUI); -- not sure why destroy is used here
                         return;
                     }
                 }

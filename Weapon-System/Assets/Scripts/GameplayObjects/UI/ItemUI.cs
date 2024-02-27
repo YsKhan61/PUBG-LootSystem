@@ -72,12 +72,14 @@ namespace Weapon_System.GameplayObjects.UI
 
         public void OnEndDrag(PointerEventData eventData)
         {
-            m_CanvasGroup.blocksRaycasts = true;
-            m_CanvasGroup.alpha = 1f;
+            
 
             if (!IsDragSuccess)
             {
-                m_RectTransform.anchoredPosition = m_lastAnchoredPosition;
+                m_CanvasGroup.blocksRaycasts = true;
+                m_CanvasGroup.alpha = 1f;
+
+                FallbackToLastPosition();
             }
         }
 
@@ -88,6 +90,31 @@ namespace Weapon_System.GameplayObjects.UI
             ItemData = item.ItemData;
             m_Icon.sprite = ItemData.IconSprite;
             m_NameText.text = ItemData.name;
+        }
+
+        public void FallbackToLastPosition()
+        {
+            m_RectTransform.anchoredPosition = m_lastAnchoredPosition;
+        }
+
+        public void Show()
+        {
+            m_CanvasGroup.alpha = 1f;
+        }
+
+        public void BlockRaycast()
+        {
+            m_CanvasGroup.blocksRaycasts = true;
+        }
+
+        public void Hide()
+        {
+            m_CanvasGroup.alpha = 0f;
+        }
+
+        public void UnblockRaycast()
+        {
+            m_CanvasGroup.blocksRaycasts = false;
         }
     }
 }
