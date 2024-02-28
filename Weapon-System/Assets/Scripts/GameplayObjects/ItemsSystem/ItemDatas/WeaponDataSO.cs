@@ -23,5 +23,9 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         [SerializeField, Tooltip("The grip items allowed to be attached to this gun")]
         ItemTagSO[] m_AllowedGripAttachments;
         public ItemTagSO[] AllowedGripAttachments => m_AllowedGripAttachments;
+
+        [SerializeField, Tooltip("The muzzle items allowed to be attached to this gun")]
+        ItemTagSO[] m_AllowedMuzzleAttachments;
+        public ItemTagSO[] AllowedMuzzleAttachments => m_AllowedMuzzleAttachments;
     }
 }

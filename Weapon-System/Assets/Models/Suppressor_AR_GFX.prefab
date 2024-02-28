@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6922968011177657473}
   - component: {fileID: 416798218512619277}
   m_Layer: 0
-  m_Name: VerticalForegrip_GFX
+  m_Name: Suppressor_AR_GFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -61,7 +61,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: f51a1e3168b572c43bfbcce8fdb6ee0f, type: 2}
+  - {fileID: 2100000, guid: ffae3362316fb0c49856f9f8348b519b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

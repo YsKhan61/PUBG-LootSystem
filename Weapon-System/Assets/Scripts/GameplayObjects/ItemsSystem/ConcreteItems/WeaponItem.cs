@@ -31,12 +31,17 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         Transform m_GripHolderTransform;
         public Transform GripHolderTransform => m_GripHolderTransform;
 
+        [SerializeField, Tooltip("The muzzle will become a child of this game object with same position")]
+        Transform m_MuzzleHolderTransform;
+        public Transform MuzzleHolderTransform => m_MuzzleHolderTransform; 
+
 
         public WeaponDataSO WeaponData => m_ItemData as WeaponDataSO;
         public bool IsCollected { get; protected set; }
         public bool IsInHand { get; protected set; }
         public SightAttachmentItem SightAttachment { get; set; }
         public GripAttachmentItem GripAttachment { get; set; }
+        public MuzzleAttachmentItem MuzzleAttachment { get; set; }
 
         // The transform of the collector, who collected this item
         // It is saved to drop the item at the same position and rotation

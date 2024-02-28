@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6995dfa3d98b294a9ccd5eda8a6ad50, type: 3}
+  m_Name: VerticalForegripGrip
+  m_EditorClassIdentifier: 
+  m_ItemTag: {fileID: 11400000, guid: dab8f52ad2ba6714db872ba8825cc99d, type: 2}
+  m_UIType: 8
+  m_IconSprite: {fileID: 21300000, guid: 7c13b0de0db59a648ae1e2e48b2a6b34, type: 3}
+  m_RecoilReductionValue: 10

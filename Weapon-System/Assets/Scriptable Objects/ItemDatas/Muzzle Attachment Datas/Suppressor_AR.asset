@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a048449166f299418094f25fd10bee2, type: 3}
+  m_Name: Suppressor_AR
+  m_EditorClassIdentifier: 
+  m_ItemTag: {fileID: 11400000, guid: fc64339493a7adf439eb9085ed0e0b8d, type: 2}
+  m_UIType: 4
+  m_IconSprite: {fileID: 21300000, guid: 8f14619e8b694354abcfeb3f99b3f2ba, type: 3}
+  m_RecoilReductionValue: 0
+  m_MuzzleFlashReductionValue: 1
+  m_SoundReductionValue: 0.9

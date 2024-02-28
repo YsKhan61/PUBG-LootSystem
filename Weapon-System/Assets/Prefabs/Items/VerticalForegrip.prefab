@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3122919045330539230}
   m_Layer: 0
-  m_Name: VerticalForegrip_GFX
+  m_Name: VerticalForegrip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -41,6 +41,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3122919045330539230}
     m_Modifications:
+    - target: {fileID: 453977229505411271, guid: 1c379bbaeeba73c4d8a45fc167e94da0,
+        type: 3}
+      propertyPath: m_RootGO
+      value: 
+      objectReference: {fileID: 5194145606954023154}
+    - target: {fileID: 453977229505411271, guid: 1c379bbaeeba73c4d8a45fc167e94da0,
+        type: 3}
+      propertyPath: m_Graphics
+      value: 
+      objectReference: {fileID: 5242456437591813281}
     - target: {fileID: 576706885073001226, guid: 1c379bbaeeba73c4d8a45fc167e94da0,
         type: 3}
       propertyPath: m_Name
@@ -108,7 +118,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 576706885073001226, guid: 1c379bbaeeba73c4d8a45fc167e94da0,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 6342284942960168521}
+      addedObject: {fileID: 8210421003485488636}
   m_SourcePrefab: {fileID: 100100000, guid: 1c379bbaeeba73c4d8a45fc167e94da0, type: 3}
 --- !u!1 &2524621176392299350 stripped
 GameObject:
@@ -116,7 +126,7 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 3101183877256243292}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &6342284942960168521
+--- !u!114 &8210421003485488636
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -125,11 +135,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 2524621176392299350}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f58eb1e8c960f304da72c21f50999a8a, type: 3}
+  m_Script: {fileID: 11500000, guid: 05d59c6c0f487e845b40ac8fa8f72462, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ItemData: {fileID: 11400000, guid: 2b89e74e1162c184c9377fbabf28d128, type: 2}
-  m_Graphics: {fileID: 0}
+  m_ItemData: {fileID: 11400000, guid: 1e7c475c3fa53e349b10d1305377b6a4, type: 2}
+  m_Graphics: {fileID: 5242456437591813281}
   m_RootGO: {fileID: 5194145606954023154}
 --- !u!4 &2776287424707527989 stripped
 Transform:
@@ -149,21 +159,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: VerticalForegrip_GFX
-      objectReference: {fileID: 0}
-    - target: {fileID: 3511381716936256054, guid: ce8e0b4e6e78fec45907ebb6fc6ef6b2,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.07146268
-      objectReference: {fileID: 0}
-    - target: {fileID: 3511381716936256054, guid: ce8e0b4e6e78fec45907ebb6fc6ef6b2,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.17501725
-      objectReference: {fileID: 0}
-    - target: {fileID: 3511381716936256054, guid: ce8e0b4e6e78fec45907ebb6fc6ef6b2,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.07146268
       objectReference: {fileID: 0}
     - target: {fileID: 3511381716936256054, guid: ce8e0b4e6e78fec45907ebb6fc6ef6b2,
         type: 3}
@@ -220,6 +215,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ce8e0b4e6e78fec45907ebb6fc6ef6b2, type: 3}
+--- !u!1 &5242456437591813281 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1286850933762156588, guid: ce8e0b4e6e78fec45907ebb6fc6ef6b2,
+    type: 3}
+  m_PrefabInstance: {fileID: 6420763358476846221}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7611590592003452603 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3511381716936256054, guid: ce8e0b4e6e78fec45907ebb6fc6ef6b2,

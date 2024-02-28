@@ -133,7 +133,7 @@ namespace Weapon_System.GameplayObjects.UI
                 }
 
                 // Check if the SightItem of dropped ItemUI is same as the SightItem of this ItemUI
-                if (StoredItem != null && droppedAttachmentItemUI.StoredItem.ItemTag == StoredItem.ItemTag)
+                if (StoredItem != null && droppedAttachmentItemUI.StoredItem.ItemData.ItemTag == StoredItem.ItemData.ItemTag)
                 {
                     return;
                 }
@@ -250,10 +250,10 @@ namespace Weapon_System.GameplayObjects.UI
                 HideItemUI(droppedItemUI);
 
                 // then set the ItemUI's datas to this ItemUI and Show it
-                SetDataAndShowSightItemUI(droppedItemUI.Item as SightAttachmentItem);
+                SetDataAndShowSightItemUI(droppedItemUI.Item as IWeaponAttachment);
 
                 // then set this attachment to the GunItem
-                (droppedItemUI.Item as SightAttachmentItem).AttachToWeapon(gunInThisSlot);
+                (droppedItemUI.Item as IWeaponAttachment).AttachToWeapon(gunInThisSlot);
             }
         }
 
@@ -262,7 +262,7 @@ namespace Weapon_System.GameplayObjects.UI
             m_SlotIndex = index;
         }
 
-        internal void SetDataAndShowSightItemUI(SightAttachmentItem item)
+        internal void SetDataAndShowSightItemUI(IWeaponAttachment item)
         {
             m_StoredItem = item;
             m_Icon.sprite = item.ItemData.IconSprite;

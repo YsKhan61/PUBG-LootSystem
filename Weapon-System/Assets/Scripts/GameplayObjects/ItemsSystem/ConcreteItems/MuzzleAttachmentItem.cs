@@ -6,24 +6,33 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
     /// <summary>
     /// The sight item that can be attached to specific WeaponItem
     /// </summary>
-    public class SightAttachmentItem : InventoryItem, IWeaponAttachment
+    public class MuzzleAttachmentItem : InventoryItem, IWeaponAttachment
     {
-        public SightAttachmentDataSO SightAttachmentData => m_ItemData as SightAttachmentDataSO;
+        public MuzzleAttachmentDataSO MuzzleAttachmentData => m_ItemData as MuzzleAttachmentDataSO;
 
         private WeaponItem m_WeaponItem;
 
-        public bool AimDownSight()
+        public void GetRecoilReduction()
         {
-            Debug.Log("Aiming down sight through " + Name + " with ADS Zoom value of " + SightAttachmentData.ADSZoomValue);
-            return true;
+            Debug.Log("Reducing recoil through " + Name + " with reduction value of " + MuzzleAttachmentData.RecoilReductionValue);
+        }
+
+        public void GetMuzzleFlashReduction()
+        {
+            Debug.Log("Reducing muzzle flash through " + Name + " with reduction value of " + MuzzleAttachmentData.MuzzleFlashReductionValue);
+        }
+
+        public void GetSoundReduction()
+        {
+            Debug.Log("Reducing sound through " + Name + " with reduction value of " + MuzzleAttachmentData.SoundReductionValue);
         }
 
         public bool AttachToWeapon(WeaponItem weapon)
         {
             m_WeaponItem = weapon;
-            m_WeaponItem.SightAttachment = this;
+            m_WeaponItem.MuzzleAttachment = this;
 
-            m_RootGO.transform.SetParent(m_WeaponItem.SightHolderTransform);
+            m_RootGO.transform.SetParent(m_WeaponItem.MuzzleHolderTransform);
             m_RootGO.transform.localPosition = Vector3.zero;
             m_RootGO.transform.localRotation = Quaternion.identity;
 
@@ -52,7 +61,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         public bool IsWeaponCompatible(WeaponDataSO weaponData)
         {
-            foreach (var tag in weaponData.AllowedSightAttachments)
+            foreach (var tag in weaponData.AllowedMuzzleAttachments)
             {
                 if (tag == m_ItemData.ItemTag)
                 {

@@ -33,13 +33,13 @@ namespace Weapon_System.GameplayObjects.UI
 
         private void Start()
         {
-            m_OnBeforeWeaponItemUIRemovedEvent.OnEventRaised += DetachSightFromWeaponAndResetUI;
+            m_OnBeforeWeaponItemUIRemovedEvent.OnEventRaised += DetachAttachmentFromWeaponAndResetUI;
             m_OnWeaponItemUISwappedEvent.OnEventRaised += SwapSlotIndices;
         }
 
         private void OnDestroy()
         {
-            m_OnBeforeWeaponItemUIRemovedEvent.OnEventRaised += DetachSightFromWeaponAndResetUI;
+            m_OnBeforeWeaponItemUIRemovedEvent.OnEventRaised += DetachAttachmentFromWeaponAndResetUI;
             m_OnWeaponItemUISwappedEvent.OnEventRaised -= SwapSlotIndices;
         }
 
@@ -69,12 +69,16 @@ namespace Weapon_System.GameplayObjects.UI
 
         // ----------------------- NOTE ---------------------------------
         // WeaponItem is not necessary to be sent here, because we can get the weapon from the WeaponInventoryUI
-        private void DetachSightFromWeaponAndResetUI(WeaponItem weapon, int slotIndex)
+        private void DetachAttachmentFromWeaponAndResetUI(WeaponItem weapon, int slotIndex)
         {
-            if (!TryGetSightItemUIFromSlotIndex(slotIndex, out AttachmentItemUI itemUI))
+            if (!TryGetAttachmentItemUIFromSlotIndex(slotIndex, out AttachmentItemUI itemUI))
             {
                 return;
             }
+
+            // If no attachment is attached to the weapon
+            if (itemUI.StoredItem == null)
+                return;
 
             itemUI.StoredItem.DetachFromWeapon();
 
@@ -86,13 +90,13 @@ namespace Weapon_System.GameplayObjects.UI
 
         private void SwapSlotIndices(int leftIndex, int rightIndex)
         {
-            if (!TryGetSightItemUIFromSlotIndex(leftIndex, out AttachmentItemUI leftUI))
+            if (!TryGetAttachmentItemUIFromSlotIndex(leftIndex, out AttachmentItemUI leftUI))
             {
                 Debug.LogError("This should not happen!");
                 return;
             }
 
-            if (!TryGetSightItemUIFromSlotIndex(rightIndex, out AttachmentItemUI rightUI))
+            if (!TryGetAttachmentItemUIFromSlotIndex(rightIndex, out AttachmentItemUI rightUI))
             {
                 Debug.LogError("This should not happen!");
                 return;
@@ -102,7 +106,7 @@ namespace Weapon_System.GameplayObjects.UI
             rightUI.SetSlotIndex(leftIndex);
         }
 
-        bool TryGetSightItemUIFromSlotIndex(int slotIndex, out AttachmentItemUI itemUI)
+        bool TryGetAttachmentItemUIFromSlotIndex(int slotIndex, out AttachmentItemUI itemUI)
         {
             itemUI = null;
             foreach (AttachmentItemUI ui in m_AttachmentItemUIs)

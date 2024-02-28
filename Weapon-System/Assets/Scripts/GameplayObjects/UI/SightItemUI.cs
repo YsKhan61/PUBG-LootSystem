@@ -135,7 +135,7 @@ namespace Weapon_System.GameplayObjects.UI
                 bool isSightPresentInThisSlot =
                     StoredSightItem != null &&
                     gunInThisSlot.SightAttachment != null &&
-                    gunInThisSlot.SightAttachment as SightAttachmentItem == StoredSightItem;
+                    gunInThisSlot.SightAttachment == StoredSightItem;
 
 
                 // Check if the SightItem of dropped SightItemUI is same as the SightItem of this SightItemUI

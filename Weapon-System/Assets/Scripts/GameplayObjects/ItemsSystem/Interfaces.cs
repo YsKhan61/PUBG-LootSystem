@@ -104,7 +104,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
     /// </summary>
     public interface IWeaponAttachment
     {
-        public ItemTagSO ItemTag { get; }
+        public ItemDataSO ItemData { get; }
         public bool IsWeaponCompatible(WeaponDataSO weaponData);
 
         /// <summary>

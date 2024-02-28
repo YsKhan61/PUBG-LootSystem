@@ -8,7 +8,6 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
     /// </summary>
     public class GripAttachmentItem : InventoryItem, IWeaponAttachment
     {
-        public ItemTagSO ItemTag => m_ItemData.ItemTag;
         public GripAttachmentDataSO GripAttachmentData => m_ItemData as GripAttachmentDataSO;
 
         private WeaponItem m_WeaponItem;
@@ -21,12 +20,6 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         public bool AttachToWeapon(WeaponItem weapon)
         {
-            if (m_WeaponItem != this)
-            {
-                Debug.LogError("First sight need to be attached by ISightHolder, then this method can be called from ISightHolder only!");
-                return false;
-            }
-
             m_WeaponItem = weapon;
             m_WeaponItem.GripAttachment = this;
 
