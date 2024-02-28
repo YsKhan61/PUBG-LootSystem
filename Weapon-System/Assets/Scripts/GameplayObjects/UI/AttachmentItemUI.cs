@@ -7,7 +7,7 @@ using Weapon_System.GameplayObjects.ItemsSystem;
 namespace Weapon_System.GameplayObjects.UI
 {
     [RequireComponent(typeof(RectTransform), typeof(CanvasGroup))]
-    public class SightItemUI : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler
+    public class AttachmentItemUI : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler
     {
         [SerializeField]
         ItemUIType m_ItemUIType;
@@ -17,14 +17,14 @@ namespace Weapon_System.GameplayObjects.UI
         Image m_Icon;
 
         [SerializeField]
-        SightInventoryUIMediator m_SightInventoryUIMediator;
+        AttachmentUIMediator m_Mediator;
 
         [SerializeField]
         int m_SlotIndex;
         public int SlotIndex => m_SlotIndex;
 
-        private SightAttachmentItem m_StoredSightItem;
-        public SightAttachmentItem StoredSightItem => m_StoredSightItem;
+        private IWeaponAttachment m_StoredItem;
+        public IWeaponAttachment StoredItem => m_StoredItem;
 
         [HideInInspector]
         public bool IsDragSuccess;
@@ -35,7 +35,7 @@ namespace Weapon_System.GameplayObjects.UI
         private Vector2 m_lastAnchoredPosition;
 
         /// <summary>
-        /// The ItemUI of the SightItem that is being dragged and dropped on this SightItemUI
+        /// The ItemUI of the SightItem that is being dragged and dropped on this ItemUI
         /// We need to store this, and later we use it to add the SightItem to the inventory
         /// </summary>
         private ItemUI m_ItemUI;
@@ -67,14 +67,14 @@ namespace Weapon_System.GameplayObjects.UI
             // Right click to drop item
             if (eventData.button == PointerEventData.InputButton.Right)
             {
-                if (StoredSightItem == null)
+                if (StoredItem == null)
                     return;
 
                 // Remove the SightItem from the gun
-                StoredSightItem.DetachFromWeapon();
+                StoredItem.DetachFromWeapon();
 
                 // Store back the SightItem in the inventory
-                m_SightInventoryUIMediator.AddItemToInventory(m_StoredSightItem);
+                m_Mediator.AddItemToInventory(m_StoredItem as InventoryItem);
 
                 // Make sure to reset the ItemUI's position to the last anchored position
                 ShowItemUIAndResetItsPosition();
@@ -113,120 +113,109 @@ namespace Weapon_System.GameplayObjects.UI
             if (eventData.pointerDrag == null)
                 return;
 
-            if (eventData.pointerDrag.TryGetComponent(out SightItemUI droppedSightItemUI))
+            if (eventData.pointerDrag.TryGetComponent(out AttachmentItemUI droppedAttachmentItemUI))
             {
-                // another SightItemUI is being dropped on this SightItemUI
+                // another ItemUI is being dropped on this ItemUI
 
-                // return if the dropped SightItemUI's ItemUIType is not compatible with this SightItemUI's ItemUIType
-                if (droppedSightItemUI.ItemUIType != ItemUIType)
+                // return if the dropped ItemUI's ItemUIType is not compatible with this ItemUI's ItemUIType
+                if (droppedAttachmentItemUI.ItemUIType != ItemUIType)
                 {
                     return;
                 }
 
                 // if no,
                 // Try to get GunItemData from the WeaponInventoryUI
-                if (!m_SightInventoryUIMediator.WeaponInventoryUI.TryGetWeaopnItemFromWeaponInventoryUI(
+                if (!m_Mediator.WeaponInventoryUI.TryGetWeaopnItemFromWeaponInventoryUI(
                     SlotIndex, out WeaponItem gunInThisSlot))
                 {
                     // if GunItem is not found, then return
                     return;
                 }
 
-                bool isSightPresentInThisSlot =
-                    StoredSightItem != null &&
-                    gunInThisSlot.SightAttachment != null &&
-                    gunInThisSlot.SightAttachment as SightAttachmentItem == StoredSightItem;
-
-
-                // Check if the SightItem of dropped SightItemUI is same as the SightItem of this SightItemUI
-                if (isSightPresentInThisSlot && droppedSightItemUI.StoredSightItem.ItemData.ItemTag == StoredSightItem.ItemData.ItemTag)
+                // Check if the SightItem of dropped ItemUI is same as the SightItem of this ItemUI
+                if (StoredItem != null && droppedAttachmentItemUI.StoredItem.ItemTag == StoredItem.ItemTag)
                 {
                     return;
                 }
 
-                // if GunItem is found, check if the SightItem of dropped SightItemUI can be attached to the GunItem
-                if (!droppedSightItemUI.StoredSightItem.IsWeaponCompatible(gunInThisSlot.WeaponData))
+                // if GunItem is found, check if the SightItem of dropped ItemUI can be attached to the GunItem
+                if (!droppedAttachmentItemUI.StoredItem.IsWeaponCompatible(gunInThisSlot.WeaponData))
                 {
                     return;
                 }
 
-                // get the gun item from the WeaponInventoryUI using the SlotIndex of dropped SightItemUI
-                if (!m_SightInventoryUIMediator.WeaponInventoryUI.TryGetWeaopnItemFromWeaponInventoryUI(
-                                       droppedSightItemUI.SlotIndex, out WeaponItem gunInDroppedSlot))
+                // get the gun item from the WeaponInventoryUI using the SlotIndex of dropped ItemUI
+                if (!m_Mediator.WeaponInventoryUI.TryGetWeaopnItemFromWeaponInventoryUI(
+                                       droppedAttachmentItemUI.SlotIndex, out WeaponItem gunInDroppedSlot))
                 {
                     return;
                 }
 
-                // detach the SightItem of dropped SightItemUI from it's GunItem
-                droppedSightItemUI.StoredSightItem.DetachFromWeapon();
+                // detach the Item of dropped ItemUI from it's GunItem
+                droppedAttachmentItemUI.StoredItem.DetachFromWeapon();
                 
                 //then check if the GunItem of this slot already has a SightItem attached to it (also SightItem can be present in this class)
-                if (isSightPresentInThisSlot)
+                if (StoredItem != null)
                 {
-                    if (gunInThisSlot.SightAttachment != m_StoredSightItem)
-                    {
-                        Debug.LogError("This should not happen as the Gun's sight attachment must match with the stored Sight Attachment Item");
-                        return;
-                    }
                     // detach it from GunItem of this slot
-                    m_StoredSightItem.DetachFromWeapon();
+                    StoredItem.DetachFromWeapon();
                 }
 
-                // add the SightItem of the dropped SightItemUI to this gun
-                droppedSightItemUI.StoredSightItem.AttachToWeapon(gunInThisSlot);
+                // add the SightItem of the dropped ItemUI to this gun
+                droppedAttachmentItemUI.StoredItem.AttachToWeapon(gunInThisSlot);
 
-                // Get the parent of the dropped SightItemUI and the slot index of the dropped SightItemUI before dropping it
-                Transform parentOfDroppedItemUI = droppedSightItemUI.transform.parent;
-                int slotIndexOfDroppedItemUI = droppedSightItemUI.SlotIndex;
+                // Get the parent of the dropped ItemUI and the slot index of the dropped ItemUI before dropping it
+                Transform parentOfDroppedItemUI = droppedAttachmentItemUI.transform.parent;
+                int slotIndexOfDroppedItemUI = droppedAttachmentItemUI.SlotIndex;
 
-                // Add the dropped SightItemUI to the SlotUI of this SightItemUI through SightInventoryUIMediator
-                m_SightInventoryUIMediator.DropSightItemUIToSlot(droppedSightItemUI, transform.parent, SlotIndex);
+                // Add the dropped ItemUI to the SlotUI of this ItemUI through SightInventoryUIMediator
+                m_Mediator.DropSightItemUIToSlot(droppedAttachmentItemUI, transform.parent, SlotIndex);
 
                 // if the SightItem of this slot is present
-                if (isSightPresentInThisSlot)
+                if (StoredItem != null)
                 {
-                    // Check if the temp SightItem is compatible with the GunItem of the dropped SightItemUI
-                    if (droppedSightItemUI.StoredSightItem.IsWeaponCompatible(gunInDroppedSlot.WeaponData))
+                    // Check if the temp SightItem is compatible with the GunItem of the dropped ItemUI
+                    if (droppedAttachmentItemUI.StoredItem.IsWeaponCompatible(gunInDroppedSlot.WeaponData))
                     {
-                        // if yes, then add the temp SightItem to the GunItem of the dropped SightItemUI
-                        StoredSightItem.AttachToWeapon(gunInDroppedSlot);
+                        // if yes, then add the temp SightItem to the GunItem of the dropped ItemUI
+                        StoredItem.AttachToWeapon(gunInDroppedSlot);
                     }
                     else
                     {
-                        m_SightInventoryUIMediator.AddItemToInventory(droppedSightItemUI.StoredSightItem);
+                        m_Mediator.AddItemToInventory(droppedAttachmentItemUI.StoredItem as InventoryItem);
 
-                        // Make sure to reset the droppedSightItemUI's ItemUI's position to the last anchored position
+                        // Make sure to reset the ItemUI's ItemUI's position to the last anchored position
                         ShowItemUIAndResetItsPosition();
 
                         ResetDataAndHideSightItemUI();
                     }
                 }
 
-                // Drop this SightItemUI to the dropped SightItemUI's Slot
-                m_SightInventoryUIMediator.DropSightItemUIToSlot(this, parentOfDroppedItemUI, slotIndexOfDroppedItemUI);
+                // Drop this ItemUI to the dropped ItemUI's Slot
+                m_Mediator.DropSightItemUIToSlot(this, parentOfDroppedItemUI, slotIndexOfDroppedItemUI);
             }
             else if (eventData.pointerDrag.TryGetComponent(out ItemUI droppedItemUI))
             {
-                // an ItemUI is being dropped on this SightItemUI
+                // an ItemUI is being dropped on this ItemUI
 
                 // NOTE - We need to do two checks here -
-                // 1. Check if the ItemUI is of the same type as this SightItemUI -> SightItemUI can be dropped on another SightItemUI or SightSlotUI
+                // 1. Check if the ItemUI is of the same type as this ItemUI -> ItemUI can be dropped on another SightItemUI or SightSlotUI
                 // 2. Check if the SightItem can be attached to the GunItem -> 8x scope (SightItem) cannot be attached to a Pistol (GunItem)
 
-                // Check if the ItemUI is of the same type as this SightItemUI
+                // Check if the ItemUI is of the same type as this ItemUI
                 if (droppedItemUI.ItemData.UIType != ItemUIType)
                 {
                     return;
                 }
 
                 // Try to get GunItemData from the WeaponInventoryUI
-                if (!m_SightInventoryUIMediator.WeaponInventoryUI.TryGetWeaopnItemFromWeaponInventoryUI(
+                if (!m_Mediator.WeaponInventoryUI.TryGetWeaopnItemFromWeaponInventoryUI(
                     SlotIndex, out WeaponItem gunInThisSlot))
                 {
                     return;
                 }
 
-                // if GunItem is found, check if the SightItem of dropped SightItemUI can be attached to the GunItem
+                // if GunItem is found, check if the SightItem of dropped ItemUI can be attached to the GunItem
                 if (!(droppedItemUI.Item as IWeaponAttachment).IsWeaponCompatible(gunInThisSlot.WeaponData))
                 {
                     return;
@@ -234,23 +223,17 @@ namespace Weapon_System.GameplayObjects.UI
 
                 // if yes,
                 // then check if the GunItem already has a SightItem attached to it (also SightItem can be present in this class)
-                if (gunInThisSlot.SightAttachment != null || StoredSightItem != null)
+                if (StoredItem != null)
                 {
-                    if (gunInThisSlot.SightAttachment != StoredSightItem)
-                    {
-                        Debug.LogError("This should not happen as the Gun's sight attachment must match with the stored Sight Attachment Item");
-                        return;
-                    }
-
                     // detach it from GunItem
-                    StoredSightItem.DetachFromWeapon();
+                    StoredItem.DetachFromWeapon();
 
                     // add the SightItem to the inventory
-                    m_SightInventoryUIMediator.AddItemToInventory(m_StoredSightItem);
+                    m_Mediator.AddItemToInventory(m_StoredItem as InventoryItem);
                     
                     if (m_ItemUI == null)
                     {
-                        // If the ItemUI is null, then throw an error as every SightItemUI should have an ItemUI
+                        // If the ItemUI is null, then throw an error as every ItemUI should have an ItemUI
                         Debug.LogError("This should not be null");
                     }
                     else
@@ -261,12 +244,12 @@ namespace Weapon_System.GameplayObjects.UI
                 }
 
                 // Then remove the SightItem of dropped ItemUI from the inventory using an event
-                m_SightInventoryUIMediator.RemoveItemFromInventory(droppedItemUI.Item);
+                m_Mediator.RemoveItemFromInventory(droppedItemUI.Item);
 
                 // Then hide the ItemUI and store it in a member variable
                 HideItemUI(droppedItemUI);
-                
-                // then set the ItemUI's datas to this SightItemUI and Show it
+
+                // then set the ItemUI's datas to this ItemUI and Show it
                 SetDataAndShowSightItemUI(droppedItemUI.Item as SightAttachmentItem);
 
                 // then set this attachment to the GunItem
@@ -281,7 +264,7 @@ namespace Weapon_System.GameplayObjects.UI
 
         internal void SetDataAndShowSightItemUI(SightAttachmentItem item)
         {
-            m_StoredSightItem = item;
+            m_StoredItem = item;
             m_Icon.sprite = item.ItemData.IconSprite;
 
             Show();
@@ -289,7 +272,7 @@ namespace Weapon_System.GameplayObjects.UI
 
         internal void ResetDataAndHideSightItemUI()
         {
-            m_StoredSightItem = null;
+            m_StoredItem = null;
             m_Icon.sprite = null;
 
             Hide();
@@ -299,7 +282,7 @@ namespace Weapon_System.GameplayObjects.UI
         {
             if (m_ItemUI == null)
             {
-                // If the ItemUI is null, then throw an error as every SightItemUI should have an ItemUI
+                // If the ItemUI is null, then throw an error as every ItemUI should have an ItemUI
                 Debug.LogError("This should not be null");
                 return;
             }
@@ -314,7 +297,7 @@ namespace Weapon_System.GameplayObjects.UI
 
         /// <summary>
         /// Hide and reset the ItemUI of the SightItem 
-        /// that is being dragged and dropped on this SightItemUI
+        /// that is being dragged and dropped on this ItemUI
         /// </summary>
         /// <param name="itemUI"></param>
         void HideItemUI(ItemUI itemUI)

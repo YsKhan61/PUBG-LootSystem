@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 14023517}
   - component: {fileID: 14023516}
   - component: {fileID: 14023518}
-  - component: {fileID: 14023519}
+  - component: {fileID: 14023520}
   m_Layer: 5
   m_Name: Sight Item UI
   m_TagString: Untagged
@@ -212,7 +212,7 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &14023519
+--- !u!114 &14023520
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -221,12 +221,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 14023513}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 34c18a0da3f44394cbf3b0192ab904ba, type: 3}
+  m_Script: {fileID: 11500000, guid: 637c892da7cd516408beb7445d0da9bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ItemUIType: 3
+  m_ItemUIType: 5
   m_Icon: {fileID: 14023516}
-  m_SightInventoryUIMediator: {fileID: 218537253}
+  m_Mediator: {fileID: 218537254}
   m_SlotIndex: 1
   IsDragSuccess: 0
 --- !u!1 &27002040
@@ -266,7 +266,6 @@ RectTransform:
   - {fileID: 765129612}
   - {fileID: 1224227109}
   - {fileID: 541914794}
-  - {fileID: 1570639775}
   - {fileID: 1118106725}
   - {fileID: 1746935684}
   m_Father: {fileID: 1400475444}
@@ -401,7 +400,7 @@ GameObject:
   - component: {fileID: 218537251}
   - component: {fileID: 218537250}
   - component: {fileID: 218537252}
-  - component: {fileID: 218537253}
+  - component: {fileID: 218537254}
   m_Layer: 5
   m_Name: Item Inventory UI
   m_TagString: Untagged
@@ -491,7 +490,7 @@ MonoBehaviour:
   m_WeaponItemUIs:
   - {fileID: 7993000985656380377}
   - {fileID: 1400475445}
---- !u!114 &218537253
+--- !u!114 &218537254
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -500,7 +499,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 218537248}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a9f4d51645a18984d9aea341be8649c1, type: 3}
+  m_Script: {fileID: 11500000, guid: d5b6765990b2d9a419087cb6b6e369ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_OnBeforeWeaponItemUIRemovedEvent: {fileID: 11400000, guid: 8933741cf6f7ee04fb7ad02eb07e1f96,
@@ -509,9 +508,9 @@ MonoBehaviour:
     type: 2}
   m_Inventory: {fileID: 2114519427}
   m_WeaponInventoryUI: {fileID: 218537252}
-  m_SightItemUIs:
-  - {fileID: 685930056}
-  - {fileID: 14023519}
+  m_AttachmentItemUIs:
+  - {fileID: 685930057}
+  - {fileID: 14023520}
 --- !u!1 &453972625
 GameObject:
   m_ObjectHideFlags: 0
@@ -839,7 +838,6 @@ GameObject:
   - component: {fileID: 541914794}
   - component: {fileID: 541914797}
   - component: {fileID: 541914796}
-  - component: {fileID: 541914795}
   m_Layer: 5
   m_Name: Foregrip Slot
   m_TagString: Untagged
@@ -858,7 +856,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1570639775}
   m_Father: {fileID: 27002041}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -866,20 +865,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -110}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &541914795
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 541914793}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7cb5dc8408439ce4b8a234b7cc2b52a9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_typeToStore: 06000000
-  m_Icon: {fileID: 541914796}
 --- !u!114 &541914796
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1253,7 +1238,7 @@ GameObject:
   - component: {fileID: 685930054}
   - component: {fileID: 685930053}
   - component: {fileID: 685930055}
-  - component: {fileID: 685930056}
+  - component: {fileID: 685930057}
   m_Layer: 5
   m_Name: Sight Item UI
   m_TagString: Untagged
@@ -1330,7 +1315,7 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &685930056
+--- !u!114 &685930057
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1339,12 +1324,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 685930050}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 34c18a0da3f44394cbf3b0192ab904ba, type: 3}
+  m_Script: {fileID: 11500000, guid: 637c892da7cd516408beb7445d0da9bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ItemUIType: 3
+  m_ItemUIType: 5
   m_Icon: {fileID: 685930053}
-  m_SightInventoryUIMediator: {fileID: 218537253}
+  m_Mediator: {fileID: 218537254}
   m_SlotIndex: 0
   IsDragSuccess: 0
 --- !u!1 &705507993
@@ -1452,6 +1437,8 @@ GameObject:
   - component: {fileID: 722403864}
   - component: {fileID: 722403867}
   - component: {fileID: 722403866}
+  - component: {fileID: 722403869}
+  - component: {fileID: 722403868}
   m_Layer: 5
   m_Name: Foregrip Item UI
   m_TagString: Untagged
@@ -1471,11 +1458,11 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1666136574}
+  m_Father: {fileID: 2064596988}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -110}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &722403866
@@ -1491,7 +1478,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.2784314}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1516,6 +1503,35 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 722403863}
   m_CullTransparentMesh: 1
+--- !u!114 &722403868
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 722403863}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 637c892da7cd516408beb7445d0da9bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ItemUIType: 8
+  m_Icon: {fileID: 722403866}
+  m_Mediator: {fileID: 218537254}
+  m_SlotIndex: 0
+  IsDragSuccess: 0
+--- !u!225 &722403869
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 722403863}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &726412307
 GameObject:
   m_ObjectHideFlags: 0
@@ -3325,7 +3341,8 @@ GameObject:
   - component: {fileID: 1570639775}
   - component: {fileID: 1570639778}
   - component: {fileID: 1570639777}
-  - component: {fileID: 1570639776}
+  - component: {fileID: 1570639780}
+  - component: {fileID: 1570639779}
   m_Layer: 5
   m_Name: Foregrip Item UI
   m_TagString: Untagged
@@ -3345,27 +3362,13 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 27002041}
+  m_Father: {fileID: 541914794}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -110}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1570639776
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1570639774}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7cb5dc8408439ce4b8a234b7cc2b52a9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_typeToStore: 06000000
-  m_Icon: {fileID: 1570639777}
 --- !u!114 &1570639777
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3379,7 +3382,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.2784314}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3404,6 +3407,35 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1570639774}
   m_CullTransparentMesh: 1
+--- !u!114 &1570639779
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1570639774}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 637c892da7cd516408beb7445d0da9bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ItemUIType: 8
+  m_Icon: {fileID: 1570639777}
+  m_Mediator: {fileID: 218537254}
+  m_SlotIndex: 1
+  IsDragSuccess: 0
+--- !u!225 &1570639780
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1570639774}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1001 &1573840715
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3821,7 +3853,6 @@ RectTransform:
   - {fileID: 2002654306}
   - {fileID: 1848328049}
   - {fileID: 2064596988}
-  - {fileID: 722403864}
   - {fileID: 994296635}
   - {fileID: 726412308}
   m_Father: {fileID: 2042320383566407012}
@@ -4856,7 +4887,6 @@ GameObject:
   - component: {fileID: 2064596988}
   - component: {fileID: 2064596991}
   - component: {fileID: 2064596990}
-  - component: {fileID: 2064596989}
   m_Layer: 5
   m_Name: Foregrip Slot
   m_TagString: Untagged
@@ -4875,7 +4905,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 722403864}
   m_Father: {fileID: 1666136574}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -4883,20 +4914,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -110}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &2064596989
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2064596987}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7cb5dc8408439ce4b8a234b7cc2b52a9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_typeToStore: 06000000
-  m_Icon: {fileID: 2064596990}
 --- !u!114 &2064596990
 MonoBehaviour:
   m_ObjectHideFlags: 0

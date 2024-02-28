@@ -8,10 +8,10 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
     /// </summary>
     public class GripAttachmentItem : InventoryItem, IWeaponAttachment
     {
+        public ItemTagSO ItemTag => m_ItemData.ItemTag;
         public GripAttachmentDataSO GripAttachmentData => m_ItemData as GripAttachmentDataSO;
 
-        bool m_IsAttached = false;
-        public bool IsAttached => m_IsAttached;
+        private WeaponItem m_WeaponItem;
 
         public float GetRecoilReduction()
         {
@@ -19,30 +19,41 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             return GripAttachmentData.RecoilReductionValue;
         }
 
-        public bool AttachToWeapon(WeaponItem gun)
+        public bool AttachToWeapon(WeaponItem weapon)
         {
-            if (gun.SightAttachment != this)
+            if (m_WeaponItem != this)
             {
                 Debug.LogError("First sight need to be attached by ISightHolder, then this method can be called from ISightHolder only!");
                 return false;
             }
 
-            m_RootGO.transform.SetParent(gun.GripHolderTransform);
+            m_WeaponItem = weapon;
+            m_WeaponItem.GripAttachment = this;
+
+            m_RootGO.transform.SetParent(m_WeaponItem.GripHolderTransform);
             m_RootGO.transform.localPosition = Vector3.zero;
             m_RootGO.transform.localRotation = Quaternion.identity;
 
             ShowGraphics();
 
-            m_IsAttached = true;
             return true;
         }
 
         public bool DetachFromWeapon()
         {
+            if (m_WeaponItem == null)
+            {
+                Debug.LogError("Grip not attached: Grip need to be attached by UI Drag Drop");
+                return false;
+            }
+
             m_RootGO.transform.SetParent(null);
+
             HideGraphics();
 
-            m_IsAttached = false;
+            m_WeaponItem.GripAttachment = null;
+            m_WeaponItem = null;
+
             return true;
         }
 

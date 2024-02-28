@@ -20,3 +20,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 351f48ffa23c68943be98de56550b22f, type: 2}
   - {fileID: 11400000, guid: 2c199787c0b1d0e4b927758c68cfe9d7, type: 2}
   - {fileID: 11400000, guid: 88aca3813d3885c44841b1c1967d1132, type: 2}
+  m_AllowedGripAttachments: []

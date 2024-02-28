@@ -8,6 +8,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
     /// </summary>
     public class SightAttachmentItem : InventoryItem, IWeaponAttachment
     {
+        public ItemTagSO ItemTag => m_ItemData.ItemTag;
         public SightAttachmentDataSO SightAttachmentData => m_ItemData as SightAttachmentDataSO;
 
         private WeaponItem m_WeaponItem;
@@ -26,12 +27,14 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
                 return false;
             }
 
-            m_RootGO.transform.SetParent(weapon.SightHolderTransform);
+            m_WeaponItem = weapon;
+            m_WeaponItem.SightAttachment = this;
+
+            m_RootGO.transform.SetParent(m_WeaponItem.SightHolderTransform);
             m_RootGO.transform.localPosition = Vector3.zero;
             m_RootGO.transform.localRotation = Quaternion.identity;
 
-            m_WeaponItem = weapon;
-            m_WeaponItem.SightAttachment = this;
+            
 
             ShowGraphics();
 

@@ -36,7 +36,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         public bool IsCollected { get; protected set; }
         public bool IsInHand { get; protected set; }
         public SightAttachmentItem SightAttachment { get; set; }
-        public GripAttachmentItem GripAttachment { get; protected set; }
+        public GripAttachmentItem GripAttachment { get; set; }
 
         // The transform of the collector, who collected this item
         // It is saved to drop the item at the same position and rotation

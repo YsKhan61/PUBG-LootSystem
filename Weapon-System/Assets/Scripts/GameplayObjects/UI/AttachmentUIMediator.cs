@@ -9,7 +9,7 @@ namespace Weapon_System.GameplayObjects.UI
     /// <summary>
     /// Manages the sight attachment UIs in the WeaponSlotUIs. [Drag drop, swap, remove, add etc]
     /// </summary>
-    public class SightInventoryUIMediator : MonoBehaviour
+    public class AttachmentUIMediator : MonoBehaviour
     {
         [Header("Listens to")]
 
@@ -29,7 +29,7 @@ namespace Weapon_System.GameplayObjects.UI
         public WeaponInventoryUIMediator WeaponInventoryUI => m_WeaponInventoryUI;
 
         [SerializeField]
-        SightItemUI[] m_SightItemUIs;
+        AttachmentItemUI[] m_AttachmentItemUIs;
 
         private void Start()
         {
@@ -57,7 +57,7 @@ namespace Weapon_System.GameplayObjects.UI
         /// Drop the other SightItemUI to this SightItemUI
         /// </summary>
         /// <param name="itemUI">the other SightItemUI</param>
-        public void DropSightItemUIToSlot(SightItemUI itemUI, Transform slotTransform, int slotIndex)
+        public void DropSightItemUIToSlot(AttachmentItemUI itemUI, Transform slotTransform, int slotIndex)
         {
             itemUI.transform.SetParent(slotTransform);
             itemUI.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
@@ -71,14 +71,14 @@ namespace Weapon_System.GameplayObjects.UI
         // WeaponItem is not necessary to be sent here, because we can get the weapon from the WeaponInventoryUI
         private void DetachSightFromWeaponAndResetUI(WeaponItem weapon, int slotIndex)
         {
-            if (!TryGetSightItemUIFromSlotIndex(slotIndex, out SightItemUI itemUI))
+            if (!TryGetSightItemUIFromSlotIndex(slotIndex, out AttachmentItemUI itemUI))
             {
                 return;
             }
 
-            itemUI.StoredSightItem.DetachFromWeapon();
+            itemUI.StoredItem.DetachFromWeapon();
 
-            m_Inventory.AddItemToInventory(itemUI.StoredSightItem);
+            m_Inventory.AddItemToInventory(itemUI.StoredItem as InventoryItem);
 
             itemUI.ShowItemUIAndResetItsPosition();
             itemUI.ResetDataAndHideSightItemUI();
@@ -86,31 +86,30 @@ namespace Weapon_System.GameplayObjects.UI
 
         private void SwapSlotIndices(int leftIndex, int rightIndex)
         {
-            if (!TryGetSightItemUIFromSlotIndex(leftIndex, out SightItemUI leftUI))
+            if (!TryGetSightItemUIFromSlotIndex(leftIndex, out AttachmentItemUI leftUI))
             {
                 Debug.LogError("This should not happen!");
                 return;
             }
 
-            if (!TryGetSightItemUIFromSlotIndex(rightIndex, out SightItemUI rightUI))
+            if (!TryGetSightItemUIFromSlotIndex(rightIndex, out AttachmentItemUI rightUI))
             {
                 Debug.LogError("This should not happen!");
                 return;
-                
             }
 
             leftUI.SetSlotIndex(rightIndex);
             rightUI.SetSlotIndex(leftIndex);
         }
 
-        bool TryGetSightItemUIFromSlotIndex(int slotIndex, out SightItemUI itemUI)
+        bool TryGetSightItemUIFromSlotIndex(int slotIndex, out AttachmentItemUI itemUI)
         {
             itemUI = null;
-            foreach (SightItemUI sightItemUI in m_SightItemUIs)
+            foreach (AttachmentItemUI ui in m_AttachmentItemUIs)
             {
-                if (sightItemUI.SlotIndex == slotIndex)
+                if (ui.SlotIndex == slotIndex)
                 {
-                    itemUI = sightItemUI;
+                    itemUI = ui;
                     return true;
                 }
             }
