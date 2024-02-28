@@ -42,7 +42,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         [Header("Weapon items")]
 
-        [SerializeField, FormerlySerializedAs("m_Guns")]        // SerializeField is used only for Debug purposes
+        [SerializeField]        // SerializeField is used only for Debug purposes
         WeaponItem[] m_Weapons;       // Only primary and secondary gun. For now only 2 guns are allowed
 
         private void Start()
@@ -53,7 +53,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             
             m_OnInventoryItemUIRemovedEvent.OnEventRaised += RemoveInventoryItem;
             m_OnAfterWeaponItemUIRemovedEvent.OnEventRaised += RemoveGunItem;
-            m_OnWeaponItemUISwappedEvent.OnEventRaised += SwapGunItems;
+            m_OnWeaponItemUISwappedEvent.OnEventRaised += SwapWeaponItems;
         }
 
         private void OnDestroy()
@@ -61,7 +61,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             
             m_OnInventoryItemUIRemovedEvent.OnEventRaised -= RemoveInventoryItem;
             m_OnAfterWeaponItemUIRemovedEvent.OnEventRaised -= RemoveGunItem;
-            m_OnWeaponItemUISwappedEvent.OnEventRaised -= SwapGunItems;
+            m_OnWeaponItemUISwappedEvent.OnEventRaised -= SwapWeaponItems;
         }
 
         public void AddItemToInventory(InventoryItem item)
@@ -81,8 +81,9 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         /// </summary>
         /// <param name="gunItem">The gun item to store</param>
         /// <returns>Returns the index of the GunItem array where the gun is stored</returns>
-        public int AddGunToGunInventory(WeaponItem gunItem)
+        public bool TryAddWeaponItemToWeaponInventory(WeaponItem gunItem, out int slotIndex)
         {
+            slotIndex = -1;
             // Add to the first empty slot
             for (int i = 0; i < m_Weapons.Length; i++)
             {
@@ -90,17 +91,21 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
                 {
                     m_Weapons[i] = gunItem;
                     Debug.Log(gunItem.Name + " added to inventory!");
-                    return i;
+                    slotIndex = i;
+                    return true;
                 }
             }
 
+            return false;
+
             // If no empty slot and no gun in hand, replace the first gun
-            m_Weapons[0] = gunItem;
+            // For now we don't override -- but later we will.
+            /*m_Weapons[0] = gunItem;
             Debug.Log(gunItem.Name + " added to inventory!");
-            return 0;
+            return 0;*/
         }
 
-        public int GetIndexOfGunItem(WeaponItem item)
+        public int GetIndexOfWeaopnItem(WeaponItem item)
         {
             for (int i = 0; i < m_Weapons.Length; i++)
             {
@@ -113,7 +118,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             return -1;
         }
 
-        public WeaponItem GetGunItem(int index)
+        public WeaponItem GetWeaponItem(int index)
         {
             if (index < 0 || index >= m_Weapons.Length)
             {
@@ -126,7 +131,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         private void RemoveGunItem(WeaponItem item, int _)
         {
-            int index = GetIndexOfGunItem(item);
+            int index = GetIndexOfWeaopnItem(item);
             if (index < 0 || index >= m_Weapons.Length)
             {
                 Debug.LogError("Index out of range");
@@ -149,7 +154,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         /// </summary>
         /// <param name="leftIndex"></param>
         /// <param name="rightIndex"></param>
-        private void SwapGunItems(int leftIndex, int rightIndex)
+        private void SwapWeaponItems(int leftIndex, int rightIndex)
         {
             if (leftIndex < 0 || leftIndex >= m_Weapons.Length || rightIndex < 0 || rightIndex >= m_Weapons.Length)
             {

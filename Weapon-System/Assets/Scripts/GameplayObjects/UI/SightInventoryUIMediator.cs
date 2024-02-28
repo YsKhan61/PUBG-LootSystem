@@ -89,15 +89,21 @@ namespace Weapon_System.GameplayObjects.UI
 
         private void SwapSlotIndices(int leftIndex, int rightIndex)
         {
-            if (TryGetSightItemUIFromSlotIndex(leftIndex, out SightItemUI itemUI))
+            if (!TryGetSightItemUIFromSlotIndex(leftIndex, out SightItemUI leftUI))
             {
-                itemUI.SetSlotIndex(rightIndex);
+                Debug.LogError("This should not happen!");
+                return;
             }
 
-            if (TryGetSightItemUIFromSlotIndex(rightIndex, out itemUI))
+            if (!TryGetSightItemUIFromSlotIndex(rightIndex, out SightItemUI rightUI))
             {
-                itemUI.SetSlotIndex(leftIndex);
+                Debug.LogError("This should not happen!");
+                return;
+                
             }
+
+            leftUI.SetSlotIndex(rightIndex);
+            rightUI.SetSlotIndex(leftIndex);
         }
 
         bool TryGetSightItemUIFromSlotIndex(int slotIndex, out SightItemUI itemUI)

@@ -3,24 +3,12 @@ using UnityEngine;
 
 namespace Weapon_System.GameplayObjects.ItemsSystem
 {
-    /*// Detailed type of the items
-    public enum ItemType
-    {
-        M416,
-
-        P1911,
-
-        EnergyDrink,
-
-    }*/
-
-    /// <summary>
-    /// These types are used to determine where the respective item can be dropped in the UI
-    /// </summary>
     public enum ItemUIType
     {
         Common,                 // These items can be stored in the Inventory Bag Panel
-        Gun,                    // These items can be stored in the Weapon Slots
+        Weapon,                    // These items can be stored in the Weapon Slots
+        HandGun,                // These items can be stored in the HandGun Slots
+        Throwables,             // These items can be stored in the Throwable Slots
         MuzzleAttachment,       // These items can be stored either in the Inventory Bag Panel or in the Muzzle Attachment Slots
         SightAttachment,        // These items can be stored either in the Inventory Bag Panel or in the Sight Attachment Slots
         MagazineAttachment,     // These items can be stored either in the Inventory Bag Panel or in the Magazine Attachment Slots

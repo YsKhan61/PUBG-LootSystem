@@ -72,7 +72,7 @@ namespace Weapon_System.GameplayObjects.UI
                     return;
 
                 // Remove the SightItem from the gun
-                if (!m_SightInventoryUIMediator.WeaponInventoryUI.TryGetGunItemFromWeaponInventoryUI(
+                if (!m_SightInventoryUIMediator.WeaponInventoryUI.TryGetWeaopnItemFromWeaponInventoryUI(
                     SlotIndex, out WeaponItem gun))
                 {
                     // right clicked on an empty SightItemUI
@@ -133,7 +133,7 @@ namespace Weapon_System.GameplayObjects.UI
 
                 // if no,
                 // Try to get GunItemData from the WeaponInventoryUI
-                if (!m_SightInventoryUIMediator.WeaponInventoryUI.TryGetGunItemFromWeaponInventoryUI(
+                if (!m_SightInventoryUIMediator.WeaponInventoryUI.TryGetWeaopnItemFromWeaponInventoryUI(
                     SlotIndex, out WeaponItem gunInThisSlot))
                 {
                     // if GunItem is not found, then return
@@ -159,7 +159,7 @@ namespace Weapon_System.GameplayObjects.UI
                 }
 
                 // get the gun item from the WeaponInventoryUI using the SlotIndex of dropped SightItemUI
-                if (!m_SightInventoryUIMediator.WeaponInventoryUI.TryGetGunItemFromWeaponInventoryUI(
+                if (!m_SightInventoryUIMediator.WeaponInventoryUI.TryGetWeaopnItemFromWeaponInventoryUI(
                                        droppedSightItemUI.SlotIndex, out WeaponItem gunInDroppedSlot))
                 {
                     return;
@@ -229,7 +229,7 @@ namespace Weapon_System.GameplayObjects.UI
                 }
 
                 // Try to get GunItemData from the WeaponInventoryUI
-                if (!m_SightInventoryUIMediator.WeaponInventoryUI.TryGetGunItemFromWeaponInventoryUI(
+                if (!m_SightInventoryUIMediator.WeaponInventoryUI.TryGetWeaopnItemFromWeaponInventoryUI(
                     SlotIndex, out WeaponItem gunInThisSlot))
                 {
                     return;
@@ -324,6 +324,11 @@ namespace Weapon_System.GameplayObjects.UI
             }
         }
 
+        /// <summary>
+        /// Hide and reset the ItemUI of the SightItem 
+        /// that is being dragged and dropped on this SightItemUI
+        /// </summary>
+        /// <param name="itemUI"></param>
         void HideItemUI(ItemUI itemUI)
         {
             itemUI.IsDragSuccess = true;            // Set the drag success to true, so that the OnEndDrag of ItemUI doesn't make it visible again or fallback to last position

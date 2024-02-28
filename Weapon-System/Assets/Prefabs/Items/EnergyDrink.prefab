@@ -124,7 +124,7 @@ PrefabInstance:
     - target: {fileID: 576706885073001226, guid: 1c379bbaeeba73c4d8a45fc167e94da0,
         type: 3}
       propertyPath: m_Name
-      value: Collectable
+      value: Item
       objectReference: {fileID: 0}
     - target: {fileID: 976934747929668969, guid: 1c379bbaeeba73c4d8a45fc167e94da0,
         type: 3}

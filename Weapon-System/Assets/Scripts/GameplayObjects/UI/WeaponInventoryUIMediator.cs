@@ -15,7 +15,8 @@ namespace Weapon_System.GameplayObjects.UI
         [Header("Listens to")]
 
         [SerializeField, Tooltip("When a gun item is added to the inventory, this event is invoked, Listen to this event to add a WeaponItemUI in respective WeaponSlotUI")]
-        WeaponItemIntEventChannelSO m_OnGunItemAddedToInventoryEvent;
+        [FormerlySerializedAs("m_OnGunItemAddedToInventoryEvent")]
+        WeaponItemIntEventChannelSO m_OnWeaponItemAddedToInventoryEvent;
 
         [Header("Broadcast to")]
 
@@ -37,12 +38,12 @@ namespace Weapon_System.GameplayObjects.UI
 
         private void Start()
         {
-            m_OnGunItemAddedToInventoryEvent.OnEventRaised += AddGunItemUIToInventoryUI;
+            m_OnWeaponItemAddedToInventoryEvent.OnEventRaised += AddWeaponItemUIToInventoryUI;
         }
 
         private void OnDestroy()
         {
-            m_OnGunItemAddedToInventoryEvent.OnEventRaised -= AddGunItemUIToInventoryUI;
+            m_OnWeaponItemAddedToInventoryEvent.OnEventRaised -= AddWeaponItemUIToInventoryUI;
         }
 
         internal void BroadcastOnBeforeWeaponItemUIRemovedEvent(WeaponItem item, int slotIndex)
@@ -60,17 +61,15 @@ namespace Weapon_System.GameplayObjects.UI
             m_OnWeaponItemUISwappedEvent.RaiseEvent(indexOfDroppedWeaponItemUI, indexOfWeaponSlotUI);
         }
 
-        public bool TryGetGunItemFromWeaponInventoryUI(int index, out WeaponItem gun)
+        public bool TryGetWeaopnItemFromWeaponInventoryUI(int index, out WeaponItem gun)
         {
             gun = null;
 
-            if (index < 0 || index >= m_WeaponItemUIs.Length)
+            if (!TryGetWeaponItemUIFromSlotIndex(index, out WeaponItemUI weaponItemUI))
             {
-                Debug.LogError("Index out of range");
                 return false;
             }
-
-            gun = m_WeaponItemUIs[index].StoredGunItem;
+            gun = weaponItemUI.StoredGunItem;
             return gun != null;
         }
 
@@ -83,20 +82,21 @@ namespace Weapon_System.GameplayObjects.UI
             itemUI.SetSlotIndex(slotIndex);
         }
 
-        private void AddGunItemUIToInventoryUI(WeaponItem item, int index)
+        private void AddWeaponItemUIToInventoryUI(WeaponItem item, int index)
         {
-            // If the gun is already in the inventory, then return for now.
-            // This is a temporary solution, as we are not removing the gun from the inventory.
-            // We are just adding the gun to the inventory.
-            // Later, we gonna implement the mechanics applied in PUBG
-            if (TryGetGunItemFromWeaponInventoryUI(index, out WeaponItem _))
-            {
-                return;
-            }
 
             if (!TryGetWeaponItemUIFromSlotIndex(index, out WeaponItemUI weaponItemUI))
             {
                 Debug.LogError("WeaponItemUI not found for the index: " + index);
+                return;
+            }
+
+            if (weaponItemUI.StoredGunItem != null)
+            {
+                // If a weapon is already in the inventory, then return for now.
+                // This is a temporary solution, as we are not removing the gun from the inventory.
+                // We are just adding the gun to the inventory.
+                // Later, we gonna implement the mechanics applied in PUBG
                 return;
             }
 

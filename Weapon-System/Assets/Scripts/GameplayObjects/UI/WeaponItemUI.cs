@@ -117,8 +117,10 @@ namespace Weapon_System.GameplayObjects.UI
             {
                 if (droppedWeaponItemUI.ItemUIType == m_ItemUIType)
                 {
+                    // If there is already a Stored WeaponItem in this ItemUI ,
                     // Check if the GunItem Type of dropped WeaponItemUI is same as this WeaponItemUI
-                    if (droppedWeaponItemUI.StoredGunItem.ItemData.ItemTag == StoredGunItem.ItemData.ItemTag)
+                    if (StoredGunItem != null && 
+                        droppedWeaponItemUI.StoredGunItem.ItemData.ItemTag == StoredGunItem.ItemData.ItemTag)
                     {
                         return;
                     }

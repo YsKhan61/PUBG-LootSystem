@@ -176,7 +176,8 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             }
             else if (item is WeaponItem gunItem)
             {
-                int storedIndex = m_Inventory.AddGunToGunInventory(gunItem);
+                if (!m_Inventory.TryAddWeaponItemToWeaponInventory(gunItem, out int storedIndex))
+                    return;
                 m_OnGunItemAddedEvent.RaiseEvent(gunItem, storedIndex);
             }
         }
@@ -201,7 +202,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         private void OnPrimaryWeaponSelect(bool _)
         {
-            WeaponItem primaryWeapon = m_Inventory.GetGunItem(0);
+            WeaponItem primaryWeapon = m_Inventory.GetWeaponItem(0);
 
             if (primaryWeapon == null)
                 return;
@@ -217,7 +218,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         private void OnSecondaryWeaponSelect(bool _)
         {
-            WeaponItem secondaryWeapon = m_Inventory.GetGunItem(1);
+            WeaponItem secondaryWeapon = m_Inventory.GetWeaponItem(1);
 
             if (secondaryWeapon == null)
                 return;
