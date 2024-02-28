@@ -82,10 +82,12 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
     public interface IHoldable
     {
         public bool IsInHand { get; }
+
         /// <summary>
         /// We pass the hand to hold the item in
         /// </summary>
         public bool Hold();
+
         /// <summary>
         /// This method is used to either put away the item in the inventory
         /// or drop it on the ground
@@ -102,6 +104,8 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
     /// </summary>
     public interface IWeaponAttachment
     {
+        public bool IsWeaponCompatible(WeaponDataSO weaponData);
+
         /// <summary>
         /// This method is used to attach the attachment to the weapon
         /// </summary>

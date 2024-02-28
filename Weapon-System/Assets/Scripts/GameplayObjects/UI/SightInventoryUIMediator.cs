@@ -67,6 +67,9 @@ namespace Weapon_System.GameplayObjects.UI
             itemUI.SetSlotIndex(slotIndex);
         }
 
+
+        // ----------------------- NOTE ---------------------------------
+        // WeaponItem is not necessary to be sent here, because we can get the weapon from the WeaponInventoryUI
         private void DetachSightFromWeaponAndResetUI(WeaponItem weapon, int slotIndex)
         {
             if (!TryGetSightItemUIFromSlotIndex(slotIndex, out SightItemUI itemUI))
@@ -74,12 +77,7 @@ namespace Weapon_System.GameplayObjects.UI
                 return;
             }
 
-            if (weapon == null || weapon.SightAttachment == null)
-            {
-                return;
-            }
-
-            weapon.DetachSight();
+            itemUI.StoredSightItem.DetachFromWeapon();
 
             m_Inventory.AddItemToInventory(itemUI.StoredSightItem);
 

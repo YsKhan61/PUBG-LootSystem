@@ -4,14 +4,13 @@ using UnityEngine;
 namespace Weapon_System.GameplayObjects.ItemsSystem
 {
     /// <summary>
-    /// The sight item that can be attached to any ISightHolder
+    /// The sight item that can be attached to specific WeaponItem
     /// </summary>
     public class SightAttachmentItem : InventoryItem, IWeaponAttachment
     {
         public SightAttachmentDataSO SightAttachmentData => m_ItemData as SightAttachmentDataSO;
 
-        bool m_IsAttached = false;
-        public bool IsAttached => m_IsAttached;
+        private WeaponItem m_WeaponItem;
 
         public bool AimDownSight()
         {
@@ -19,31 +18,55 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             return true;
         }
 
-        public bool AttachToWeapon(WeaponItem gun)
+        public bool AttachToWeapon(WeaponItem weapon)
         {
-            if (gun.SightAttachment != this)
+            if (m_WeaponItem != null)
             {
-                Debug.LogError("First sight need to be attached by ISightHolder, then this method can be called from ISightHolder only!");
+                Debug.LogError("Sight already attached: Sight need to be removed by UI Drag Drop");
                 return false;
             }
 
-            m_RootGO.transform.SetParent(gun.SightHolderTransform);
+            m_RootGO.transform.SetParent(weapon.SightHolderTransform);
             m_RootGO.transform.localPosition = Vector3.zero;
             m_RootGO.transform.localRotation = Quaternion.identity;
 
+            m_WeaponItem = weapon;
+            m_WeaponItem.SightAttachment = this;
+
             ShowGraphics();
 
-            m_IsAttached = true;
             return true;
         }
 
         public bool DetachFromWeapon()
         {
+            if (m_WeaponItem == null)
+            {
+                Debug.LogError("Sight not attached: Sight need to be attached by UI Drag Drop");
+                return false;
+            }
+
             m_RootGO.transform.SetParent(null);
+
             HideGraphics();
 
-            m_IsAttached = false;
+            m_WeaponItem.SightAttachment = null;
+            m_WeaponItem = null;
+
             return true;
+        }
+
+        public bool IsWeaponCompatible(WeaponDataSO weaponData)
+        {
+            foreach (var tag in weaponData.AllowedSightAttachments)
+            {
+                if (tag == m_ItemData.ItemTag)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 

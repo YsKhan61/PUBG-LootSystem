@@ -1,5 +1,5 @@
-using System.Text;
 using UnityEngine;
+
 
 namespace Weapon_System.GameplayObjects.ItemsSystem
 {
@@ -14,22 +14,29 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
     /// </summary>
     public class WeaponItem : ItemBase, ICollectable, IStorable, IDropable, IP_Usable, IS_Usable, IHoldable
     {
-        public WeaponDataSO WeaponData => m_ItemData as WeaponDataSO;
-        public bool IsCollected { get; protected set; }
-
-        public bool IsInHand { get; protected set; }
-
-        public SightAttachmentItem SightAttachment { get; protected set; }
-
         [SerializeField, Tooltip("The root game object of this item")]
         GameObject m_RootGO;
+
 
         [SerializeField, Tooltip("The graphics model of this gun")]
         GameObject m_Graphics;
 
+
         [SerializeField, Tooltip("The sight will become a child of this game object with same position")]
         Transform m_SightHolderTransform;
         public Transform SightHolderTransform => m_SightHolderTransform;
+
+
+        [SerializeField, Tooltip("The grip will become a child of this game object with same position")]
+        Transform m_GripHolderTransform;
+        public Transform GripHolderTransform => m_GripHolderTransform;
+
+
+        public WeaponDataSO WeaponData => m_ItemData as WeaponDataSO;
+        public bool IsCollected { get; protected set; }
+        public bool IsInHand { get; protected set; }
+        public SightAttachmentItem SightAttachment { get; set; }
+        public GripAttachmentItem GripAttachment { get; protected set; }
 
         // The transform of the collector, who collected this item
         // It is saved to drop the item at the same position and rotation
@@ -114,43 +121,6 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             IsInHand = false;
             HideGraphics();
             return true;
-        }
-
-        public void AttachSight(SightAttachmentItem sight)
-        {
-            if (SightAttachment != null)
-            {
-                Debug.LogError("Sight already attached: Sight need to be removed by UI Drag Drop");
-                return;
-            }
-
-            SightAttachment = sight;
-            sight.AttachToWeapon(this);
-        }
-
-        public void DetachSight()
-        {
-            if (SightAttachment == null)
-            {
-                Debug.LogError("No sight attached: Sight must be attached if Detach sight is called!");
-                return;
-            }
-
-            SightAttachment.DetachFromWeapon();
-            SightAttachment = null;
-        }
-
-        public bool IsSightTypeCompatible(ItemTagSO tagToCheck)
-        {
-            foreach (ItemTagSO type in WeaponData.AllowedSightAttachments)
-            {
-                if (tagToCheck == type)
-                {
-                    return true;
-                }
-            }
-
-            return false;
         }
 
         bool Shoot()
