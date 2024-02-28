@@ -107,7 +107,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         /// </summary>
         /// <param name="gun">the gun on which the attachment will be attached</param>
         /// <returns></returns>
-        public bool AttachToWeapon(GunItem gun);
+        public bool AttachToWeapon(WeaponItem gun);
         public bool DetachFromWeapon();
     }
 }

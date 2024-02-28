@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Weapon_System.GameplayObjects.ItemsSystem;
 using Weapon_System.Utilities;
 
@@ -14,12 +15,17 @@ namespace Weapon_System.GameplayObjects.UI
         [Header("Listens to")]
 
         [SerializeField, Tooltip("When a gun item is added to the inventory, this event is invoked, Listen to this event to add a WeaponItemUI in respective WeaponSlotUI")]
-        GunItemIntEventChannelSO m_OnGunItemAddedToInventoryEvent;
+        WeaponItemIntEventChannelSO m_OnGunItemAddedToInventoryEvent;
 
         [Header("Broadcast to")]
 
-        [SerializeField, Tooltip("When an WeaponItemUI is removed from WeaponInventoryUI, this event is invoked")]
-        GunItemIntEventChannelSO m_OnWeaponItemUIRemovedEvent;
+        [SerializeField, Tooltip("When an WeaponItemUI is going to be removed from WeaponInventoryUI, this event is invoked before that happens")]
+        WeaponItemIntEventChannelSO m_OnBeforeWeaponItemUIRemovedEvent;
+
+
+        [SerializeField, Tooltip("When an WeaponItemUI is removed from WeaponInventoryUI, this event is invoked after that")]
+        [FormerlySerializedAs("m_OnWeaponItemUIRemovedEvent")]
+        WeaponItemIntEventChannelSO m_OnAfterWeaponItemUIRemovedEvent;
 
         [SerializeField, Tooltip("When two WeaponItemUI's are swapped with each other, this event is invoked")]
         IntIntEventChannelSO m_OnWeaponItemUISwappedEvent;
@@ -28,9 +34,6 @@ namespace Weapon_System.GameplayObjects.UI
 
         [SerializeField]
         WeaponItemUI[] m_WeaponItemUIs;
-
-        [SerializeField]
-        Inventory m_Inventory;
 
         private void Start()
         {
@@ -42,17 +45,22 @@ namespace Weapon_System.GameplayObjects.UI
             m_OnGunItemAddedToInventoryEvent.OnEventRaised -= AddGunItemUIToInventoryUI;
         }
 
-        public void BroadcastWeaponItemUIRemovedEvent(GunItem item, int slotIndex)
+        internal void BroadcastOnBeforeWeaponItemUIRemovedEvent(WeaponItem item, int slotIndex)
         {
-            m_OnWeaponItemUIRemovedEvent?.RaiseEvent(item, slotIndex);
+            m_OnBeforeWeaponItemUIRemovedEvent.RaiseEvent(item, slotIndex);
         }
 
-        public void BroadcastWeaponItemUIsSwappedEvent(int indexOfDroppedWeaponItemUI, int indexOfWeaponSlotUI)
+        internal void BroadcastOnAfterWeaponItemUIRemovedEvent(WeaponItem item, int slotIndex)
         {
-            m_OnWeaponItemUISwappedEvent?.RaiseEvent(indexOfDroppedWeaponItemUI, indexOfWeaponSlotUI);
+            m_OnAfterWeaponItemUIRemovedEvent.RaiseEvent(item, slotIndex);
         }
 
-        public bool TryGetGunItemFromWeaponInventoryUI(int index, out GunItem gun)
+        internal void BroadcastWeaponItemUIsSwappedEvent(int indexOfDroppedWeaponItemUI, int indexOfWeaponSlotUI)
+        {
+            m_OnWeaponItemUISwappedEvent.RaiseEvent(indexOfDroppedWeaponItemUI, indexOfWeaponSlotUI);
+        }
+
+        public bool TryGetGunItemFromWeaponInventoryUI(int index, out WeaponItem gun)
         {
             gun = null;
 
@@ -75,13 +83,13 @@ namespace Weapon_System.GameplayObjects.UI
             itemUI.SetSlotIndex(slotIndex);
         }
 
-        private void AddGunItemUIToInventoryUI(GunItem item, int index)
+        private void AddGunItemUIToInventoryUI(WeaponItem item, int index)
         {
             // If the gun is already in the inventory, then return for now.
             // This is a temporary solution, as we are not removing the gun from the inventory.
             // We are just adding the gun to the inventory.
             // Later, we gonna implement the mechanics applied in PUBG
-            if (TryGetGunItemFromWeaponInventoryUI(index, out GunItem _))
+            if (TryGetGunItemFromWeaponInventoryUI(index, out WeaponItem _))
             {
                 return;
             }

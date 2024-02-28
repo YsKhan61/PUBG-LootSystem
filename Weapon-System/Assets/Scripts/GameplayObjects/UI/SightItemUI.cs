@@ -68,9 +68,12 @@ namespace Weapon_System.GameplayObjects.UI
             // Right click to drop item
             if (eventData.button == PointerEventData.InputButton.Right)
             {
+                if (StoredSightItem == null)
+                    return;
+
                 // Remove the SightItem from the gun
                 if (!m_SightInventoryUIMediator.WeaponInventoryUI.TryGetGunItemFromWeaponInventoryUI(
-                    SlotIndex, out GunItem gun))
+                    SlotIndex, out WeaponItem gun))
                 {
                     // right clicked on an empty SightItemUI
                     return;
@@ -131,7 +134,7 @@ namespace Weapon_System.GameplayObjects.UI
                 // if no,
                 // Try to get GunItemData from the WeaponInventoryUI
                 if (!m_SightInventoryUIMediator.WeaponInventoryUI.TryGetGunItemFromWeaponInventoryUI(
-                    SlotIndex, out GunItem gunInThisSlot))
+                    SlotIndex, out WeaponItem gunInThisSlot))
                 {
                     // if GunItem is not found, then return
                     return;
@@ -157,7 +160,7 @@ namespace Weapon_System.GameplayObjects.UI
 
                 // get the gun item from the WeaponInventoryUI using the SlotIndex of dropped SightItemUI
                 if (!m_SightInventoryUIMediator.WeaponInventoryUI.TryGetGunItemFromWeaponInventoryUI(
-                                       droppedSightItemUI.SlotIndex, out GunItem gunInDroppedSlot))
+                                       droppedSightItemUI.SlotIndex, out WeaponItem gunInDroppedSlot))
                 {
                     return;
                 }
@@ -227,7 +230,7 @@ namespace Weapon_System.GameplayObjects.UI
 
                 // Try to get GunItemData from the WeaponInventoryUI
                 if (!m_SightInventoryUIMediator.WeaponInventoryUI.TryGetGunItemFromWeaponInventoryUI(
-                    SlotIndex, out GunItem gunInThisSlot))
+                    SlotIndex, out WeaponItem gunInThisSlot))
                 {
                     return;
                 }
@@ -288,7 +291,7 @@ namespace Weapon_System.GameplayObjects.UI
             m_SlotIndex = index;
         }
 
-        public void SetDataAndShowSightItemUI(SightAttachmentItem item)
+        internal void SetDataAndShowSightItemUI(SightAttachmentItem item)
         {
             m_StoredSightItem = item;
             m_Icon.sprite = item.ItemData.IconSprite;
@@ -296,10 +299,7 @@ namespace Weapon_System.GameplayObjects.UI
             Show();
         }
 
-
-        
-
-        void ResetDataAndHideSightItemUI()
+        internal void ResetDataAndHideSightItemUI()
         {
             m_StoredSightItem = null;
             m_Icon.sprite = null;
@@ -307,15 +307,7 @@ namespace Weapon_System.GameplayObjects.UI
             Hide();
         }
 
-        void HideItemUI(ItemUI itemUI)
-        {
-            itemUI.IsDragSuccess = true;            // Set the drag success to true, so that the OnEndDrag of ItemUI doesn't make it visible again or fallback to last position
-            itemUI.Hide();
-            itemUI.UnblockRaycast();
-            m_ItemUI = itemUI;
-        }
-
-        void ShowItemUIAndResetItsPosition()
+        internal void ShowItemUIAndResetItsPosition()
         {
             if (m_ItemUI == null)
             {
@@ -330,6 +322,14 @@ namespace Weapon_System.GameplayObjects.UI
                 m_ItemUI.BlockRaycast();
                 m_ItemUI.FallbackToLastPosition();
             }
+        }
+
+        void HideItemUI(ItemUI itemUI)
+        {
+            itemUI.IsDragSuccess = true;            // Set the drag success to true, so that the OnEndDrag of ItemUI doesn't make it visible again or fallback to last position
+            itemUI.Hide();
+            itemUI.UnblockRaycast();
+            m_ItemUI = itemUI;
         }
 
         private void Show()

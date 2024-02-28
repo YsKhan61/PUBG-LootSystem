@@ -12,9 +12,9 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
     ///  ---------------------- NOIE----------------------
     ///  This Gun item can attach a sight attachment to it.
     /// </summary>
-    public class GunItem : ItemBase, ICollectable, IStorable, IDropable, IP_Usable, IS_Usable, IHoldable
+    public class WeaponItem : ItemBase, ICollectable, IStorable, IDropable, IP_Usable, IS_Usable, IHoldable
     {
-        public GunDataSO GunData => m_ItemData as GunDataSO;
+        public WeaponDataSO WeaponData => m_ItemData as WeaponDataSO;
         public bool IsCollected { get; protected set; }
 
         public bool IsInHand { get; protected set; }
@@ -98,7 +98,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             }
 
             // If there is no sight attachment, then aim down sight through iron sight
-            Debug.Log("Aiming down sight through iron sight with ADS Zoom value of " + GunData.ADSZoomValue);
+            Debug.Log("Aiming down sight through iron sight with ADS Zoom value of " + WeaponData.ADSZoomValue);
             return true;
         }
 
@@ -142,7 +142,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         public bool IsSightTypeCompatible(ItemTagSO tagToCheck)
         {
-            foreach (ItemTagSO type in GunData.AllowedSightAttachments)
+            foreach (ItemTagSO type in WeaponData.AllowedSightAttachments)
             {
                 if (tagToCheck == type)
                 {

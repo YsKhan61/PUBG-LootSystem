@@ -16,14 +16,13 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         [Header("Listens to")]
 
         [SerializeField, Tooltip("Listen to this event to remove the respective common item from inventory.")]
-        [FormerlySerializedAs("m_OnCommonItemUIRemovedEvent")]
         InventoryItemEventChannelSO m_OnInventoryItemUIRemovedEvent;
 
-        [SerializeField, Tooltip("Listen to this event to remove the respective gun item from inventory.")]
-        GunItemIntEventChannelSO m_OnGunItemUIRemovedEvent;
+        [SerializeField, Tooltip("When an WeaponItemUI is removed from WeaponInventoryUI, this event is invoked after that")]
+        WeaponItemIntEventChannelSO m_OnAfterWeaponItemUIRemovedEvent;
 
-        [SerializeField, Tooltip("Listen to this event to swap the respective guns in inventory.")]
-        IntIntEventChannelSO m_OnGunItemUISwappedEvent;
+        [SerializeField, Tooltip("When two WeaponItemUI's are swapped with each other, this event is invoked")]
+        IntIntEventChannelSO m_OnWeaponItemUISwappedEvent;
 
         [Space(10)]
 
@@ -41,28 +40,28 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         [Space(10)]
 
-        [Header("Gun items")]
+        [Header("Weapon items")]
 
-        [SerializeField]        // SerializeField is used only for Debug purposes
-        GunItem[] m_Guns;       // Only primary and secondary gun. For now only 2 guns are allowed
+        [SerializeField, FormerlySerializedAs("m_Guns")]        // SerializeField is used only for Debug purposes
+        WeaponItem[] m_Weapons;       // Only primary and secondary gun. For now only 2 guns are allowed
 
         private void Start()
         {
             m_InventoryItems = new List<InventoryItem>();
-            m_Guns = new GunItem[2];                    // For now only 2 guns are allowed
+            m_Weapons = new WeaponItem[2];                    // For now only 2 guns are allowed
 
             
             m_OnInventoryItemUIRemovedEvent.OnEventRaised += RemoveInventoryItem;
-            m_OnGunItemUIRemovedEvent.OnEventRaised += RemoveGunItem;
-            m_OnGunItemUISwappedEvent.OnEventRaised += SwapGunItems;
+            m_OnAfterWeaponItemUIRemovedEvent.OnEventRaised += RemoveGunItem;
+            m_OnWeaponItemUISwappedEvent.OnEventRaised += SwapGunItems;
         }
 
         private void OnDestroy()
         {
             
             m_OnInventoryItemUIRemovedEvent.OnEventRaised -= RemoveInventoryItem;
-            m_OnGunItemUIRemovedEvent.OnEventRaised -= RemoveGunItem;
-            m_OnGunItemUISwappedEvent.OnEventRaised -= SwapGunItems;
+            m_OnAfterWeaponItemUIRemovedEvent.OnEventRaised -= RemoveGunItem;
+            m_OnWeaponItemUISwappedEvent.OnEventRaised -= SwapGunItems;
         }
 
         public void AddItemToInventory(InventoryItem item)
@@ -82,30 +81,30 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         /// </summary>
         /// <param name="gunItem">The gun item to store</param>
         /// <returns>Returns the index of the GunItem array where the gun is stored</returns>
-        public int AddGunToGunInventory(GunItem gunItem)
+        public int AddGunToGunInventory(WeaponItem gunItem)
         {
             // Add to the first empty slot
-            for (int i = 0; i < m_Guns.Length; i++)
+            for (int i = 0; i < m_Weapons.Length; i++)
             {
-                if (m_Guns[i] == null)
+                if (m_Weapons[i] == null)
                 {
-                    m_Guns[i] = gunItem;
+                    m_Weapons[i] = gunItem;
                     Debug.Log(gunItem.Name + " added to inventory!");
                     return i;
                 }
             }
 
             // If no empty slot and no gun in hand, replace the first gun
-            m_Guns[0] = gunItem;
+            m_Weapons[0] = gunItem;
             Debug.Log(gunItem.Name + " added to inventory!");
             return 0;
         }
 
-        public int GetIndexOfGunItem(GunItem item)
+        public int GetIndexOfGunItem(WeaponItem item)
         {
-            for (int i = 0; i < m_Guns.Length; i++)
+            for (int i = 0; i < m_Weapons.Length; i++)
             {
-                if (m_Guns[i] == item)
+                if (m_Weapons[i] == item)
                 {
                     return i;
                 }
@@ -114,34 +113,34 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             return -1;
         }
 
-        public GunItem GetGunItem(int index)
+        public WeaponItem GetGunItem(int index)
         {
-            if (index < 0 || index >= m_Guns.Length)
+            if (index < 0 || index >= m_Weapons.Length)
             {
                 Debug.LogError("Index out of range");
                 return null;
             }
 
-            return m_Guns[index];
+            return m_Weapons[index];
         }
 
-        private void RemoveGunItem(GunItem item, int _)
+        private void RemoveGunItem(WeaponItem item, int _)
         {
             int index = GetIndexOfGunItem(item);
-            if (index < 0 || index >= m_Guns.Length)
+            if (index < 0 || index >= m_Weapons.Length)
             {
                 Debug.LogError("Index out of range");
                 return;
             }
 
-            if (m_Guns[index] == null)
+            if (m_Weapons[index] == null)
             {
                 Debug.LogError("UI was present, but gun is not present in the inventory!");
                 return;
             }
 
-            m_Guns[index].Drop();
-            m_Guns[index] = null;
+            m_Weapons[index].Drop();
+            m_Weapons[index] = null;
         }
 
         /// <summary>
@@ -152,15 +151,15 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         /// <param name="rightIndex"></param>
         private void SwapGunItems(int leftIndex, int rightIndex)
         {
-            if (leftIndex < 0 || leftIndex >= m_Guns.Length || rightIndex < 0 || rightIndex >= m_Guns.Length)
+            if (leftIndex < 0 || leftIndex >= m_Weapons.Length || rightIndex < 0 || rightIndex >= m_Weapons.Length)
             {
                 Debug.LogError("Index out of range");
                 return;
             }
 
-            GunItem temp = m_Guns[leftIndex];
-            m_Guns[leftIndex] = m_Guns[rightIndex];
-            m_Guns[rightIndex] = temp;
+            WeaponItem temp = m_Weapons[leftIndex];
+            m_Weapons[leftIndex] = m_Weapons[rightIndex];
+            m_Weapons[rightIndex] = temp;
         }
     }
 }

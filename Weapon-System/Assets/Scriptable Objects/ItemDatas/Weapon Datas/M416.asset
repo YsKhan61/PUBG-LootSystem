@@ -9,13 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a238cfa189984984aa0f6cc4cfa817c0, type: 3}
-  m_Name: P1911
+  m_Script: {fileID: 11500000, guid: 29005bed0e836fc48a97abe2ccb1d9fb, type: 3}
+  m_Name: M416
   m_EditorClassIdentifier: 
-  m_ItemTag: {fileID: 11400000, guid: ab1461bfae4bf494d8d4084e26c3ff6d, type: 2}
+  m_ItemTag: {fileID: 11400000, guid: badb1b7175e3eb84cb0733f3a46563f1, type: 2}
   m_UIType: 1
-  m_IconSprite: {fileID: 21300000, guid: b5329082547ac1b4bb96b470a3a1b77b, type: 3}
-  m_ADSZoomValue: 0
+  m_IconSprite: {fileID: 21300000, guid: a5684b65aef70014e9429daf22f88ec7, type: 3}
+  m_ADSZoomValue: 2
   m_AllowedSightAttachments:
+  - {fileID: 11400000, guid: 351f48ffa23c68943be98de56550b22f, type: 2}
   - {fileID: 11400000, guid: 2c199787c0b1d0e4b927758c68cfe9d7, type: 2}
   - {fileID: 11400000, guid: 88aca3813d3885c44841b1c1967d1132, type: 2}

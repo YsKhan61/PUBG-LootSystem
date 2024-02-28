@@ -482,14 +482,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_OnGunItemAddedToInventoryEvent: {fileID: 11400000, guid: e0bc3b9c8a58e6542966ee9c2f16ceb6,
     type: 2}
-  m_OnWeaponItemUIRemovedEvent: {fileID: 11400000, guid: 192f4dd12ef944f469016a701256cb7d,
+  m_OnBeforeWeaponItemUIRemovedEvent: {fileID: 11400000, guid: 8933741cf6f7ee04fb7ad02eb07e1f96,
+    type: 2}
+  m_OnAfterWeaponItemUIRemovedEvent: {fileID: 11400000, guid: 192f4dd12ef944f469016a701256cb7d,
     type: 2}
   m_OnWeaponItemUISwappedEvent: {fileID: 11400000, guid: 0f4de236d6d17ca46a8bae2d726da53c,
     type: 2}
   m_WeaponItemUIs:
   - {fileID: 7993000985656380377}
   - {fileID: 1400475445}
-  m_Inventory: {fileID: 2114519427}
 --- !u!114 &218537253
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -502,8 +503,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9f4d51645a18984d9aea341be8649c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_OnBeforeWeaponItemUIRemovedEvent: {fileID: 11400000, guid: 8933741cf6f7ee04fb7ad02eb07e1f96,
+    type: 2}
+  m_OnWeaponItemUISwappedEvent: {fileID: 11400000, guid: 0f4de236d6d17ca46a8bae2d726da53c,
+    type: 2}
   m_Inventory: {fileID: 2114519427}
   m_WeaponInventoryUI: {fileID: 218537252}
+  m_SightItemUIs:
+  - {fileID: 685930056}
+  - {fileID: 14023519}
 --- !u!1 &453972625
 GameObject:
   m_ObjectHideFlags: 0
@@ -5159,6 +5167,12 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4005358851779753207, guid: fde1863501b36d14297b180ab2062be0,
+        type: 3}
+      propertyPath: m_ItemData
+      value: 
+      objectReference: {fileID: 11400000, guid: 8094637332a63b745bd3ba33c401079e,
+        type: 2}
     - target: {fileID: 4210785308608106674, guid: fde1863501b36d14297b180ab2062be0,
         type: 3}
       propertyPath: m_Name
@@ -5227,21 +5241,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1755077732641988665, guid: 0735faa488d2cd44c90df22b099d00df,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1755077732641988665, guid: 0735faa488d2cd44c90df22b099d00df,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1755077732641988665, guid: 0735faa488d2cd44c90df22b099d00df,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4345107818352820876, guid: 0735faa488d2cd44c90df22b099d00df,
         type: 3}
       propertyPath: m_LocalPosition.x

@@ -37,11 +37,11 @@ namespace Weapon_System.GameplayObjects.UI
 
         private Vector2 m_lastAnchoredPosition;
         
-        private GunItem m_StoredGunItem;
+        private WeaponItem m_StoredGunItem;
         /// <summary>
         /// This stores the GunItem data of this ItemUI, from the Inventory
         /// </summary>
-        public GunItem StoredGunItem => m_StoredGunItem;
+        public WeaponItem StoredGunItem => m_StoredGunItem;
 
         [HideInInspector]
         public bool IsDragSuccess;
@@ -77,7 +77,8 @@ namespace Weapon_System.GameplayObjects.UI
                 if (m_StoredGunItem == null)
                     return;
 
-                m_WeaponInventoryUIMediator.BroadcastWeaponItemUIRemovedEvent(m_StoredGunItem, m_SlotIndex);
+                m_WeaponInventoryUIMediator.BroadcastOnBeforeWeaponItemUIRemovedEvent(m_StoredGunItem, m_SlotIndex);
+                m_WeaponInventoryUIMediator.BroadcastOnAfterWeaponItemUIRemovedEvent(m_StoredGunItem, m_SlotIndex);
                 ResetDataAndHideGunItemUI();
             }
         }
@@ -152,7 +153,7 @@ namespace Weapon_System.GameplayObjects.UI
             m_SlotIndex = index;
         }
 
-        public void SetItemDataAndShow(GunItem item)
+        public void SetItemDataAndShow(WeaponItem item)
         {
             m_StoredGunItem = item;
             m_Icon.sprite = StoredGunItem.ItemData.IconSprite;

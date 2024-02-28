@@ -38,11 +38,13 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         [SerializeField, Tooltip("Listen to this event to remove the respective common item from inventory.")]
         InventoryItemEventChannelSO m_OnCommonItemUIRemovedEvent;
 
-        [SerializeField, Tooltip("Listen to this event to remove the respective gun item from inventory.")]
-        GunItemIntEventChannelSO m_OnGunItemUIRemovedEvent;
+        [SerializeField, Tooltip("When an WeaponItemUI is removed from WeaponInventoryUI, this event is invoked after that")]
+        [FormerlySerializedAs("m_OnGunItemUIRemovedEvent")]
+        WeaponItemIntEventChannelSO m_OnAfterWeaponItemUIRemovedEvent;
 
-        [SerializeField, Tooltip("Listen to this event to swap the respective guns in inventory.")]
-        IntIntEventChannelSO m_OnGunItemUISwappedEvent;
+        [SerializeField, Tooltip("hen two WeaponItemUI's are swapped with each other, this event is invoked")]
+        [FormerlySerializedAs("m_OnGunItemUISwappedEvent")]
+        IntIntEventChannelSO m_OnWeaponItemUISwappedEvent;
 
         [Space(10)]
 
@@ -54,7 +56,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         InventoryItemEventChannelSO m_InventoryItemAddedEvent;
 
         [SerializeField, Tooltip("When a gun item is added to the inventory, this event is invoked.")]
-        GunItemIntEventChannelSO m_OnGunItemAddedEvent;
+        WeaponItemIntEventChannelSO m_OnGunItemAddedEvent;
 
 
 
@@ -68,7 +70,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         LayerMask m_ItemLayer;
 
         [SerializeField, Tooltip("This radius will be used for the OverlapSphere that will detect the collectable items nearby")]
-        float m_Radius = 3f;
+        float m_Radius = 1f;
 
         public Transform Transform => transform;
 
@@ -76,7 +78,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         /// For now we use GunItem, later we can use a base class for all items
         /// We need to have IHoldable and IUsable interfaces for the items
         /// </remarks>
-        public GunItem ItemInHand { get; private set; }
+        public WeaponItem ItemInHand { get; private set; }
 
         Collider[] resultColliders = new Collider[10];
         List<ICollectable> m_CollectablesScanned;
@@ -90,7 +92,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             m_SecondaryWeaponSelectInputEvent.OnEventRaised += OnSecondaryWeaponSelect;
             m_HolsterItemInputEvent.OnEventRaised += TryPutAwayItem;
             m_OnCommonItemUIRemovedEvent.OnEventRaised += OnCommonItemUIRemovedEvent;
-            m_OnGunItemUIRemovedEvent.OnEventRaised += OnGunItemUIRemovedEvent;
+            m_OnAfterWeaponItemUIRemovedEvent.OnEventRaised += OnGunItemUIRemovedEvent;
         }
 
         private void Update()
@@ -117,7 +119,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             m_SecondaryWeaponSelectInputEvent.OnEventRaised -= OnSecondaryWeaponSelect;
             m_HolsterItemInputEvent.OnEventRaised -= TryPutAwayItem;
             m_OnCommonItemUIRemovedEvent.OnEventRaised -= OnCommonItemUIRemovedEvent;
-            m_OnGunItemUIRemovedEvent.OnEventRaised -= OnGunItemUIRemovedEvent;
+            m_OnAfterWeaponItemUIRemovedEvent.OnEventRaised -= OnGunItemUIRemovedEvent;
         }
 
         private void CheckForNearbyItems()
@@ -172,7 +174,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
                 m_Inventory.AddItemToInventory(inventoryItem);
                 m_InventoryItemAddedEvent.RaiseEvent(inventoryItem);
             }
-            else if (item is GunItem gunItem)
+            else if (item is WeaponItem gunItem)
             {
                 int storedIndex = m_Inventory.AddGunToGunInventory(gunItem);
                 m_OnGunItemAddedEvent.RaiseEvent(gunItem, storedIndex);
@@ -184,7 +186,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             if (ItemInHand != null)
                 return;
 
-            ItemInHand = item as GunItem;
+            ItemInHand = item as WeaponItem;
             ItemInHand?.Hold();
         }
 
@@ -199,7 +201,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         private void OnPrimaryWeaponSelect(bool _)
         {
-            GunItem primaryWeapon = m_Inventory.GetGunItem(0);
+            WeaponItem primaryWeapon = m_Inventory.GetGunItem(0);
 
             if (primaryWeapon == null)
                 return;
@@ -215,7 +217,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         private void OnSecondaryWeaponSelect(bool _)
         {
-            GunItem secondaryWeapon = m_Inventory.GetGunItem(1);
+            WeaponItem secondaryWeapon = m_Inventory.GetGunItem(1);
 
             if (secondaryWeapon == null)
                 return;
@@ -241,7 +243,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         /// </summary>
         /// <param name="item"></param>
         /// <param name="_"></param>
-        private void OnGunItemUIRemovedEvent(GunItem item, int _)
+        private void OnGunItemUIRemovedEvent(WeaponItem item, int _)
         {
             item.Drop();
 

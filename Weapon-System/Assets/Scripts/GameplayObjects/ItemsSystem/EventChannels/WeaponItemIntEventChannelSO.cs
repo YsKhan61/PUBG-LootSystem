@@ -6,11 +6,11 @@ using Weapon_System.Utilities;
 namespace Weapon_System.GameplayObjects.ItemsSystem
 {
     [CreateAssetMenu(fileName = "GunItemIntEventChannel", menuName = "ScriptableObjects/Event Channels/GunItemIntEventChannelSO")]
-    public class GunItemIntEventChannelSO : ScriptableObject
+    public class WeaponItemIntEventChannelSO : ScriptableObject
     {
-        public event Action<GunItem, int> OnEventRaised;
+        public event Action<WeaponItem, int> OnEventRaised;
 
-        public void RaiseEvent(GunItem item, int slotIndex)
+        public void RaiseEvent(WeaponItem item, int slotIndex)
         {
             OnEventRaised?.Invoke(item, slotIndex);
         }

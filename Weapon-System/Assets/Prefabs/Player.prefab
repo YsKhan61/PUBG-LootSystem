@@ -568,12 +568,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_OnInventoryItemUIRemovedEvent: {fileID: 11400000, guid: 2620e14ce84026742843c989b15d9f86,
     type: 2}
-  m_OnGunItemUIRemovedEvent: {fileID: 11400000, guid: 192f4dd12ef944f469016a701256cb7d,
+  m_OnAfterWeaponItemUIRemovedEvent: {fileID: 11400000, guid: 192f4dd12ef944f469016a701256cb7d,
     type: 2}
-  m_OnGunItemUISwappedEvent: {fileID: 11400000, guid: 0f4de236d6d17ca46a8bae2d726da53c,
+  m_OnWeaponItemUISwappedEvent: {fileID: 11400000, guid: 0f4de236d6d17ca46a8bae2d726da53c,
     type: 2}
   m_InventoryItems: []
-  m_Guns: []
+  m_Weapons: []
 --- !u!1001 &4392950461943648704
 PrefabInstance:
   m_ObjectHideFlags: 0

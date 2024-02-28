@@ -19,7 +19,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             return true;
         }
 
-        public bool AttachToWeapon(GunItem gun)
+        public bool AttachToWeapon(WeaponItem gun)
         {
             if (gun.SightAttachment != this)
             {
