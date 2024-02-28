@@ -214,7 +214,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bbd316a709a091468339234ee149ea8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ItemData: {fileID: 11400000, guid: 8094637332a63b745bd3ba33c401079e, type: 2}
+  m_ItemData: {fileID: 11400000, guid: c4d661bbad83fd24f973015ccefc662e, type: 2}
   m_RootGO: {fileID: 4210785308608106674}
   m_Graphics: {fileID: 3908720646936615801}
   m_SightHolderTransform: {fileID: 2518024451041562470}
