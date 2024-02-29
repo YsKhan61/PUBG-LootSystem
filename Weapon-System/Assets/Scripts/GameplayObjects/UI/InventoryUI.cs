@@ -1,7 +1,5 @@
 using UnityEngine;
-using UnityEngine.Serialization;
 using Weapon_System.GameplayObjects.ItemsSystem;
-using Weapon_System.Utilities;
 
 
 namespace Weapon_System.GameplayObjects.UI
@@ -15,9 +13,6 @@ namespace Weapon_System.GameplayObjects.UI
     {
         [Header("Listens to")]
 
-        [SerializeField, Tooltip("The event that will toggle the inventory")]
-        BoolEventChannelSO m_ToggleInventoryEvent;
-
         [SerializeField, Tooltip("When an Inventory item is added to the inventory, this event is invoked")]
         InventoryItemEventChannelSO m_OnInventoryItemAddedEvent;
 
@@ -28,13 +23,10 @@ namespace Weapon_System.GameplayObjects.UI
         [SerializeField, Tooltip("When an Inventory Item UI is added to the InventoryUI, this event is invoked")]
         InventoryItemEventChannelSO m_OnInventoryItemUIAddedEvent;
 
-        [SerializeField, FormerlySerializedAs("When an Inventory item UI is removed from the inventory UI, this event is invoked")]
+        [SerializeField, Tooltip("When an Inventory item UI is removed from the inventory UI, this event is invoked")]
         InventoryItemEventChannelSO m_OnInventoryItemUIRemovedEvent;
 
         [Space(10)]
-
-        [SerializeField, Tooltip("The panel to toggle on/off")]
-        GameObject m_Panel;
 
         [SerializeField, Tooltip("The prefab that will be spawned as child of 'm_ContentGO' when a common item is stored in inventory")]
         ItemUI m_ItemUIPrefab;
@@ -45,15 +37,11 @@ namespace Weapon_System.GameplayObjects.UI
 
         private void Start()
         {
-            m_ToggleInventoryEvent.OnEventRaised += OnToggleInventory;
             m_OnInventoryItemAddedEvent.OnEventRaised += CreateInventoryItemUI;
-
-            ToggleInventoryUI(false);
         }
 
         private void OnDestroy()
         {
-            m_ToggleInventoryEvent.OnEventRaised -= OnToggleInventory;
             m_OnInventoryItemAddedEvent.OnEventRaised -= CreateInventoryItemUI;
         }
 
@@ -70,16 +58,6 @@ namespace Weapon_System.GameplayObjects.UI
         private void CreateInventoryItemUI(InventoryItem item)
         {
             Instantiate(m_ItemUIPrefab, m_ContentGO.transform).SetItemData(item, this);
-        }
-
-        private void OnToggleInventory(bool value)
-        {
-            ToggleInventoryUI(value);
-        }
-
-        private void ToggleInventoryUI(bool value)
-        {
-            m_Panel.SetActive(value);
         }
     }
 }

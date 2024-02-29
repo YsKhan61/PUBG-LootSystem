@@ -12,7 +12,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
     ///  ---------------------- NOIE----------------------
     ///  This Gun item can attach a sight attachment to it.
     /// </summary>
-    public class WeaponItem : ItemBase, ICollectable, IStorable, IDropable, IP_Usable, IS_Usable, IHoldable
+    public class WeaponItem : ItemBase, ICollectable, IStorable, IDroppable, IP_Usable, IS_Usable, IHoldable
     {
         [SerializeField, Tooltip("The root game object of this item")]
         GameObject m_RootGO;

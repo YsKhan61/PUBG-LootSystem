@@ -31,7 +31,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
     /// <summary>
     /// Interface for the droppable items
     /// </summary>
-    public interface IDropable
+    public interface IDroppable
     {
         public bool Drop();
     }
