@@ -63,7 +63,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         {
             foreach (var tag in weaponData.AllowedMuzzleAttachments)
             {
-                if (tag == m_ItemData.ItemTag)
+                if (tag == MuzzleAttachmentData.ItemTag)
                 {
                     return true;
                 }

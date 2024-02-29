@@ -1,6 +1,4 @@
-using System;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Weapon_System.GameplayObjects.ItemsSystem;
 using Weapon_System.Utilities;
 
@@ -10,12 +8,11 @@ namespace Weapon_System.GameplayObjects.UI
     /// <summary>
     /// Manages the Weapon related UIs (WeaponItemUIs and WeaponSlotUIs) in the WeaponSlotUIs.
     /// </summary>
-    public class WeaponInventoryUIMediator : MonoBehaviour
+    public class WeaponUIMediator : MonoBehaviour
     {
         [Header("Listens to")]
 
-        [SerializeField, Tooltip("When a gun item is added to the inventory, this event is invoked, Listen to this event to add a WeaponItemUI in respective WeaponSlotUI")]
-        [FormerlySerializedAs("m_OnGunItemAddedToInventoryEvent")]
+        [SerializeField, Tooltip("When an Weapon item is added to the inventory, this event is invoked")]
         WeaponItemIntEventChannelSO m_OnWeaponItemAddedToInventoryEvent;
 
         [Header("Broadcast to")]
@@ -25,7 +22,6 @@ namespace Weapon_System.GameplayObjects.UI
 
 
         [SerializeField, Tooltip("When an WeaponItemUI is removed from WeaponInventoryUI, this event is invoked after that")]
-        [FormerlySerializedAs("m_OnWeaponItemUIRemovedEvent")]
         WeaponItemIntEventChannelSO m_OnAfterWeaponItemUIRemovedEvent;
 
         [SerializeField, Tooltip("When two WeaponItemUI's are swapped with each other, this event is invoked")]
@@ -35,6 +31,8 @@ namespace Weapon_System.GameplayObjects.UI
 
         [SerializeField]
         WeaponItemUI[] m_WeaponItemUIs;
+
+
 
         private void Start()
         {
@@ -73,6 +71,12 @@ namespace Weapon_System.GameplayObjects.UI
             return gun != null;
         }
 
+        /// <summary>
+        /// This method drops an already existing weapon item UI to the slot of given slot index
+        /// </summary>
+        /// <param name="itemUI"></param>
+        /// <param name="slotTransform"></param>
+        /// <param name="slotIndex"></param>
         public void DropWeaponItemUIToSlot(WeaponItemUI itemUI, Transform slotTransform, int slotIndex)
         {
             itemUI.transform.SetParent(slotTransform);
@@ -82,6 +86,11 @@ namespace Weapon_System.GameplayObjects.UI
             itemUI.SetSlotIndex(slotIndex);
         }
 
+        /// <summary>
+        /// When an weapon is picked up, this method is called to add the weapon to the inventory UI
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="index"></param>
         private void AddWeaponItemUIToInventoryUI(WeaponItem item, int index)
         {
 

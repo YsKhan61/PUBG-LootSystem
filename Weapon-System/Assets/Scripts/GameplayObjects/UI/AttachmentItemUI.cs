@@ -9,9 +9,9 @@ namespace Weapon_System.GameplayObjects.UI
     [RequireComponent(typeof(RectTransform), typeof(CanvasGroup))]
     public class AttachmentItemUI : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler
     {
-        [SerializeField]
+        /*[SerializeField]
         ItemUIType m_ItemUIType;
-        public ItemUIType ItemUIType => m_ItemUIType;
+        public ItemUIType ItemUIType => m_ItemUIType;*/
 
         [SerializeField]
         Image m_Icon;
@@ -70,16 +70,11 @@ namespace Weapon_System.GameplayObjects.UI
                 if (StoredItem == null)
                     return;
 
-                // Remove the SightItem from the gun
                 StoredItem.DetachFromWeapon();
-
-                // Store back the SightItem in the inventory
-                m_Mediator.AddItemToInventory(m_StoredItem as InventoryItem);
-
-                // Make sure to reset the ItemUI's position to the last anchored position
                 ShowItemUIAndResetItsPosition();
+                ResetDataAndHideAttachmentItemUI();
 
-                ResetDataAndHideSightItemUI();
+                m_Mediator.RaiseEventOnInventoryUIItemAdded(m_StoredItem as InventoryItem);
             }
         }
 
@@ -118,7 +113,7 @@ namespace Weapon_System.GameplayObjects.UI
                 // another ItemUI is being dropped on this ItemUI
 
                 // return if the dropped ItemUI's ItemUIType is not compatible with this ItemUI's ItemUIType
-                if (droppedAttachmentItemUI.ItemUIType != ItemUIType)
+                if (droppedAttachmentItemUI.m_Mediator.ItemUIType != m_Mediator.ItemUIType)
                 {
                     return;
                 }
@@ -169,7 +164,7 @@ namespace Weapon_System.GameplayObjects.UI
                 int slotIndexOfDroppedItemUI = droppedAttachmentItemUI.SlotIndex;
 
                 // Add the dropped ItemUI to the SlotUI of this ItemUI through SightInventoryUIMediator
-                m_Mediator.DropSightItemUIToSlot(droppedAttachmentItemUI, transform.parent, SlotIndex);
+                m_Mediator.DropAttachmentItemUIToSlot(droppedAttachmentItemUI, transform.parent, SlotIndex);
 
                 // if the SightItem of this slot is present
                 if (StoredItem != null)
@@ -182,17 +177,17 @@ namespace Weapon_System.GameplayObjects.UI
                     }
                     else
                     {
-                        m_Mediator.AddItemToInventory(droppedAttachmentItemUI.StoredItem as InventoryItem);
+                        m_Mediator.RaiseEventOnInventoryUIItemAdded(droppedAttachmentItemUI.StoredItem as InventoryItem);
 
                         // Make sure to reset the ItemUI's ItemUI's position to the last anchored position
                         ShowItemUIAndResetItsPosition();
 
-                        ResetDataAndHideSightItemUI();
+                        ResetDataAndHideAttachmentItemUI();
                     }
                 }
 
                 // Drop this ItemUI to the dropped ItemUI's Slot
-                m_Mediator.DropSightItemUIToSlot(this, parentOfDroppedItemUI, slotIndexOfDroppedItemUI);
+                m_Mediator.DropAttachmentItemUIToSlot(this, parentOfDroppedItemUI, slotIndexOfDroppedItemUI);
             }
             else if (eventData.pointerDrag.TryGetComponent(out ItemUI droppedItemUI))
             {
@@ -203,7 +198,7 @@ namespace Weapon_System.GameplayObjects.UI
                 // 2. Check if the SightItem can be attached to the GunItem -> 8x scope (SightItem) cannot be attached to a Pistol (GunItem)
 
                 // Check if the ItemUI is of the same type as this ItemUI
-                if (droppedItemUI.ItemData.UIType != ItemUIType)
+                if (droppedItemUI.Item.ItemData.UIType != m_Mediator.ItemUIType)
                 {
                     return;
                 }
@@ -229,7 +224,7 @@ namespace Weapon_System.GameplayObjects.UI
                     StoredItem.DetachFromWeapon();
 
                     // add the SightItem to the inventory
-                    m_Mediator.AddItemToInventory(m_StoredItem as InventoryItem);
+                    m_Mediator.RaiseEventOnInventoryUIItemAdded(m_StoredItem as InventoryItem);
                     
                     if (m_ItemUI == null)
                     {
@@ -244,13 +239,13 @@ namespace Weapon_System.GameplayObjects.UI
                 }
 
                 // Then remove the SightItem of dropped ItemUI from the inventory using an event
-                m_Mediator.RemoveItemFromInventory(droppedItemUI.Item);
+                m_Mediator.RaiseEventOnInventoryUIItemRemoved(droppedItemUI.Item);
 
                 // Then hide the ItemUI and store it in a member variable
                 HideItemUI(droppedItemUI);
 
                 // then set the ItemUI's datas to this ItemUI and Show it
-                SetDataAndShowSightItemUI(droppedItemUI.Item as IWeaponAttachment);
+                SetDataAndShowAttachmentItemUI(droppedItemUI.Item as IWeaponAttachment);
 
                 // then set this attachment to the GunItem
                 (droppedItemUI.Item as IWeaponAttachment).AttachToWeapon(gunInThisSlot);
@@ -262,7 +257,7 @@ namespace Weapon_System.GameplayObjects.UI
             m_SlotIndex = index;
         }
 
-        internal void SetDataAndShowSightItemUI(IWeaponAttachment item)
+        internal void SetDataAndShowAttachmentItemUI(IWeaponAttachment item)
         {
             m_StoredItem = item;
             m_Icon.sprite = item.ItemData.IconSprite;
@@ -270,7 +265,7 @@ namespace Weapon_System.GameplayObjects.UI
             Show();
         }
 
-        internal void ResetDataAndHideSightItemUI()
+        internal void ResetDataAndHideAttachmentItemUI()
         {
             m_StoredItem = null;
             m_Icon.sprite = null;
@@ -308,14 +303,32 @@ namespace Weapon_System.GameplayObjects.UI
             m_ItemUI = itemUI;
         }
 
-        private void Show()
+        internal void Show()
         {
             m_CanvasGroup.alpha = 1;
         }
 
-        private void Hide()
+        internal void ShowSlot()
+        {
+            if (transform.parent.TryGetComponent(out CanvasGroup cg))
+            {
+                cg.alpha = 1;
+                cg.blocksRaycasts = true;
+            }
+        }
+
+        internal void Hide()
         {
             m_CanvasGroup.alpha = 0;
+        }
+
+        internal void HideSlot()
+        {
+            if (transform.parent.TryGetComponent(out CanvasGroup cg))
+            {
+                cg.alpha = 0;
+                cg.blocksRaycasts = false;
+            }
         }
     }
 }

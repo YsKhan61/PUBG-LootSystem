@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Weapon_System.GameplayObjects.ItemsSystem;
 
@@ -24,8 +25,8 @@ namespace Weapon_System.GameplayObjects.UI
         [SerializeField]
         TextMeshProUGUI m_NameText;
 
-        [SerializeField]
-        WeaponInventoryUIMediator m_WeaponInventoryUIMediator;
+        [SerializeField, FormerlySerializedAs("m_WeaponInventoryUIMediator")]
+        WeaponUIMediator m_WeaponUIMediator;
 
         [SerializeField]
         int m_SlotIndex;
@@ -77,8 +78,8 @@ namespace Weapon_System.GameplayObjects.UI
                 if (m_StoredGunItem == null)
                     return;
 
-                m_WeaponInventoryUIMediator.BroadcastOnBeforeWeaponItemUIRemovedEvent(m_StoredGunItem, m_SlotIndex);
-                m_WeaponInventoryUIMediator.BroadcastOnAfterWeaponItemUIRemovedEvent(m_StoredGunItem, m_SlotIndex);
+                m_WeaponUIMediator.BroadcastOnBeforeWeaponItemUIRemovedEvent(m_StoredGunItem, m_SlotIndex);
+                m_WeaponUIMediator.BroadcastOnAfterWeaponItemUIRemovedEvent(m_StoredGunItem, m_SlotIndex);
                 ResetDataAndHideGunItemUI();
             }
         }
@@ -129,15 +130,15 @@ namespace Weapon_System.GameplayObjects.UI
                     int slotIndexOfDroppedItemUI = droppedWeaponItemUI.SlotIndex;
                     int slotIndexOfThisItemUI = m_SlotIndex;
 
-                    m_WeaponInventoryUIMediator.DropWeaponItemUIToSlot(droppedWeaponItemUI, transform.parent, m_SlotIndex);
-                    m_WeaponInventoryUIMediator.DropWeaponItemUIToSlot(this, parentOfDroppedItemUI, slotIndexOfDroppedItemUI);
+                    m_WeaponUIMediator.DropWeaponItemUIToSlot(droppedWeaponItemUI, transform.parent, m_SlotIndex);
+                    m_WeaponUIMediator.DropWeaponItemUIToSlot(this, parentOfDroppedItemUI, slotIndexOfDroppedItemUI);
 
-                    m_WeaponInventoryUIMediator.BroadcastWeaponItemUIsSwappedEvent(slotIndexOfDroppedItemUI, slotIndexOfThisItemUI);
+                    m_WeaponUIMediator.BroadcastWeaponItemUIsSwappedEvent(slotIndexOfDroppedItemUI, slotIndexOfThisItemUI);
                 }
             }
             else if (eventData.pointerDrag.TryGetComponent(out ItemUI itemUI))
             {
-                if (itemUI.ItemData.UIType == m_ItemUIType)
+                if (itemUI.Item.ItemData.UIType == m_ItemUIType)
                 {
                     // This is an ItemUI of a Gun Item,
                     // If the index of this ItemUI matches with the index of ItemUI of the currently held Gun Item, then put away the gun from hand.

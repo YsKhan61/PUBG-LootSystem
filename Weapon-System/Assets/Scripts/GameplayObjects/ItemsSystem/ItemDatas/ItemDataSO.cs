@@ -13,7 +13,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         SightAttachment,        // These items can be stored either in the Inventory Bag Panel or in the Sight Attachment Slots
         MagazineAttachment,     // These items can be stored either in the Inventory Bag Panel or in the Magazine Attachment Slots
         StockAttachment,        // These items can be stored either in the Inventory Bag Panel or in the Stock Attachment Slots
-        ForegripAttachment,     // These items can be stored either in the Inventory Bag Panel or in the Foregrip Attachment Slots
+        GripAttachment,     // These items can be stored either in the Inventory Bag Panel or in the Foregrip Attachment Slots
     }
 
     /// <summary>

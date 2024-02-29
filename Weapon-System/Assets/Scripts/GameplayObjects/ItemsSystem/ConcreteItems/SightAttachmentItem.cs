@@ -54,7 +54,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         {
             foreach (var tag in weaponData.AllowedSightAttachments)
             {
-                if (tag == m_ItemData.ItemTag)
+                if (tag == SightAttachmentData.ItemTag)
                 {
                     return true;
                 }

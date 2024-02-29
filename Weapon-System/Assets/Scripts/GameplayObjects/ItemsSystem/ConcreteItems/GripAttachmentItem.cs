@@ -54,7 +54,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         {
             foreach (var tag in weaponData.AllowedGripAttachments)
             {
-                if (tag == m_ItemData.ItemTag)
+                if (tag == GripAttachmentData.ItemTag)
                 {
                     return true;
                 }

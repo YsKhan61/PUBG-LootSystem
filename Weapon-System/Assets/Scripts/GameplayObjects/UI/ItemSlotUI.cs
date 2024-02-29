@@ -35,7 +35,7 @@ namespace Weapon_System.GameplayObjects.UI
             {
                 foreach (ItemUIType type in m_typeToStore)
                 {
-                    if (itemUI.ItemData.UIType == type)
+                    if (itemUI.Item.ItemData.UIType == type)
                     {
                         item.transform.SetParent(transform);
                         item.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
@@ -43,7 +43,7 @@ namespace Weapon_System.GameplayObjects.UI
                         itemUI.Show();
                         itemUI.BlockRaycast();
 
-                        m_Icon.sprite = itemUI.ItemData.IconSprite;
+                        m_Icon.sprite = itemUI.Item.ItemData.IconSprite;
 
                         // This event is raised, for different occasions.
                         // For example: if a gun is placed from Inventory Bag Panel, to the Gun Slot Panel.

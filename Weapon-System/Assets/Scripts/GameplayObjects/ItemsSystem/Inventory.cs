@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Weapon_System.Utilities;
 
 
@@ -14,6 +13,9 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
     public class Inventory : MonoBehaviour
     {
         [Header("Listens to")]
+
+        [SerializeField, Tooltip("When an Inventory Item UI is added to the InventoryUI, this event is invoked")]
+        InventoryItemEventChannelSO m_OnInventoryItemUIAddedEvent;
 
         [SerializeField, Tooltip("Listen to this event to remove the respective common item from inventory.")]
         InventoryItemEventChannelSO m_OnInventoryItemUIRemovedEvent;
@@ -51,6 +53,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             m_Weapons = new WeaponItem[2];                    // For now only 2 guns are allowed
 
             
+            m_OnInventoryItemUIAddedEvent.OnEventRaised += AddItemToInventory;
             m_OnInventoryItemUIRemovedEvent.OnEventRaised += RemoveInventoryItem;
             m_OnAfterWeaponItemUIRemovedEvent.OnEventRaised += RemoveGunItem;
             m_OnWeaponItemUISwappedEvent.OnEventRaised += SwapWeaponItems;
@@ -58,7 +61,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         private void OnDestroy()
         {
-            
+            m_OnInventoryItemUIAddedEvent.OnEventRaised -= AddItemToInventory;
             m_OnInventoryItemUIRemovedEvent.OnEventRaised -= RemoveInventoryItem;
             m_OnAfterWeaponItemUIRemovedEvent.OnEventRaised -= RemoveGunItem;
             m_OnWeaponItemUISwappedEvent.OnEventRaised -= SwapWeaponItems;

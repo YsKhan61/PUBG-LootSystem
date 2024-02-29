@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Weapon_System.Utilities;
 
 
@@ -29,7 +27,6 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         BoolEventChannelSO m_PickupInputEvent;
 
         [SerializeField, Tooltip("This event notifies the primary use input performing")]
-        [FormerlySerializedAs("m_FiringInputEvent")]
         BoolEventChannelSO m_PrimaryUseInputEvent;
 
         [SerializeField, Tooltip("This event notifies the secondary use input performing")]
@@ -39,11 +36,9 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         InventoryItemEventChannelSO m_OnCommonItemUIRemovedEvent;
 
         [SerializeField, Tooltip("When an WeaponItemUI is removed from WeaponInventoryUI, this event is invoked after that")]
-        [FormerlySerializedAs("m_OnGunItemUIRemovedEvent")]
         WeaponItemIntEventChannelSO m_OnAfterWeaponItemUIRemovedEvent;
 
         [SerializeField, Tooltip("hen two WeaponItemUI's are swapped with each other, this event is invoked")]
-        [FormerlySerializedAs("m_OnGunItemUISwappedEvent")]
         IntIntEventChannelSO m_OnWeaponItemUISwappedEvent;
 
         [Space(10)]

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 using Weapon_System.GameplayObjects.ItemsSystem;
 using Weapon_System.Utilities;
 
@@ -17,15 +18,18 @@ namespace Weapon_System.GameplayObjects.UI
         [SerializeField, Tooltip("The event that will toggle the inventory")]
         BoolEventChannelSO m_ToggleInventoryEvent;
 
-        [SerializeField, Tooltip("When a common item is added to the inventory, this event is invoked")]
-        InventoryItemEventChannelSO m_OnCommonItemAddedEvent;
+        [SerializeField, Tooltip("When an Inventory item is added to the inventory, this event is invoked")]
+        InventoryItemEventChannelSO m_OnInventoryItemAddedEvent;
 
         [Space(10)]
 
         [Header("Broadcast to")]
 
-        [SerializeField]
-        InventoryItemEventChannelSO m_OnCommonItemRemovedEvent;
+        [SerializeField, Tooltip("When an Inventory Item UI is added to the InventoryUI, this event is invoked")]
+        InventoryItemEventChannelSO m_OnInventoryItemUIAddedEvent;
+
+        [SerializeField, FormerlySerializedAs("When an Inventory item UI is removed from the inventory UI, this event is invoked")]
+        InventoryItemEventChannelSO m_OnInventoryItemUIRemovedEvent;
 
         [Space(10)]
 
@@ -42,7 +46,7 @@ namespace Weapon_System.GameplayObjects.UI
         private void Start()
         {
             m_ToggleInventoryEvent.OnEventRaised += OnToggleInventory;
-            m_OnCommonItemAddedEvent.OnEventRaised += AddCommonItemUIToInventoryUI;
+            m_OnInventoryItemAddedEvent.OnEventRaised += CreateInventoryItemUI;
 
             ToggleInventoryUI(false);
         }
@@ -50,29 +54,22 @@ namespace Weapon_System.GameplayObjects.UI
         private void OnDestroy()
         {
             m_ToggleInventoryEvent.OnEventRaised -= OnToggleInventory;
-            m_OnCommonItemAddedEvent.OnEventRaised -= AddCommonItemUIToInventoryUI;
+            m_OnInventoryItemAddedEvent.OnEventRaised -= CreateInventoryItemUI;
         }
 
-        public void RemoveCommonItemUIFromInventoryUI(InventoryItem item)
+        public void RaiseOnInventoryItemUIAddedEvent(InventoryItem item)
         {
-            m_OnCommonItemRemovedEvent?.RaiseEvent(item);
+            m_OnInventoryItemUIAddedEvent.RaiseEvent(item);
         }
 
-        private void AddCommonItemUIToInventoryUI(InventoryItem item)
+        public void RaiseOnInventoryItemUIRemovedEvent(InventoryItem item)
+        {
+            m_OnInventoryItemUIRemovedEvent.RaiseEvent(item);
+        }
+
+        private void CreateInventoryItemUI(InventoryItem item)
         {
             Instantiate(m_ItemUIPrefab, m_ContentGO.transform).SetItemData(item, this);
-        }
-
-        /// <summary>
-        /// For scopes, after pickup, we will check if any gun slot has a gun,
-        /// if yes, we will check if it's scope slot is empty,
-        /// if yes, we will add the pickedup scope to that empty slot,
-        /// other wise, we will do AddCommonItemUIToInventoryUI(itemData);
-        /// </summary>
-        /// <param name="itemData"></param>
-        private void AddScopeItemUIToInventoryUI(ItemDataSO itemData)
-        {
-            
         }
 
         private void OnToggleInventory(bool value)

@@ -16,8 +16,6 @@ namespace Weapon_System.GameplayObjects.UI
         [SerializeField]
         TextMeshProUGUI m_NameText;
 
-        public ItemDataSO ItemData { get; private set; }
-
         private RectTransform m_RectTransform;
         private Canvas m_Canvas;
         private CanvasGroup m_CanvasGroup;
@@ -51,7 +49,7 @@ namespace Weapon_System.GameplayObjects.UI
             // Right click to drop item
             if (eventData.button == PointerEventData.InputButton.Right)
             {
-                m_InventoryUI.RemoveCommonItemUIFromInventoryUI(m_Item);
+                m_InventoryUI.RaiseOnInventoryItemUIRemovedEvent(m_Item);
                 Destroy(gameObject);
             }
         }
@@ -87,9 +85,8 @@ namespace Weapon_System.GameplayObjects.UI
         {
             m_InventoryUI = inventoryUI;
             m_Item = item;
-            ItemData = item.ItemData;
-            m_Icon.sprite = ItemData.IconSprite;
-            m_NameText.text = ItemData.name;
+            m_Icon.sprite = m_Item.ItemData.IconSprite;
+            m_NameText.text = m_Item.ItemData.name;
         }
 
         public void FallbackToLastPosition()
