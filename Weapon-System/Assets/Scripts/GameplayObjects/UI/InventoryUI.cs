@@ -51,6 +51,7 @@ namespace Weapon_System.GameplayObjects.UI
 
         [SerializeField]
         Canvas m_Canvas;
+        public Transform CanvasTransform => m_Canvas.transform;
 
         public float CanvasScaleFactor => m_Canvas.scaleFactor;
 
@@ -120,6 +121,16 @@ namespace Weapon_System.GameplayObjects.UI
         private void CreateInventoryItemUI(InventoryItem item)
         {
             Instantiate(m_ItemUIPrefab, m_ViscinityContentGO.transform).SetItemDataAndShow(item, this);
+        }
+
+        public void RemoveItemUIFromList(ItemUI itemUI)
+        {
+            m_ItemUIs.Remove(itemUI);
+        }
+
+        public void AddItemUIToList(ItemUI itemUI)
+        {
+            m_ItemUIs.Add(itemUI);
         }
     }
 }

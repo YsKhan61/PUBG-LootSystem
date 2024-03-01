@@ -25,7 +25,6 @@ namespace Weapon_System.GameplayObjects.UI
         [SerializeField]
         TextMeshProUGUI m_NameText;
 
-        [SerializeField, FormerlySerializedAs("m_WeaponInventoryUIMediator")]
         WeaponUIMediator m_WeaponUIMediator;
 
         [SerializeField]

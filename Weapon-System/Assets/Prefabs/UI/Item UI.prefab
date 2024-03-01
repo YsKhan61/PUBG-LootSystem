@@ -315,6 +315,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Icon: {fileID: 7485955786487929094}
   m_NameText: {fileID: 4600463788508337725}
+  m_PoolSize: 20
   IsDragSuccess: 0
 --- !u!1 &7997225379273209768
 GameObject:
