@@ -4,24 +4,15 @@ using UnityEngine;
 namespace Weapon_System.GameplayObjects.ItemsSystem
 {
     /// <summary>
-    ///  This class represents the guns in the game.
-    ///  This item is not stored in the Inventory's CommonItems list. Hence we don't need to inherit from CommonItem.
+    ///  This class represents the weapons in the game.
+    ///  This item is not stored in the Inventory's InventoryItem's list
     ///  It is a carry item, which can be collected, stored in inventory separately, dropped and used.
-    ///  This can be later inherited from WeaponItem or UsableItem etc (can contain throwables, melee weapons etc)
-    ///  But this is GunItem and only two guns can be collected and stored in inventory.
+    ///  This can be later inherited or extended to guns, launchers, throwables, melee weapons etc
     ///  ---------------------- NOIE----------------------
     ///  This Gun item can attach a sight attachment to it.
     /// </summary>
-    public class WeaponItem : ItemBase, ICollectable, IStorable, IDroppable, IP_Usable, IS_Usable, IHoldable
+    public class WeaponItem : InventoryItem, IP_Usable, IS_Usable, IHoldable
     {
-        [SerializeField, Tooltip("The root game object of this item")]
-        GameObject m_RootGO;
-
-
-        [SerializeField, Tooltip("The graphics model of this gun")]
-        GameObject m_Graphics;
-
-
         [SerializeField, Tooltip("The sight will become a child of this game object with same position")]
         Transform m_SightHolderTransform;
         public Transform SightHolderTransform => m_SightHolderTransform;
@@ -37,7 +28,6 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
 
         public WeaponDataSO WeaponData => m_ItemData as WeaponDataSO;
-        public bool IsCollected { get; protected set; }
         public bool IsInHand { get; protected set; }
         public SightAttachmentItem SightAttachment { get; set; }
         public GripAttachmentItem GripAttachment { get; set; }
@@ -47,7 +37,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         // It is saved to drop the item at the same position and rotation
         Transform m_CollectorTransform;
 
-        public virtual bool Collect(ItemUserHand hand)
+        public override bool Collect(ItemUserHand hand)
         {
             if (IsCollected)
             {
@@ -69,12 +59,12 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             return true;
         }
 
-        public virtual bool StoreInInventory()
+        public override bool StoreInInventory()
         {
             return true;
         }
 
-        public virtual bool Drop()
+        public override bool Drop()
         {
             if (!IsCollected)
             {
@@ -132,16 +122,6 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         {
             Debug.Log(Name + " shooting....!");
             return true;
-        }
-
-        void ShowGraphics()
-        {
-            m_Graphics.SetActive(true);
-        }
-
-        void HideGraphics()
-        {
-            m_Graphics.SetActive(false);
         }
     }
 

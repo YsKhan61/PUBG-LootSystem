@@ -3,12 +3,13 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Weapon_System.GameplayObjects.ItemsSystem;
+using Weapon_System.Utilities;
 
 
 namespace Weapon_System.GameplayObjects.UI
 {
     [RequireComponent(typeof(RectTransform), typeof(CanvasGroup))]
-    public class ItemUI : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
+    public class ItemUI : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IDragHandler, IEndDragHandler, ISpawnable
     {
         [SerializeField]
         Image m_Icon;
@@ -16,8 +17,11 @@ namespace Weapon_System.GameplayObjects.UI
         [SerializeField]
         TextMeshProUGUI m_NameText;
 
+        [SerializeField]
+        int m_PoolSize = 20;
+
         private RectTransform m_RectTransform;
-        private Canvas m_Canvas;
+        // private Canvas m_Canvas;
         private CanvasGroup m_CanvasGroup;
 
         private Vector2 m_lastAnchoredPosition;
@@ -27,18 +31,24 @@ namespace Weapon_System.GameplayObjects.UI
         private InventoryItem m_Item;
         public InventoryItem Item => m_Item;
 
+        public string Name => gameObject.name;
+
+        public GameObject GameObject => gameObject;
+
+        public int PoolSize => m_PoolSize;
+
         [HideInInspector]
         public bool IsDragSuccess;
 
         private void Awake()
         {
-            m_Canvas = GetComponentInParent<Canvas>();
+            /*m_Canvas = GetComponentInParent<Canvas>();
             if (m_Canvas == null)
             {
                 Debug.LogError("No Canvas found in parent of " + gameObject.name);
                 enabled = false;
                 return;
-            }
+            }*/
 
             m_CanvasGroup = GetComponent<CanvasGroup>();
             m_RectTransform = GetComponent<RectTransform>();
@@ -65,13 +75,11 @@ namespace Weapon_System.GameplayObjects.UI
 
         public void OnDrag(PointerEventData eventData)
         {
-            m_RectTransform.anchoredPosition += eventData.delta * m_Canvas.scaleFactor;
+            m_RectTransform.anchoredPosition += eventData.delta * m_InventoryUI.CanvasScaleFactor;
         }
 
         public void OnEndDrag(PointerEventData eventData)
         {
-            
-
             if (!IsDragSuccess)
             {
                 m_CanvasGroup.blocksRaycasts = true;
@@ -81,12 +89,25 @@ namespace Weapon_System.GameplayObjects.UI
             }
         }
 
-        public void SetItemData(InventoryItem item, InventoryUI inventoryUI)
+        public void SetItemDataAndShow(InventoryItem item, InventoryUI inventoryUI)
         {
             m_InventoryUI = inventoryUI;
             m_Item = item;
             m_Icon.sprite = m_Item.ItemData.IconSprite;
             m_NameText.text = m_Item.ItemData.name;
+
+            Show();
+            BlockRaycast();
+        }
+
+        public void ResetItemDataAndHide()
+        {
+            m_Item = null;
+            m_Icon.sprite = null;
+            m_NameText.text = string.Empty;
+
+            Hide();
+            UnblockRaycast();
         }
 
         public void FallbackToLastPosition()

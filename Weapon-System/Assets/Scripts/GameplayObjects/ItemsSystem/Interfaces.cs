@@ -18,6 +18,9 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
     public interface ICollectable
     {
         public bool IsCollected { get; }
+
+        public ItemDataSO ItemData { get; }
+
         /// <summary>
         /// Collect the item.
         /// If some items need to be attached to the collector's hand, then the collector's transform is also passed

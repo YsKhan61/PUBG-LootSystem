@@ -59,7 +59,6 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         [SerializeField]
         Inventory m_Inventory;
-        public Inventory Inventory => m_Inventory;
 
         [SerializeField]
         LayerMask m_ItemLayer;
@@ -77,6 +76,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         Collider[] resultColliders = new Collider[10];
         List<ICollectable> m_CollectablesScanned;
+        public IList<ICollectable> CollectablesScanned => m_CollectablesScanned;
 
         private void Start()
         {
@@ -123,20 +123,22 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
             // Do an overlap Sphere to detect items
             int overlaps = Physics.OverlapSphereNonAlloc(transform.position, m_Radius, resultColliders, m_ItemLayer, QueryTriggerInteraction.Collide);
-            if (overlaps > 0)
+            if (overlaps <= 0)
+                return;
+
+            for (int i = 0; i < overlaps; i++)
             {
-                for (int i = 0; i < overlaps; i++)
+                if (!resultColliders[i].TryGetComponent(out ICollectable collectable))
                 {
-                    if (resultColliders[i].TryGetComponent(out ICollectable collectable))
-                    {
-                        if (collectable.IsCollected)
-                        {
-                            continue;
-                        }
-                        // Add to list of collectables
-                        m_CollectablesScanned.Add(collectable);
-                    }
+                    continue;
                 }
+
+                if (collectable.IsCollected)
+                {
+                    continue;
+                }
+                // Add to list of collectables
+                m_CollectablesScanned.Add(collectable);
             }
         }
 
@@ -164,16 +166,17 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             // Each item can be stored in different places in the inventory,
             // hence we send the inventory to the item to store itself in the inventory
             // eg: Gun item, Armor, Ammo, etc.
-            if (item is InventoryItem inventoryItem)
-            {
-                m_Inventory.AddItemToInventory(inventoryItem);
-                m_InventoryItemAddedEvent.RaiseEvent(inventoryItem);
-            }
-            else if (item is WeaponItem gunItem)
+            if (item is WeaponItem gunItem)
             {
                 if (!m_Inventory.TryAddWeaponItemToWeaponInventory(gunItem, out int storedIndex))
                     return;
                 m_OnGunItemAddedEvent.RaiseEvent(gunItem, storedIndex);
+            }
+
+            else if (item is InventoryItem inventoryItem)
+            {
+                m_Inventory.AddItemToInventory(inventoryItem);
+                m_InventoryItemAddedEvent.RaiseEvent(inventoryItem);
             }
         }
 
