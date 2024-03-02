@@ -663,7 +663,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &218537249
 RectTransform:
   m_ObjectHideFlags: 0
@@ -904,7 +904,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8766afd3142a5f4ea521ac061c728b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ParentTransform: {fileID: 1733424410}
+  m_SlotType: 0
 --- !u!114 &328944627
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1681,16 +1681,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_OnToggleInventoryUIEvent: {fileID: 11400000, guid: 839a9b09f40946b4589534a87d46908b,
     type: 2}
-  m_OnInventoryItemAddedEvent: {fileID: 11400000, guid: 259c3b4dd8a97a74d81fd063a3ef2b08,
+  m_OnInventoryItemAddedToInventory: {fileID: 11400000, guid: a232a433ebe571f4f97973b1bc5d5073,
     type: 2}
-  m_OnInventoryItemUIAddedEvent: {fileID: 11400000, guid: 259c3b4dd8a97a74d81fd063a3ef2b08,
+  m_OnInventoryItemRemovedFromInventory: {fileID: 11400000, guid: 7b2daeeab0cd74e40b59aa4374ac4ee6,
     type: 2}
-  m_OnInventoryItemUIRemovedEvent: {fileID: 11400000, guid: 2620e14ce84026742843c989b15d9f86,
+  m_OnAddInventoryItemToInventoryEvent: {fileID: 11400000, guid: 9fc8d72ca1c60dd459ffee1d6357ac9f,
+    type: 2}
+  m_OnRemoveInventoryItemFromInventoryEvent: {fileID: 11400000, guid: a7879200c488cbe40b19e42a86467c4c,
     type: 2}
   m_ItemUIPrefab: {fileID: 3163105790329499988, guid: 31b90ab2993f3714b9c2257a7f0c026c,
     type: 3}
-  m_ViscinityContentGO: {fileID: 487389707}
-  m_InventoryContentGO: {fileID: 1733424409}
+  m_ViscinityContentTransform: {fileID: 487389708}
+  m_InventoryContentTransform: {fileID: 1733424410}
   m_ItemUserHand: {fileID: 1898064524}
   m_PoolManager: {fileID: 520762433}
   m_Canvas: {fileID: 738153175}
@@ -3780,7 +3782,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8766afd3142a5f4ea521ac061c728b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ParentTransform: {fileID: 487389708}
+  m_SlotType: 1
 --- !u!114 &1396669121
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6365,6 +6367,30 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 259c3b4dd8a97a74d81fd063a3ef2b08,
         type: 2}
+    - target: {fileID: 6398577312195835515, guid: cbc1839e74f3092489e9d3200098973f,
+        type: 3}
+      propertyPath: m_OnInventoryItemAddedToInventory
+      value: 
+      objectReference: {fileID: 11400000, guid: a232a433ebe571f4f97973b1bc5d5073,
+        type: 2}
+    - target: {fileID: 6398577312195835515, guid: cbc1839e74f3092489e9d3200098973f,
+        type: 3}
+      propertyPath: m_OnAddInventoryItemToInventoryEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: 9fc8d72ca1c60dd459ffee1d6357ac9f,
+        type: 2}
+    - target: {fileID: 6398577312195835515, guid: cbc1839e74f3092489e9d3200098973f,
+        type: 3}
+      propertyPath: m_OnInventoryItemRemovedFromInventory
+      value: 
+      objectReference: {fileID: 11400000, guid: 7b2daeeab0cd74e40b59aa4374ac4ee6,
+        type: 2}
+    - target: {fileID: 6398577312195835515, guid: cbc1839e74f3092489e9d3200098973f,
+        type: 3}
+      propertyPath: m_OnRemoveInventoryItemFromInventoryEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: a7879200c488cbe40b19e42a86467c4c,
+        type: 2}
     - target: {fileID: 6801109740986997673, guid: cbc1839e74f3092489e9d3200098973f,
         type: 3}
       propertyPath: m_OnWeaponItemUISwappedEvent
@@ -6639,6 +6665,7 @@ SceneRoots:
   m_Roots:
   - {fileID: 1810876903}
   - {fileID: 705507995}
+  - {fileID: 520762432}
   - {fileID: 4390806022631715982}
   - {fileID: 1842092961}
   - {fileID: 738153172}
@@ -6653,4 +6680,3 @@ SceneRoots:
   - {fileID: 6551550837350072304}
   - {fileID: 50066442}
   - {fileID: 214212219}
-  - {fileID: 520762432}

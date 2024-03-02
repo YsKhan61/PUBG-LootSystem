@@ -20,17 +20,21 @@ namespace Weapon_System.GameplayObjects.UI
         BoolEventChannelSO m_OnToggleInventoryUIEvent;
 
         [SerializeField, Tooltip("When an Inventory item is added to the inventory, this event is invoked")]
-        InventoryItemEventChannelSO m_OnInventoryItemAddedEvent;
+        InventoryItemEventChannelSO m_OnInventoryItemAddedToInventory;
+
+        [SerializeField, Tooltip("When an Inventory item is removed from the inventory, this event is invoked")]
+        InventoryItemEventChannelSO m_OnInventoryItemRemovedFromInventory;
+
 
         [Space(10)]
 
         [Header("Broadcast to")]
 
-        [SerializeField, Tooltip("When an Inventory Item UI is added to the InventoryUI, this event is invoked")]
-        InventoryItemEventChannelSO m_OnInventoryItemUIAddedEvent;
+        [SerializeField, Tooltip("To add an inventory item in the inventory, this event is invoked")]
+        InventoryItemEventChannelSO m_OnAddInventoryItemToInventoryEvent;
 
-        [SerializeField, Tooltip("When an Inventory item UI is removed from the inventory UI, this event is invoked")]
-        InventoryItemEventChannelSO m_OnInventoryItemUIRemovedEvent;
+        [SerializeField, Tooltip("To remove an inventory item from inventory, this event is invoked")]
+        InventoryItemEventChannelSO m_OnRemoveInventoryItemFromInventoryEvent;
 
         [Space(10)]
 
@@ -38,10 +42,17 @@ namespace Weapon_System.GameplayObjects.UI
         ItemUI m_ItemUIPrefab;
 
         [SerializeField, Tooltip("To show ItemUI in Viscinity, The spawned instance of 'm_ItemUIPrefab' will be set as a child of this transform")]
-        GameObject m_ViscinityContentGO;
+        Transform m_ViscinityContentTransform;
 
         [SerializeField, Tooltip("To show ItemUI in Inventory, The spawned instance of 'm_ItemUIPrefab' will be set as a child of this transform")]
-        GameObject m_InventoryContentGO;
+        Transform m_InventoryContentTransform;
+
+        [SerializeField, Tooltip("The slots where various ItemUIs can be dropped.")]
+        ItemSlotUI[] m_ItemSlotUIs;
+
+        [SerializeField, Tooltip("The canvas of this whole UI")]
+        Canvas m_Canvas;
+        public Transform CanvasTransform => m_Canvas.transform;
 
         [SerializeField]
         ItemUserHand m_ItemUserHand;
@@ -49,19 +60,23 @@ namespace Weapon_System.GameplayObjects.UI
         [SerializeField]
         PoolManager m_PoolManager;
 
-        [SerializeField]
-        Canvas m_Canvas;
-        public Transform CanvasTransform => m_Canvas.transform;
-
         public float CanvasScaleFactor => m_Canvas.scaleFactor;
 
-        List<ItemUI> m_ItemUIs;
+        List<ItemUI> m_ViscinityItemUIs;
+
+        /// <summary>
+        /// This is a temporary ItemUI that will be used to store the ItemUI 
+        /// that is being dragged after it's item in it is stored in inventory
+        /// </summary>
+        ItemUI m_TempItemUI;
 
 
         private void Start()
         {
-            m_ItemUIs = new List<ItemUI>();
-            // m_OnInventoryItemAddedEvent.OnEventRaised += CreateInventoryItemUI;
+            m_ViscinityItemUIs = new List<ItemUI>();
+
+            m_OnInventoryItemAddedToInventory.OnEventRaised += OnInventoryItemAddedToInventory;
+            m_OnInventoryItemRemovedFromInventory.OnEventRaised += OnInventoryItemRemovedFromInventory;
         }
 
         private void Update()
@@ -71,7 +86,8 @@ namespace Weapon_System.GameplayObjects.UI
 
         private void OnDestroy()
         {
-            // m_OnInventoryItemAddedEvent.OnEventRaised -= CreateInventoryItemUI;
+            m_OnInventoryItemAddedToInventory.OnEventRaised -= OnInventoryItemAddedToInventory;
+            m_OnInventoryItemRemovedFromInventory.OnEventRaised -= OnInventoryItemRemovedFromInventory;
         }
         private void RefreshAndDisplayScannedCollectables()
         {
@@ -81,7 +97,7 @@ namespace Weapon_System.GameplayObjects.UI
             }
 
             // Clear all the ItemUIs
-            foreach (ItemUI itemUI in m_ItemUIs)
+            foreach (ItemUI itemUI in m_ViscinityItemUIs)
             {
                 itemUI.ResetItemDataAndHide();
             }
@@ -92,45 +108,83 @@ namespace Weapon_System.GameplayObjects.UI
                 if (item == null)
                     continue;
 
-                if (m_ItemUIs.Count < count)
+                if (m_ViscinityItemUIs.Count < count)
                 {
                     /// If the ItemUI is not present for this index, then create a new instance of ItemUI
                     ItemUI itemUI = m_PoolManager.GetObjectFromPool(m_ItemUIPrefab.Name) as ItemUI;
-                    itemUI.SetItemDataAndShow(item, this);
-                    itemUI.transform.SetParent(m_ViscinityContentGO.transform);
-                    m_ItemUIs.Add(itemUI);
+                    itemUI.SetItemDataAndShow(item, this, SlotType.Viscinity);
+                    itemUI.transform.SetParent(m_ViscinityContentTransform.transform);
+                    m_ViscinityItemUIs.Add(itemUI);
                 }
                 else
                 {   // If the ItemUI is present for this index, then just update the data
-                    m_ItemUIs[i].SetItemDataAndShow(item, this);
+                    m_ViscinityItemUIs[i].SetItemDataAndShow(item, this, SlotType.Viscinity);
                 }
             }
         }
 
-
-        public void RaiseOnInventoryItemUIAddedEvent(InventoryItem item)
+        /// <summary>
+        /// When an ItemUI is dropped on a slot type of another ItemUI, or SlotUI
+        /// </summary>
+        /// <param name="droppedItemUI">The ItemUI that is being dropped</param>
+        /// <param name="slotTypeOfOtherItemUI">The slot type of the ItemUI or SlotUI where the droppedItemUI is dropped.</param>
+        public void OnItemUIDroppedOnSlotType(ItemUI droppedItemUI, SlotType slotTypeOfOtherItemUI)
         {
-            m_OnInventoryItemUIAddedEvent.RaiseEvent(item);
+            // If the item is already in the same slot type, then return
+            if (droppedItemUI.StoredSlotType == slotTypeOfOtherItemUI)
+            {
+                return;
+            }
+
+            switch (slotTypeOfOtherItemUI)
+            {
+                case SlotType.Inventory:
+                    OnItemUIDroppedFromViscinityToInventory(droppedItemUI);
+                    break;
+                case SlotType.Viscinity:
+                    OnItemUIDroppedFromInventoryToViscinity(droppedItemUI);
+                    break;
+            }
         }
 
-        public void RaiseOnInventoryItemUIRemovedEvent(InventoryItem item)
+
+
+        void OnItemUIDroppedFromViscinityToInventory(ItemUI itemUI)
         {
-            m_OnInventoryItemUIRemovedEvent.RaiseEvent(item);
+            m_TempItemUI = itemUI;
+            m_OnAddInventoryItemToInventoryEvent.RaiseEvent(itemUI.Item);
         }
 
-        private void CreateInventoryItemUI(InventoryItem item)
+        void OnItemUIDroppedFromInventoryToViscinity(ItemUI itemUI)
         {
-            Instantiate(m_ItemUIPrefab, m_ViscinityContentGO.transform).SetItemDataAndShow(item, this);
+            m_TempItemUI = itemUI;
+            m_OnRemoveInventoryItemFromInventoryEvent.RaiseEvent(itemUI.Item);
         }
 
-        public void RemoveItemUIFromList(ItemUI itemUI)
+        private void OnInventoryItemAddedToInventory(InventoryItem item)
         {
-            m_ItemUIs.Remove(itemUI);
+            if (item != m_TempItemUI.Item)
+            {
+                Debug.LogError("This should never happen!");
+                return;
+            }
+
+            m_TempItemUI.transform.SetParent(m_InventoryContentTransform);
+            m_TempItemUI.OnDragSuccess(SlotType.Inventory);
+
+            m_ViscinityItemUIs.Remove(m_TempItemUI);
         }
 
-        public void AddItemUIToList(ItemUI itemUI)
+        private void OnInventoryItemRemovedFromInventory(InventoryItem item)
         {
-            m_ItemUIs.Add(itemUI);
+            if (item != m_TempItemUI.Item)
+            {
+                Debug.LogError("This should never happen!");
+                return;
+            }
+
+            // We destroy this ItemUI from InventoryUI, after it's item is already dropped.
+            Destroy(m_TempItemUI.gameObject);
         }
     }
 }

@@ -4,7 +4,7 @@ using Weapon_System.Utilities;
 
 namespace Weapon_System.GameplayObjects.ItemsSystem
 {
-    [CreateAssetMenu(fileName = "CommonItemEventChannel", menuName = "ScriptableObjects/Event Channels/CommonItemEventChannelSO")]
+    [CreateAssetMenu(fileName = "InventoryItemEventChannel", menuName = "ScriptableObjects/Event Channels/InventoryItemEventChannelSO")]
     public class InventoryItemEventChannelSO : EventChannelBaseSO<InventoryItem>
     {
     }

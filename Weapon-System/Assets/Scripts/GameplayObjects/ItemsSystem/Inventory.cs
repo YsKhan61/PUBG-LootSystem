@@ -14,17 +14,23 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
     {
         [Header("Listens to")]
 
-        [SerializeField, Tooltip("When an Inventory Item UI is added to the InventoryUI, this event is invoked")]
-        InventoryItemEventChannelSO m_OnInventoryItemUIAddedEvent;
+        [SerializeField, Tooltip("To add an inventory item in the inventory, this event is invoked")]
+        InventoryItemEventChannelSO m_OnAddInventoryItemToInventoryEvent;
 
-        [SerializeField, Tooltip("Listen to this event to remove the respective common item from inventory.")]
-        InventoryItemEventChannelSO m_OnInventoryItemUIRemovedEvent;
+        [SerializeField, Tooltip("To remove an inventory item from inventory, this event is invoked")]
+        InventoryItemEventChannelSO m_OnRemoveInventoryItemFromInventoryEvent;
 
-        [SerializeField, Tooltip("When an WeaponItemUI is removed from WeaponInventoryUI, this event is invoked after that")]
-        WeaponItemIntEventChannelSO m_OnAfterWeaponItemUIRemovedEvent;
 
-        [SerializeField, Tooltip("When two WeaponItemUI's are swapped with each other, this event is invoked")]
-        IntIntEventChannelSO m_OnWeaponItemUISwappedEvent;
+        [Space(10)]
+
+        [Header("Broadcast to")]
+
+        [SerializeField, Tooltip("When an Inventory item is added to the inventory, this event is invoked")]
+        InventoryItemEventChannelSO m_OnInventoryItemAddedToInventory;
+
+        [SerializeField, Tooltip("When an Inventory item is removed from the inventory, this event is invoked")]
+        InventoryItemEventChannelSO m_OnInventoryItemRemovedFromInventory;
+
 
         [Space(10)]
 
@@ -53,30 +59,30 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             m_Weapons = new WeaponItem[2];                    // For now only 2 guns are allowed
 
             
-            m_OnInventoryItemUIAddedEvent.OnEventRaised += AddItemToInventory;
-            m_OnInventoryItemUIRemovedEvent.OnEventRaised += RemoveInventoryItem;
-            m_OnAfterWeaponItemUIRemovedEvent.OnEventRaised += RemoveGunItem;
-            m_OnWeaponItemUISwappedEvent.OnEventRaised += SwapWeaponItems;
+            m_OnAddInventoryItemToInventoryEvent.OnEventRaised += AddItemToInventory;
+            m_OnRemoveInventoryItemFromInventoryEvent.OnEventRaised += RemoveInventoryItem;
         }
 
         private void OnDestroy()
         {
-            m_OnInventoryItemUIAddedEvent.OnEventRaised -= AddItemToInventory;
-            m_OnInventoryItemUIRemovedEvent.OnEventRaised -= RemoveInventoryItem;
-            m_OnAfterWeaponItemUIRemovedEvent.OnEventRaised -= RemoveGunItem;
-            m_OnWeaponItemUISwappedEvent.OnEventRaised -= SwapWeaponItems;
+            m_OnAddInventoryItemToInventoryEvent.OnEventRaised -= AddItemToInventory;
+            m_OnRemoveInventoryItemFromInventoryEvent.OnEventRaised -= RemoveInventoryItem;
         }
 
         public void AddItemToInventory(InventoryItem item)
         {
             m_InventoryItems.Add(item);
             Debug.Log(item.Name + " added to inventory!");
+
+            m_OnInventoryItemAddedToInventory.RaiseEvent(item);
         }
 
         public void RemoveInventoryItem(InventoryItem item)
         {
             m_InventoryItems.Remove(item);
             Debug.Log(item.Name + " removed from inventory!");
+
+            m_OnInventoryItemRemovedFromInventory.RaiseEvent(item);
         }
 
         /// <summary>

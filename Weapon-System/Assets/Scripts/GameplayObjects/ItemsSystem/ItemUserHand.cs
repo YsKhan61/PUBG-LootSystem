@@ -32,26 +32,11 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         [SerializeField, Tooltip("This event notifies the secondary use input performing")]
         BoolEventChannelSO m_SecondaryUseInputEvent;
 
-        [SerializeField, Tooltip("Listen to this event to remove the respective common item from inventory.")]
-        InventoryItemEventChannelSO m_OnCommonItemUIRemovedEvent;
-
-        [SerializeField, Tooltip("When an WeaponItemUI is removed from WeaponInventoryUI, this event is invoked after that")]
-        WeaponItemIntEventChannelSO m_OnAfterWeaponItemUIRemovedEvent;
-
-        [SerializeField, Tooltip("hen two WeaponItemUI's are swapped with each other, this event is invoked")]
-        IntIntEventChannelSO m_OnWeaponItemUISwappedEvent;
-
         [Space(10)]
 
 
 
         [Header("Broadcast to")]
-
-        [SerializeField, Tooltip("When a common item is added to the inventory, this event is invoked.")]
-        InventoryItemEventChannelSO m_InventoryItemAddedEvent;
-
-        [SerializeField, Tooltip("When a gun item is added to the inventory, this event is invoked.")]
-        WeaponItemIntEventChannelSO m_OnGunItemAddedEvent;
 
 
 
@@ -86,8 +71,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             m_PrimaryWeaponSelectInputEvent.OnEventRaised += OnPrimaryWeaponSelect;
             m_SecondaryWeaponSelectInputEvent.OnEventRaised += OnSecondaryWeaponSelect;
             m_HolsterItemInputEvent.OnEventRaised += TryPutAwayItem;
-            m_OnCommonItemUIRemovedEvent.OnEventRaised += OnCommonItemUIRemovedEvent;
-            m_OnAfterWeaponItemUIRemovedEvent.OnEventRaised += OnGunItemUIRemovedEvent;
+
         }
 
         private void Update()
@@ -113,8 +97,6 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             m_PrimaryWeaponSelectInputEvent.OnEventRaised -= OnPrimaryWeaponSelect;
             m_SecondaryWeaponSelectInputEvent.OnEventRaised -= OnSecondaryWeaponSelect;
             m_HolsterItemInputEvent.OnEventRaised -= TryPutAwayItem;
-            m_OnCommonItemUIRemovedEvent.OnEventRaised -= OnCommonItemUIRemovedEvent;
-            m_OnAfterWeaponItemUIRemovedEvent.OnEventRaised -= OnGunItemUIRemovedEvent;
         }
 
         private void CheckForNearbyItems()
@@ -170,13 +152,11 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             {
                 if (!m_Inventory.TryAddWeaponItemToWeaponInventory(gunItem, out int storedIndex))
                     return;
-                m_OnGunItemAddedEvent.RaiseEvent(gunItem, storedIndex);
             }
 
             else if (item is InventoryItem inventoryItem)
             {
                 m_Inventory.AddItemToInventory(inventoryItem);
-                m_InventoryItemAddedEvent.RaiseEvent(inventoryItem);
             }
         }
 

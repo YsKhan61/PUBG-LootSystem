@@ -297,7 +297,7 @@ namespace Weapon_System.GameplayObjects.UI
         /// <param name="itemUI"></param>
         void HideItemUI(ItemUI itemUI)
         {
-            itemUI.IsDragSuccess = true;            // Set the drag success to true, so that the OnEndDrag of ItemUI doesn't make it visible again or fallback to last position
+            // itemUI.IsDragSuccess = true;            // Set the drag success to true, so that the OnEndDrag of ItemUI doesn't make it visible again or fallback to last position
             itemUI.Hide();
             itemUI.UnblockRaycast();
             m_ItemUI = itemUI;

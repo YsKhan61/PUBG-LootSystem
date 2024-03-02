@@ -1,4 +1,5 @@
 using TMPro;
+using UnityEditor.Graphs;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -9,7 +10,7 @@ using Weapon_System.Utilities;
 namespace Weapon_System.GameplayObjects.UI
 {
     [RequireComponent(typeof(RectTransform), typeof(CanvasGroup))]
-    public class ItemUI : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IDragHandler, IEndDragHandler, ISpawnable
+    public class ItemUI : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler, ISpawnable
     {
         [SerializeField]
         Image m_Icon;
@@ -20,14 +21,8 @@ namespace Weapon_System.GameplayObjects.UI
         [SerializeField]
         int m_PoolSize = 20;
 
-        private RectTransform m_RectTransform;
-        // private Canvas m_Canvas;
-        private CanvasGroup m_CanvasGroup;
-
-        private Transform m_LastParent;
-        private Vector2 m_lastAnchoredPosition;
-
         private InventoryUI m_InventoryUI;
+        public InventoryUI InventoryUI => m_InventoryUI;
 
         private InventoryItem m_Item;
         public InventoryItem Item => m_Item;
@@ -38,19 +33,20 @@ namespace Weapon_System.GameplayObjects.UI
 
         public int PoolSize => m_PoolSize;
 
-        [HideInInspector]
-        public bool IsDragSuccess;
+        public bool IsDragSuccess { get; private set; }
+
+        /// <summary>
+        /// The slot type of the slot where this ItemUI is currently stored
+        /// </summary>
+        public SlotType StoredSlotType { get; private set; }
+
+        private RectTransform m_RectTransform;
+        private CanvasGroup m_CanvasGroup;
+        private Transform m_LastParent;
+        private Vector2 m_lastAnchoredPosition;
 
         private void Awake()
         {
-            /*m_Canvas = GetComponentInParent<Canvas>();
-            if (m_Canvas == null)
-            {
-                Debug.LogError("No Canvas found in parent of " + gameObject.name);
-                enabled = false;
-                return;
-            }*/
-
             m_CanvasGroup = GetComponent<CanvasGroup>();
             m_RectTransform = GetComponent<RectTransform>();
         }
@@ -66,16 +62,16 @@ namespace Weapon_System.GameplayObjects.UI
 
         public void OnBeginDrag(PointerEventData eventData)
         {
-            // m_InventoryUI.RemoveItemUIFromList(this);
-
             m_lastAnchoredPosition = m_RectTransform.anchoredPosition;
             m_LastParent = m_RectTransform.parent;
 
             IsDragSuccess = false;
 
             m_CanvasGroup.blocksRaycasts = false;
+            // Set the parent to the canvas so that the UI is not clipped by the parent
             transform.SetParent(m_InventoryUI.CanvasTransform);
             m_CanvasGroup.alpha = 0.6f;
+
         }
 
         public void OnDrag(PointerEventData eventData)
@@ -91,14 +87,28 @@ namespace Weapon_System.GameplayObjects.UI
                 m_CanvasGroup.alpha = 1f;
 
                 FallbackToLastPosition();
-
-                // m_InventoryUI.AddItemUIToList(this);
             }
         }
 
-        public void SetItemDataAndShow(InventoryItem item, InventoryUI inventoryUI)
+        public void OnDrop(PointerEventData eventData)
+        {
+            if (eventData.pointerDrag == null)
+            {
+                return;
+            }
+
+            if (eventData.pointerDrag.TryGetComponent(out ItemUI itemUI))
+            {
+                m_InventoryUI.OnItemUIDroppedOnSlotType(itemUI, StoredSlotType);
+            }
+        }
+
+
+
+        public void SetItemDataAndShow(InventoryItem item, InventoryUI inventoryUI, SlotType storedSlotType)
         {
             m_InventoryUI = inventoryUI;
+            StoredSlotType = storedSlotType;
             m_Item = item;
             m_Icon.sprite = m_Item.ItemData.IconSprite;
             m_NameText.text = m_Item.ItemData.name;
@@ -119,6 +129,14 @@ namespace Weapon_System.GameplayObjects.UI
         {
             m_RectTransform.anchoredPosition = m_lastAnchoredPosition;
             m_RectTransform.SetParent(m_LastParent);
+        }
+
+        public void OnDragSuccess(SlotType storedSlotType)
+        {
+            StoredSlotType = storedSlotType;
+            IsDragSuccess = true;
+            Show();
+            BlockRaycast();
         }
 
         public void Show()
