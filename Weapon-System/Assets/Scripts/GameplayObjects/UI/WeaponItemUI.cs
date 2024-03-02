@@ -25,7 +25,9 @@ namespace Weapon_System.GameplayObjects.UI
         [SerializeField]
         TextMeshProUGUI m_NameText;
 
+        [SerializeField]
         WeaponUIMediator m_WeaponUIMediator;
+        public WeaponUIMediator WeaponUIMediator => m_WeaponUIMediator;
 
         [SerializeField]
         int m_SlotIndex;
@@ -77,9 +79,7 @@ namespace Weapon_System.GameplayObjects.UI
                 if (m_StoredGunItem == null)
                     return;
 
-                m_WeaponUIMediator.BroadcastOnBeforeWeaponItemUIRemovedEvent(m_StoredGunItem, m_SlotIndex);
-                m_WeaponUIMediator.BroadcastOnAfterWeaponItemUIRemovedEvent(m_StoredGunItem, m_SlotIndex);
-                ResetDataAndHideGunItemUI();
+                m_WeaponUIMediator.RemoveWeaponItemFromInventory(m_StoredGunItem, m_SlotIndex);
             }
         }
 
@@ -137,14 +137,24 @@ namespace Weapon_System.GameplayObjects.UI
             }
             else if (eventData.pointerDrag.TryGetComponent(out ItemUI itemUI))
             {
+                if (itemUI.Item is not WeaponItem weaponItem)
+                    return;
+
                 if (itemUI.Item.ItemData.UIType == m_ItemUIType)
                 {
-                    // This is an ItemUI of a Gun Item,
-                    // If the index of this ItemUI matches with the index of ItemUI of the currently held Gun Item, then put away the gun from hand.
-                    // Drop the Gun Item from the Inventory matchin the index of this ItemUI
-                    // Replace the current Gun Item UI datas with the new Gun Item UI datas
-                    // Add the new Gun Item to the inventory
-                    // If the previous gun was in hand, then add the new gun to the hand
+                    // This is an ItemUI of a Weapon Item,
+
+                    // If there is already a Stored WeaponItem in this ItemUI , Drop it first
+                    if (StoredGunItem != null)
+                    {
+                        m_WeaponUIMediator.RemoveWeaponItemFromInventory(StoredGunItem, SlotIndex);
+                    }
+
+                    m_WeaponUIMediator.AddWeaponItemToInventory(weaponItem, SlotIndex);
+
+                    // Destroying the ItemUI here, but make sure, if it is better to destroy it
+                    // after we recieve the callback of OnWeaponItemAddedToWeaponInventoryEvent inside WeaponUIMediator
+                    itemUI.InventoryUI.ReleaseItemUIToPool(itemUI);
                 }
             }
             
@@ -164,7 +174,7 @@ namespace Weapon_System.GameplayObjects.UI
             Show();
         }
 
-        void ResetDataAndHideGunItemUI()
+        public void ResetDataAndHideGunItemUI()
         {
             m_StoredGunItem = null;
             m_Icon.sprite = null;

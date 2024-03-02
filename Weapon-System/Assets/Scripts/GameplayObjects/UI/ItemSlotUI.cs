@@ -13,7 +13,7 @@ namespace Weapon_System.GameplayObjects.UI
     public enum SlotType
     {
         Inventory,
-        Viscinity
+        Vicinity
     }
 
     public class ItemSlotUI : MonoBehaviour, IDropHandler
@@ -25,8 +25,17 @@ namespace Weapon_System.GameplayObjects.UI
         {
             if (eventData.pointerDrag == null)
                 return;
-            
-            if (eventData.pointerDrag.TryGetComponent(out ItemUI itemUI))
+
+            // If slot type is vicinity, then if we drag and drop a WeaponItemUI, then remove it from the inventory and drop the weapon item
+            if (eventData.pointerDrag.TryGetComponent(out WeaponItemUI weaponItemUI))
+            {
+                if (m_SlotType != SlotType.Vicinity)
+                    return;
+
+                weaponItemUI.WeaponUIMediator.RemoveWeaponItemFromInventory(weaponItemUI.StoredGunItem, weaponItemUI.SlotIndex);
+            }
+
+            else if (eventData.pointerDrag.TryGetComponent(out ItemUI itemUI))
             {
                 itemUI.InventoryUI.OnItemUIDroppedOnSlotType(itemUI, m_SlotType);
             }

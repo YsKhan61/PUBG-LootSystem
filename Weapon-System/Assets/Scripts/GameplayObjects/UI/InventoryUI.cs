@@ -36,6 +36,11 @@ namespace Weapon_System.GameplayObjects.UI
         [SerializeField, Tooltip("To remove an inventory item from inventory, this event is invoked")]
         InventoryItemEventChannelSO m_OnRemoveInventoryItemFromInventoryEvent;
 
+        [SerializeField, Tooltip("To remove an weapon item from weapon inventory, this event is invoked")]
+        WeaponItemIntEventChannelSO m_OnRemoveWeaponItemFromWeaponInventoryEvent;
+
+
+
         [Space(10)]
 
         [SerializeField, Tooltip("The prefab that will be spawned as child of 'm_ContentGO' when a common item is stored in inventory")]
@@ -89,6 +94,17 @@ namespace Weapon_System.GameplayObjects.UI
             m_OnInventoryItemAddedToInventory.OnEventRaised -= OnInventoryItemAddedToInventory;
             m_OnInventoryItemRemovedFromInventory.OnEventRaised -= OnInventoryItemRemovedFromInventory;
         }
+
+        /// <remarks>
+        /// NOTE to check out the same methods of WeaponUIMediator class and from InventoryUI class, before modifying this method.
+        /// Weapon can be removed from inventory by dropping the weapon item UI to vicinity
+        /// or right clicking on the weapon item UI in the inventory
+        /// </remarks>
+        internal void RemoveWeaponItemFromInventory(WeaponItem weaponItem, int index)
+        {
+            m_OnRemoveWeaponItemFromWeaponInventoryEvent.RaiseEvent(weaponItem, index);
+        }
+
         private void RefreshAndDisplayScannedCollectables()
         {
             if (!m_OnToggleInventoryUIEvent.Value)
@@ -112,13 +128,13 @@ namespace Weapon_System.GameplayObjects.UI
                 {
                     /// If the ItemUI is not present for this index, then create a new instance of ItemUI
                     ItemUI itemUI = m_PoolManager.GetObjectFromPool(m_ItemUIPrefab.Name) as ItemUI;
-                    itemUI.SetItemDataAndShow(item, this, SlotType.Viscinity);
+                    itemUI.SetItemDataAndShow(item, this, SlotType.Vicinity);
                     itemUI.transform.SetParent(m_ViscinityContentTransform.transform);
                     m_ViscinityItemUIs.Add(itemUI);
                 }
                 else
                 {   // If the ItemUI is present for this index, then just update the data
-                    m_ViscinityItemUIs[i].SetItemDataAndShow(item, this, SlotType.Viscinity);
+                    m_ViscinityItemUIs[i].SetItemDataAndShow(item, this, SlotType.Vicinity);
                 }
             }
         }
@@ -141,9 +157,18 @@ namespace Weapon_System.GameplayObjects.UI
                 case SlotType.Inventory:
                     OnItemUIDroppedFromViscinityToInventory(droppedItemUI);
                     break;
-                case SlotType.Viscinity:
+                case SlotType.Vicinity:
                     OnItemUIDroppedFromInventoryToViscinity(droppedItemUI);
                     break;
+            }
+        }
+
+        public void ReleaseItemUIToPool(ItemUI itemUI)
+        {
+            if (itemUI != null)
+            {
+                itemUI.ResetItemDataAndHide();
+                m_PoolManager.ReleaseObjectToPool(itemUI);
             }
         }
 
@@ -184,7 +209,7 @@ namespace Weapon_System.GameplayObjects.UI
             }
 
             // We destroy this ItemUI from InventoryUI, after it's item is already dropped.
-            Destroy(m_TempItemUI.gameObject);
+            ReleaseItemUIToPool(m_TempItemUI);
         }
     }
 }

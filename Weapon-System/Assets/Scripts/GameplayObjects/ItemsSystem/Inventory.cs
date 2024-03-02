@@ -1,6 +1,6 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Weapon_System.Utilities;
 
 
 namespace Weapon_System.GameplayObjects.ItemsSystem
@@ -20,6 +20,12 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         [SerializeField, Tooltip("To remove an inventory item from inventory, this event is invoked")]
         InventoryItemEventChannelSO m_OnRemoveInventoryItemFromInventoryEvent;
 
+        [SerializeField, Tooltip("To add an weapon item in the weapon inventory, this event is invoked")]
+        WeaponItemIntEventChannelSO m_OnAddWeaponItemToWeaponInventoryToSpecificIndexEvent;
+
+        [SerializeField, Tooltip("To remove an weapon item from weapon inventory, this event is invoked")]
+        WeaponItemIntEventChannelSO m_OnRemoveWeaponItemFromWeaponInventoryFromSpecificIndexEvent;
+
 
         [Space(10)]
 
@@ -31,13 +37,18 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         [SerializeField, Tooltip("When an Inventory item is removed from the inventory, this event is invoked")]
         InventoryItemEventChannelSO m_OnInventoryItemRemovedFromInventory;
 
+        [SerializeField, Tooltip("When an Weapon item is added to the inventory to specific index, this event is invoked")]
+        WeaponItemIntEventChannelSO m_OnWeaponItemAddedToWeaponInventoryToSpecificIndexEvent;
+
+        [SerializeField, Tooltip("When an Weapon item is removed from the inventory from specific index, this event is invoked")]
+        WeaponItemIntEventChannelSO m_OnWeaponItemRemovedFromWeaponInventoryFromSpecificIndexEvent;
+
 
         [Space(10)]
 
         [Header("---------Debug purposes----------")]
 
         [Header("Inventory items")]
-
 
         /// <summary>
         /// We are not using IStorable interface rather using InventoryItem,
@@ -53,6 +64,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         [SerializeField]        // SerializeField is used only for Debug purposes
         WeaponItem[] m_Weapons;       // Only primary and secondary gun. For now only 2 guns are allowed
 
+
         private void Start()
         {
             m_InventoryItems = new List<InventoryItem>();
@@ -61,12 +73,18 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             
             m_OnAddInventoryItemToInventoryEvent.OnEventRaised += AddItemToInventory;
             m_OnRemoveInventoryItemFromInventoryEvent.OnEventRaised += RemoveInventoryItem;
+
+            m_OnAddWeaponItemToWeaponInventoryToSpecificIndexEvent.OnEventRaised += OnAddWeaponItemToWeaponInventoryToSpecificIndex;
+            m_OnRemoveWeaponItemFromWeaponInventoryFromSpecificIndexEvent.OnEventRaised += OnRemoveWeaponItemFromWeaponInventoryFromSpecificIndex;
         }
 
         private void OnDestroy()
         {
             m_OnAddInventoryItemToInventoryEvent.OnEventRaised -= AddItemToInventory;
             m_OnRemoveInventoryItemFromInventoryEvent.OnEventRaised -= RemoveInventoryItem;
+
+            m_OnAddWeaponItemToWeaponInventoryToSpecificIndexEvent.OnEventRaised -= OnAddWeaponItemToWeaponInventoryToSpecificIndex;
+            m_OnRemoveWeaponItemFromWeaponInventoryFromSpecificIndexEvent.OnEventRaised -= OnRemoveWeaponItemFromWeaponInventoryFromSpecificIndex;
         }
 
         public void AddItemToInventory(InventoryItem item)
@@ -86,75 +104,70 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         }
 
         /// <summary>
-        /// Stores the gun item in separate array.
+        /// Stores the gun in separate array.
         /// </summary>
-        /// <param name="gunItem">The gun item to store</param>
-        /// <returns>Returns the index of the GunItem array where the gun is stored</returns>
-        public bool TryAddWeaponItemToWeaponInventory(WeaponItem gunItem, out int slotIndex)
+        /// <param name="weaponItem">The gun item to store</param>
+        public void AddWeaponItemToWeaponInventory(WeaponItem weaponItem)
         {
-            slotIndex = -1;
-            // Add to the first empty slot
+            // Try add to the first empty slot
             for (int i = 0; i < m_Weapons.Length; i++)
             {
-                if (m_Weapons[i] == null)
-                {
-                    m_Weapons[i] = gunItem;
-                    Debug.Log(gunItem.Name + " added to inventory!");
-                    slotIndex = i;
-                    return true;
-                }
-            }
+                if (m_Weapons[i] != null)
+                    continue;
 
-            return false;
-
-            // If no empty slot and no gun in hand, replace the first gun
-            // For now we don't override -- but later we will.
-            /*m_Weapons[0] = gunItem;
-            Debug.Log(gunItem.Name + " added to inventory!");
-            return 0;*/
-        }
-
-        public int GetIndexOfWeaopnItem(WeaponItem item)
-        {
-            for (int i = 0; i < m_Weapons.Length; i++)
-            {
-                if (m_Weapons[i] == item)
-                {
-                    return i;
-                }
-            }
-
-            return -1;
-        }
-
-        public WeaponItem GetWeaponItem(int index)
-        {
-            if (index < 0 || index >= m_Weapons.Length)
-            {
-                Debug.LogError("Index out of range");
-                return null;
-            }
-
-            return m_Weapons[index];
-        }
-
-        private void RemoveGunItem(WeaponItem item, int _)
-        {
-            int index = GetIndexOfWeaopnItem(item);
-            if (index < 0 || index >= m_Weapons.Length)
-            {
-                Debug.LogError("Index out of range");
+                AddWeaponItemToIndex(weaponItem, i);
                 return;
+            }
+
+            // Try replacing the gun in hand with the new gun
+            for (int i = 0; i < m_Weapons.Length; i++)
+            {
+                if (!m_Weapons[i].IsInHand)
+                    continue;
+
+                TryRemoveWeaponItem(m_Weapons[i]);
+
+                AddWeaponItemToIndex(weaponItem, i);
+                return;
+            }
+
+            // If no empty slot is present, nor is there any gun in hand,
+            // replace the first gun with the new gun.
+            TryRemoveWeaponItem(m_Weapons[0]);
+
+            // Store the new gun in the empty slot
+            AddWeaponItemToIndex(weaponItem, 0);
+        }
+
+        private void OnAddWeaponItemToWeaponInventoryToSpecificIndex(WeaponItem weaponItem, int index)
+        {
+            // If there is already a weapon item in the index, then remove it first
+            TryRemoveWeaponItem(m_Weapons[index]);
+            // Now add the new weapon item to the index
+            AddWeaponItemToIndex(weaponItem, index);
+        }
+
+        private void OnRemoveWeaponItemFromWeaponInventoryFromSpecificIndex(WeaponItem weaponItem, int index)
+        {
+            TryRemoveWeaponItem(weaponItem);
+        }
+
+        public bool TryGetWeaponItem(int index, out WeaponItem weaponItem)
+        {
+            weaponItem = null;
+            if (index < 0 || index >= m_Weapons.Length)
+            {
+                Debug.LogError("Index out of range");
+                return false;
             }
 
             if (m_Weapons[index] == null)
             {
-                Debug.LogError("UI was present, but gun is not present in the inventory!");
-                return;
+                return false;
             }
 
-            m_Weapons[index].Drop();
-            m_Weapons[index] = null;
+            weaponItem = m_Weapons[index];
+            return true;
         }
 
         /// <summary>
@@ -174,6 +187,51 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             WeaponItem temp = m_Weapons[leftIndex];
             m_Weapons[leftIndex] = m_Weapons[rightIndex];
             m_Weapons[rightIndex] = temp;
+        }
+
+        private void AddWeaponItemToIndex(WeaponItem weaponItem, int index)
+        {
+            // Store the new gun in the empty slot
+            m_Weapons[index] = weaponItem;
+            Debug.Log(weaponItem.Name + " added to inventory!");
+
+            m_OnWeaponItemAddedToWeaponInventoryToSpecificIndexEvent.RaiseEvent(weaponItem, index);
+        }
+
+        private void TryRemoveWeaponItem(WeaponItem item)
+        {
+            if (!TryGetIndexOfWeaopnItem(item, out int index))
+                return;
+
+            if (index < 0 || index >= m_Weapons.Length)
+            {
+                Debug.LogError("Index out of range");
+                return;
+            }
+
+            if (m_Weapons[index] == null)
+            {
+                Debug.LogError("UI was present, but gun is not present in the inventory!");
+                return;
+            }
+
+            m_OnWeaponItemRemovedFromWeaponInventoryFromSpecificIndexEvent.RaiseEvent(m_Weapons[index], index);
+            m_Weapons[index] = null;
+        }
+
+        private bool TryGetIndexOfWeaopnItem(WeaponItem item, out int index)
+        {
+            index = -1;
+            for (int i = 0; i < m_Weapons.Length; i++)
+            {
+                if (m_Weapons[i] == item)
+                {
+                    index = i;
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }
