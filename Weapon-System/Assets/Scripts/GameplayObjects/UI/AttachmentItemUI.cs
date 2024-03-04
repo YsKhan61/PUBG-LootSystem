@@ -33,6 +33,10 @@ namespace Weapon_System.GameplayObjects.UI
         private RectTransform m_RectTransform;
         private Canvas m_Canvas;
         private CanvasGroup m_CanvasGroup;
+
+        private Transform m_LastParent;
+        public Transform LastParent => m_LastParent;
+
         private Vector2 m_lastAnchoredPosition;
 
         /// <summary>
@@ -76,9 +80,13 @@ namespace Weapon_System.GameplayObjects.UI
         public void OnBeginDrag(PointerEventData eventData)
         {
             m_lastAnchoredPosition = m_RectTransform.anchoredPosition;
+            m_LastParent = m_RectTransform.parent;
+
             IsDragSuccess = false;
 
             m_CanvasGroup.blocksRaycasts = false;
+            // Set the parent to the canvas so that the UI is not clipped by the parent
+            transform.SetParent(m_Mediator.CanvasTransform);
             m_CanvasGroup.alpha = 0.6f;
         }
 
@@ -94,6 +102,7 @@ namespace Weapon_System.GameplayObjects.UI
 
             if (!IsDragSuccess)
             {
+                m_RectTransform.SetParent(m_LastParent);
                 m_RectTransform.anchoredPosition = m_lastAnchoredPosition;
             }
         }

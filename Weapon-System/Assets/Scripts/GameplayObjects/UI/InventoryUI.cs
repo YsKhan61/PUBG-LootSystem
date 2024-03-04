@@ -221,16 +221,25 @@ namespace Weapon_System.GameplayObjects.UI
 
         private void OnInventoryItemAddedToInventory(InventoryItem item)
         {
+            if (m_TempItemUI == null)
+            {
+                // THis happens when we press an input button to pick up item
+                CreateItemUIInInventorySlot(item);
+                return;
+            }
+
+            
             if (item != m_TempItemUI.Item)
             {
                 Debug.LogError("This should never happen!");
                 return;
             }
 
+            // This happens when we drop an ItemUI from Viscinity to Inventory
             m_TempItemUI.transform.SetParent(m_InventoryContentTransform);
             m_TempItemUI.OnDragSuccess(SlotType.Inventory);
-
             m_ViscinityItemUIs.Remove(m_TempItemUI);
+            m_TempItemUI = null;
         }
 
         private void OnInventoryItemRemovedFromInventory(InventoryItem item)

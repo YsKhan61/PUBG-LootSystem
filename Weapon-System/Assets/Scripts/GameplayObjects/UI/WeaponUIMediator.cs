@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using Weapon_System.GameplayObjects.ItemsSystem;
 using Weapon_System.Utilities;
@@ -34,7 +33,10 @@ namespace Weapon_System.GameplayObjects.UI
 
         [SerializeField, Tooltip("To swap two WeaponItemUI's in the inventory, this event is invoked")]
         IntIntEventChannelSO m_OnSwapWeaponItemUIsInInventoryEvent;
-        
+
+        [SerializeField]
+        Canvas m_Canvas;
+        public Transform CanvasTransform => m_Canvas.transform;
 
 
         [Space(10)]
@@ -157,11 +159,10 @@ namespace Weapon_System.GameplayObjects.UI
                 return;
             }
 
-            Transform parentOfLeftItemUI = leftItemUI.transform.parent;
+            Transform parentOfLeftItemUI = leftItemUI.LastParent;
             int slotIndexOfLeftItemUI = leftItemUI.SlotIndex;
-            int slotIndexOfRightItemUI = rightItemUI.SlotIndex;
 
-            DropWeaponItemUIToSlot(leftItemUI, transform.parent, slotIndexOfRightItemUI);
+            DropWeaponItemUIToSlot(leftItemUI, rightItemUI.transform.parent, rightItemUI.SlotIndex);
             DropWeaponItemUIToSlot(rightItemUI, parentOfLeftItemUI, slotIndexOfLeftItemUI);
         }
 

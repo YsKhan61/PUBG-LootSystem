@@ -747,6 +747,7 @@ MonoBehaviour:
     type: 2}
   m_OnSwapWeaponItemUIsInInventoryEvent: {fileID: 11400000, guid: dc5f38b2f421b8f4084fa52ab7adfe39,
     type: 2}
+  m_Canvas: {fileID: 738153175}
   m_WeaponItemUIs:
   - {fileID: 7993000985656380377}
   - {fileID: 1400475445}

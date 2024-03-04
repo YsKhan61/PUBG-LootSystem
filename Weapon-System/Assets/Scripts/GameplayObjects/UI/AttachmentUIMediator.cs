@@ -60,6 +60,8 @@ namespace Weapon_System.GameplayObjects.UI
         [SerializeField]
         AttachmentItemUI[] m_AttachmentItemUIs;
 
+        public Transform CanvasTransform => m_InventoryUI.CanvasTransform;
+
 
 
         private void Start()
@@ -135,7 +137,7 @@ namespace Weapon_System.GameplayObjects.UI
             }
 
             // get the gun item from the WeaponInventoryUI using the SlotIndex of dropped ItemUI
-            if (WeaponInventoryUI.TryGetWeaopnItemFromWeaponInventoryUI(
+            if (!WeaponInventoryUI.TryGetWeaopnItemFromWeaponInventoryUI(
                                    droppedAttachmentItemUI.SlotIndex, out WeaponItem weaponItemOfDroppedAttachmentItemUI))
             {
                 return;
@@ -155,11 +157,11 @@ namespace Weapon_System.GameplayObjects.UI
             droppedAttachmentItemUI.StoredItem.AttachToWeapon(weaponItemInThisDropArea);
 
             // Get the parent of the dropped ItemUI and the slot index of the dropped ItemUI before dropping it
-            Transform parentOfDroppedItemUI = droppedAttachmentItemUI.transform.parent;
+            Transform parentOfDroppedItemUI = droppedAttachmentItemUI.LastParent;
             int slotIndexOfDroppedItemUI = droppedAttachmentItemUI.SlotIndex;
 
             // Add the dropped ItemUI to the SlotUI of this ItemUI through SightInventoryUIMediator
-            DropAttachmentItemUIToSlot(droppedAttachmentItemUI, transform.parent, attachmentItemUIOfDropArea.SlotIndex);
+            DropAttachmentItemUIToSlot(droppedAttachmentItemUI, attachmentItemUIOfDropArea.transform.parent, attachmentItemUIOfDropArea.SlotIndex);
 
             // if the SightItem of this slot is present
             if (attachmentItemUIOfDropArea.StoredItem != null)
