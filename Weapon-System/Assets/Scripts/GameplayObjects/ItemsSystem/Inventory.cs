@@ -84,8 +84,8 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             m_Weapons = new WeaponItem[2];                    // For now only 2 guns are allowed
 
             
-            m_OnAddInventoryItemToInventoryEvent.OnEventRaised += AddItemToInventory;
-            m_OnRemoveInventoryItemFromInventoryEvent.OnEventRaised += RemoveInventoryItem;
+            m_OnAddInventoryItemToInventoryEvent.OnEventRaised += AddItemToInventoryAndRaiseEvent;
+            m_OnRemoveInventoryItemFromInventoryEvent.OnEventRaised += RemoveItemFromInventoryAndRaiseEvent;
 
             m_OnAddWeaponItemToWeaponInventoryEvent.OnEventRaised += AddWeaponItemToWeaponInventory;
             m_OnAddWeaponItemToWeaponInventoryToSpecificIndexEvent.OnEventRaised += OnAddWeaponItemToWeaponInventoryToSpecificIndex;
@@ -95,8 +95,8 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         private void OnDestroy()
         {
-            m_OnAddInventoryItemToInventoryEvent.OnEventRaised -= AddItemToInventory;
-            m_OnRemoveInventoryItemFromInventoryEvent.OnEventRaised -= RemoveInventoryItem;
+            m_OnAddInventoryItemToInventoryEvent.OnEventRaised -= AddItemToInventoryAndRaiseEvent;
+            m_OnRemoveInventoryItemFromInventoryEvent.OnEventRaised -= RemoveItemFromInventoryAndRaiseEvent;
 
             m_OnAddWeaponItemToWeaponInventoryEvent.OnEventRaised -= AddWeaponItemToWeaponInventory;
             m_OnAddWeaponItemToWeaponInventoryToSpecificIndexEvent.OnEventRaised -= OnAddWeaponItemToWeaponInventoryToSpecificIndex;
@@ -104,19 +104,39 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             m_OnSwapWeaponItemUIsInInventoryEvent.OnEventRaised -= SwapWeaponItems;
         }
 
-        public void AddItemToInventory(InventoryItem item)
+        /// <summary>
+        /// Later, the inventory will have a capacity, beyond which no more items can be added.
+        /// That time it will return false
+        /// </summary>
+        /// <param name="item"></param>
+        public bool TryAddItemToInventory(InventoryItem item)
         {
             m_InventoryItems.Add(item);
             Debug.Log(item.Name + " added to inventory!");
 
+            return true;
+        }
+
+        public void AddItemToInventoryAndRaiseEvent(InventoryItem item)
+        {
+            TryAddItemToInventory(item);
             m_OnInventoryItemAddedToInventory.RaiseEvent(item);
         }
 
-        public void RemoveInventoryItem(InventoryItem item)
+        public bool TryRemoveItemFromInventory(InventoryItem item)
         {
+            if (!m_InventoryItems.Contains(item))
+                return false;
+
             m_InventoryItems.Remove(item);
             Debug.Log(item.Name + " removed from inventory!");
 
+            return true;
+        }
+
+        public void RemoveItemFromInventoryAndRaiseEvent(InventoryItem item)
+        {
+            TryRemoveItemFromInventory(item);
             m_OnInventoryItemRemovedFromInventory.RaiseEvent(item);
         }
 

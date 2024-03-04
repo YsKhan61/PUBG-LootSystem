@@ -69,7 +69,7 @@ namespace Weapon_System.GameplayObjects.UI
             // Right click to drop item
             if (eventData.button == PointerEventData.InputButton.Right)
             {
-                m_Mediator.AddAttachmentItemToInventory(m_StoredItem as InventoryItem);
+                m_Mediator.OnRightClickInputOnAttachmentItemUI(this);
             }
         }
 

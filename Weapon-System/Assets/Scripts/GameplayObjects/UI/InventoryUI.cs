@@ -65,6 +65,9 @@ namespace Weapon_System.GameplayObjects.UI
         [SerializeField]
         PoolManager m_PoolManager;
 
+        [SerializeField]
+        Inventory m_Inventory;
+
         public float CanvasScaleFactor => m_Canvas.scaleFactor;
 
         List<ItemUI> m_ViscinityItemUIs;
@@ -121,6 +124,21 @@ namespace Weapon_System.GameplayObjects.UI
             }
         }
 
+        public void CreateItemUIForVicinitySlot(InventoryItem item)
+        {
+            ItemUI itemUI = m_PoolManager.GetObjectFromPool(m_ItemUIPrefab.Name) as ItemUI;
+            itemUI.SetItemDataAndShow(item, this, SlotType.Vicinity);
+            itemUI.transform.SetParent(m_ViscinityContentTransform.transform);
+            m_ViscinityItemUIs.Add(itemUI);
+        }
+
+        public void CreateItemUIInInventorySlot(InventoryItem item)
+        {
+            ItemUI itemUI = m_PoolManager.GetObjectFromPool(m_ItemUIPrefab.Name) as ItemUI;
+            itemUI.SetItemDataAndShow(item, this, SlotType.Inventory);
+            itemUI.transform.SetParent(m_InventoryContentTransform.transform);
+        }
+
         public void ReleaseItemUIToPool(ItemUI itemUI)
         {
             if (itemUI != null)
@@ -135,6 +153,16 @@ namespace Weapon_System.GameplayObjects.UI
             m_OnAddWeaponItemToWeaponInventoryEvent.RaiseEvent(weaponItem);
         }
 
+        public bool TryCollectItem(InventoryItem item)
+        {
+            return m_ItemUserHand.TryCollectItem(item);
+        }
+
+        public void AddItemToInventory(InventoryItem item)
+        {
+            m_Inventory.TryAddItemToInventory(item);
+        }
+
         private void RefreshAndDisplayScannedCollectables()
         {
             if (!m_OnToggleInventoryUIEvent.Value)
@@ -142,31 +170,41 @@ namespace Weapon_System.GameplayObjects.UI
                 return;
             }
 
-            // Clear all the ItemUIs
-            foreach (ItemUI itemUI in m_ViscinityItemUIs)
-            {
-                itemUI.ResetItemDataAndHide();
-            }
-
+            // Create the ItemUIs for the items that are recently scanned and are not already present in the vicinity.
             for (int i = 0, count = m_ItemUserHand.CollectablesScanned.Count; i < count; i++)
             {
                 InventoryItem item = m_ItemUserHand.CollectablesScanned[i] as InventoryItem;
                 if (item == null)
                     continue;
 
-                if (m_ViscinityItemUIs.Count < count)
+                if (IsItemAlreadyPresentInVicinitySlot(item))
                 {
-                    /// If the ItemUI is not present for this index, then create a new instance of ItemUI
-                    ItemUI itemUI = m_PoolManager.GetObjectFromPool(m_ItemUIPrefab.Name) as ItemUI;
-                    itemUI.SetItemDataAndShow(item, this, SlotType.Vicinity);
-                    itemUI.transform.SetParent(m_ViscinityContentTransform.transform);
-                    m_ViscinityItemUIs.Add(itemUI);
+                    continue;
                 }
-                else
-                {   // If the ItemUI is present for this index, then just update the data
-                    m_ViscinityItemUIs[i].SetItemDataAndShow(item, this, SlotType.Vicinity);
+
+                CreateItemUIForVicinitySlot(item);
+            }
+
+            // Release the ItemUIs whose Item is not in the vicinity anymore.
+            foreach (ItemUI itemUI in m_ViscinityItemUIs)
+            {
+                if (!m_ItemUserHand.CollectablesScanned.Contains(itemUI.Item))
+                {
+                    ReleaseItemUIToPool(itemUI);
                 }
             }
+        }
+
+        bool IsItemAlreadyPresentInVicinitySlot(in InventoryItem item)
+        {
+            for (int i = 0, count = m_ViscinityItemUIs.Count; i < count; i++)
+            {
+                if (m_ViscinityItemUIs[i].Item == item)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         void OnItemUIDroppedFromViscinityToInventory(ItemUI itemUI)

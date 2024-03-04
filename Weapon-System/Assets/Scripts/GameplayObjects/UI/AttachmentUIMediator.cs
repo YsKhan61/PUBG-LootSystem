@@ -50,9 +50,12 @@ namespace Weapon_System.GameplayObjects.UI
 
         [Space(10)]
 
-        [SerializeField, FormerlySerializedAs("m_WeaponInventoryUI")]
+        [SerializeField]
         WeaponUIMediator m_WeaponUIMediator;
         public WeaponUIMediator WeaponInventoryUI => m_WeaponUIMediator;
+
+        [SerializeField]
+        InventoryUI m_InventoryUI;
 
         [SerializeField]
         AttachmentItemUI[] m_AttachmentItemUIs;
@@ -89,7 +92,8 @@ namespace Weapon_System.GameplayObjects.UI
                 return;
 
             attachmentItemUI.StoredItem.DetachFromWeapon();
-            AddAttachmentItemToInventory(attachmentItemUI.StoredItem as InventoryItem);
+            // AddAttachmentItemToInventory(attachmentItemUI.StoredItem as InventoryItem);
+            m_InventoryUI.CreateItemUIInInventorySlot(attachmentItemUI.StoredItem as InventoryItem);
             // ShowItemUIAndResetItsPosition();
             attachmentItemUI.ResetDataAndHideAttachmentItemUI();
         }
@@ -168,8 +172,8 @@ namespace Weapon_System.GameplayObjects.UI
                 }
                 else
                 {
-                    AddAttachmentItemToInventory(droppedAttachmentItemUI.StoredItem as InventoryItem);
-
+                    // AddAttachmentItemToInventory(droppedAttachmentItemUI.StoredItem as InventoryItem);
+                    m_InventoryUI.CreateItemUIInInventorySlot(droppedAttachmentItemUI.StoredItem as InventoryItem);
                     // Make sure to reset the ItemUI's ItemUI's position to the last anchored position
                     /*ShowItemUIAndResetItsPosition();*/
 
@@ -216,8 +220,8 @@ namespace Weapon_System.GameplayObjects.UI
                 attachmentItemUI.StoredItem.DetachFromWeapon();
 
                 // add the SightItem to the inventory
-                AddAttachmentItemToInventory(attachmentItemUI.StoredItem as InventoryItem);
-
+                // AddAttachmentItemToInventory(attachmentItemUI.StoredItem as InventoryItem);
+                m_InventoryUI.CreateItemUIInInventorySlot(attachmentItemUI.StoredItem as InventoryItem);
                 /*if (attachmentItemUI.TempItemUI == null)
                 {
                     // If the ItemUI is null, then throw an error as every ItemUI should have an ItemUI
@@ -231,7 +235,8 @@ namespace Weapon_System.GameplayObjects.UI
             }
 
             // Then remove the SightItem of dropped ItemUI from the inventory using an event
-            RemoveAttachmentItemFromInventory(droppedItemUI.Item);
+            // RemoveAttachmentItemFromInventory(droppedItemUI.Item);
+            
 
             // Then hide the ItemUI and store it in a member variable
             // HideItemUI(droppedItemUI);
@@ -239,8 +244,18 @@ namespace Weapon_System.GameplayObjects.UI
             // then set the ItemUI's datas to this ItemUI and Show it
             attachmentItemUI.SetDataAndShowAttachmentItemUI(droppedItemUI.Item as IWeaponAttachment);
 
+            if (droppedItemUI.StoredSlotType == SlotType.Vicinity)
+            {
+                if (m_InventoryUI.TryCollectItem(droppedItemUI.Item))
+                {
+                    m_InventoryUI.AddItemToInventory(droppedItemUI.Item);
+                }
+            }
+
             // then set this attachment to the GunItem
             (droppedItemUI.Item as IWeaponAttachment).AttachToWeapon(weaponItemInTheSlotOfDropArea);
+
+            m_InventoryUI.ReleaseItemUIToPool(droppedItemUI);
         }
 
         /// <summary>
@@ -276,18 +291,19 @@ namespace Weapon_System.GameplayObjects.UI
 
         private void DetachAttachmentFromWeaponAndResetUI(WeaponItem _, int slotIndex)
         {
-            if (!TryGetAttachmentItemUIFromSlotIndex(slotIndex, out AttachmentItemUI itemUI))
+            if (!TryGetAttachmentItemUIFromSlotIndex(slotIndex, out AttachmentItemUI attachmentItemUI))
             {
                 return;
             }
 
             // If no attachment is attached to the weapon
-            if (itemUI.StoredItem == null)
+            if (attachmentItemUI.StoredItem == null)
                 return;
 
-            itemUI.StoredItem.DetachFromWeapon();
-            itemUI.ShowItemUIAndResetItsPosition();
-            itemUI.ResetDataAndHideAttachmentItemUI();
+            attachmentItemUI.StoredItem.DetachFromWeapon();
+            m_InventoryUI.CreateItemUIInInventorySlot(attachmentItemUI.StoredItem as InventoryItem);
+            // attachmentItemUI.ShowItemUIAndResetItsPosition();
+            attachmentItemUI.ResetDataAndHideAttachmentItemUI();
         }
 
         private void SwapSlotIndices(int leftIndex, int rightIndex)

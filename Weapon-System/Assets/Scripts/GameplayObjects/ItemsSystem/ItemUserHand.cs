@@ -180,17 +180,20 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
             for (int i = 0; i < m_CollectablesScanned.Count; i++)
             {
-                if (!m_CollectablesScanned[i].Collect(this))
-                {
+                if (!TryCollectItem(m_CollectablesScanned[i]))
                     continue;
-                }
 
                 TryStoreCollectableInInventory(m_CollectablesScanned[i] as IStorable);
                 return;
             }
         }
 
-        void TryStoreCollectableInInventory(IStorable item)
+        public bool TryCollectItem(ICollectable item)
+        {
+            return item.Collect(this);
+        }
+
+        public void TryStoreCollectableInInventory(IStorable item)
         {
             if (item == null)
                 return;
@@ -205,7 +208,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
             else if (item is InventoryItem inventoryItem)
             {
-                m_Inventory.AddItemToInventory(inventoryItem);
+                m_Inventory.AddItemToInventoryAndRaiseEvent(inventoryItem);
             }
         }
 
