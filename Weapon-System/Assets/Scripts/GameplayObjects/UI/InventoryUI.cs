@@ -30,14 +30,14 @@ namespace Weapon_System.GameplayObjects.UI
 
         [Header("Broadcast to")]
 
+        [SerializeField, Tooltip("To add an weapon item in the inventory without any specific slot, this event is invoked")]
+        WeaponItemEventChannelSO m_OnAddWeaponItemToWeaponInventoryEvent;
+
         [SerializeField, Tooltip("To add an inventory item in the inventory, this event is invoked")]
         InventoryItemEventChannelSO m_OnAddInventoryItemToInventoryEvent;
 
         [SerializeField, Tooltip("To remove an inventory item from inventory, this event is invoked")]
         InventoryItemEventChannelSO m_OnRemoveInventoryItemFromInventoryEvent;
-
-        [SerializeField, Tooltip("To remove an weapon item from weapon inventory, this event is invoked")]
-        WeaponItemIntEventChannelSO m_OnRemoveWeaponItemFromWeaponInventoryEvent;
 
 
 
@@ -95,14 +95,44 @@ namespace Weapon_System.GameplayObjects.UI
             m_OnInventoryItemRemovedFromInventory.OnEventRaised -= OnInventoryItemRemovedFromInventory;
         }
 
-        /// <remarks>
-        /// NOTE to check out the same methods of WeaponUIMediator class and from InventoryUI class, before modifying this method.
-        /// Weapon can be removed from inventory by dropping the weapon item UI to vicinity
-        /// or right clicking on the weapon item UI in the inventory
-        /// </remarks>
-        internal void RemoveWeaponItemFromInventory(WeaponItem weaponItem, int index)
+        
+
+        /// <summary>
+        /// When an ItemUI is dropped on a slot type of another ItemUI, or SlotUI
+        /// </summary>
+        /// <param name="droppedItemUI">The ItemUI that is being dropped</param>
+        /// <param name="slotTypeOfOtherItemUI">The slot type of the ItemUI or SlotUI where the droppedItemUI is dropped.</param>
+        public void OnItemUIDroppedOnSlotType(ItemUI droppedItemUI, SlotType slotTypeOfOtherItemUI)
         {
-            m_OnRemoveWeaponItemFromWeaponInventoryEvent.RaiseEvent(weaponItem, index);
+            // If the item is already in the same slot type, then return
+            if (droppedItemUI.StoredSlotType == slotTypeOfOtherItemUI)
+            {
+                return;
+            }
+
+            switch (slotTypeOfOtherItemUI)
+            {
+                case SlotType.Inventory:
+                    OnItemUIDroppedFromViscinityToInventory(droppedItemUI);
+                    break;
+                case SlotType.Vicinity:
+                    OnItemUIDroppedFromInventoryToViscinity(droppedItemUI);
+                    break;
+            }
+        }
+
+        public void ReleaseItemUIToPool(ItemUI itemUI)
+        {
+            if (itemUI != null)
+            {
+                itemUI.ResetItemDataAndHide();
+                m_PoolManager.ReleaseObjectToPool(itemUI);
+            }
+        }
+
+        public void AddWeaponItemToWeaponInventory(WeaponItem weaponItem)
+        {
+            m_OnAddWeaponItemToWeaponInventoryEvent.RaiseEvent(weaponItem);
         }
 
         private void RefreshAndDisplayScannedCollectables()
@@ -138,41 +168,6 @@ namespace Weapon_System.GameplayObjects.UI
                 }
             }
         }
-
-        /// <summary>
-        /// When an ItemUI is dropped on a slot type of another ItemUI, or SlotUI
-        /// </summary>
-        /// <param name="droppedItemUI">The ItemUI that is being dropped</param>
-        /// <param name="slotTypeOfOtherItemUI">The slot type of the ItemUI or SlotUI where the droppedItemUI is dropped.</param>
-        public void OnItemUIDroppedOnSlotType(ItemUI droppedItemUI, SlotType slotTypeOfOtherItemUI)
-        {
-            // If the item is already in the same slot type, then return
-            if (droppedItemUI.StoredSlotType == slotTypeOfOtherItemUI)
-            {
-                return;
-            }
-
-            switch (slotTypeOfOtherItemUI)
-            {
-                case SlotType.Inventory:
-                    OnItemUIDroppedFromViscinityToInventory(droppedItemUI);
-                    break;
-                case SlotType.Vicinity:
-                    OnItemUIDroppedFromInventoryToViscinity(droppedItemUI);
-                    break;
-            }
-        }
-
-        public void ReleaseItemUIToPool(ItemUI itemUI)
-        {
-            if (itemUI != null)
-            {
-                itemUI.ResetItemDataAndHide();
-                m_PoolManager.ReleaseObjectToPool(itemUI);
-            }
-        }
-
-
 
         void OnItemUIDroppedFromViscinityToInventory(ItemUI itemUI)
         {

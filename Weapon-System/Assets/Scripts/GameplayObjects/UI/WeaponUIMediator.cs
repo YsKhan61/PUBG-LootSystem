@@ -19,6 +19,9 @@ namespace Weapon_System.GameplayObjects.UI
         [SerializeField, Tooltip("When an Weapon item is removed from the inventory, this event is invoked")]
         WeaponItemIntEventChannelSO m_OnWeaponItemRemovedFromWeaponInventoryEvent;
 
+        [SerializeField, Tooltip("When two WeaponItemUI's are swapped with each other in the inventory, this event is invoked")]
+        IntIntEventChannelSO m_OnWeaponItemSwappedInInventoryEvent;
+
         [Space(10)]
 
         [Header("Broadcast to")]
@@ -29,9 +32,9 @@ namespace Weapon_System.GameplayObjects.UI
         [SerializeField, Tooltip("To remove an weapon item from weapon inventory, this event is invoked")]
         WeaponItemIntEventChannelSO m_OnRemoveWeaponItemFromWeaponInventoryEvent;
 
-
-        [SerializeField, Tooltip("When two WeaponItemUI's are swapped with each other, this event is invoked")]
-        IntIntEventChannelSO m_OnWeaponItemUISwappedEvent;
+        [SerializeField, Tooltip("To swap two WeaponItemUI's in the inventory, this event is invoked")]
+        IntIntEventChannelSO m_OnSwapWeaponItemUIsInInventoryEvent;
+        
 
 
         [Space(10)]
@@ -40,17 +43,18 @@ namespace Weapon_System.GameplayObjects.UI
         WeaponItemUI[] m_WeaponItemUIs;
 
 
-
         private void Start()
         {
             m_OnWeaponItemAddedToWeaponInventoryEvent.OnEventRaised += OnWeaponItemAddedToWeaponInventoryEvent;
             m_OnWeaponItemRemovedFromWeaponInventoryEvent.OnEventRaised += OnWeaponItemRemovedFromWeaponInventoryEvent;
+            m_OnWeaponItemSwappedInInventoryEvent.OnEventRaised += OnWeaponItemSwappedInInventoryEvent;
         }
 
         private void OnDestroy()
         {
             m_OnWeaponItemAddedToWeaponInventoryEvent.OnEventRaised -= OnWeaponItemAddedToWeaponInventoryEvent;
             m_OnWeaponItemRemovedFromWeaponInventoryEvent.OnEventRaised -= OnWeaponItemRemovedFromWeaponInventoryEvent;
+            m_OnWeaponItemSwappedInInventoryEvent.OnEventRaised -= OnWeaponItemSwappedInInventoryEvent;
         }
 
         internal void AddWeaponItemToInventory(WeaponItem weaponItem, int index)
@@ -68,9 +72,9 @@ namespace Weapon_System.GameplayObjects.UI
             m_OnRemoveWeaponItemFromWeaponInventoryEvent.RaiseEvent(weaponItem, index);
         }
 
-        internal void BroadcastWeaponItemUIsSwappedEvent(int indexOfDroppedWeaponItemUI, int indexOfWeaponSlotUI)
+        internal void SwapWeaponItemsInInventory(int leftIndex, int rightIndex)
         {
-            m_OnWeaponItemUISwappedEvent.RaiseEvent(indexOfDroppedWeaponItemUI, indexOfWeaponSlotUI);
+            m_OnSwapWeaponItemUIsInInventoryEvent.RaiseEvent(leftIndex, rightIndex);
         }
 
         public bool TryGetWeaopnItemFromWeaponInventoryUI(int index, out WeaponItem gun)
@@ -114,14 +118,16 @@ namespace Weapon_System.GameplayObjects.UI
                 return;
             }
 
-            if (weaponItemUI.StoredGunItem != null)
+            // It's not needed to check if the weaponItemUI is already holding a weapon item
+            // As we are overriding the weapon item in the inventory by dropping the old one.
+            /*if (weaponItemUI.StoredGunItem != null)
             {
                 // If a weapon is already in the inventory, then return for now.
                 // This is a temporary solution, as we are not removing the gun from the inventory.
                 // We are just adding the gun to the inventory.
                 // Later, we gonna implement the mechanics applied in PUBG
                 return;
-            }
+            }*/
 
             weaponItemUI.SetItemDataAndShow(weaponItem);
         }
@@ -135,6 +141,28 @@ namespace Weapon_System.GameplayObjects.UI
             }
 
             weaponItemUI.ResetDataAndHideGunItemUI();
+        }
+
+        private void OnWeaponItemSwappedInInventoryEvent(int leftIndex, int rightIndex)
+        {
+            if (!TryGetWeaponItemUIFromSlotIndex(leftIndex, out WeaponItemUI leftItemUI))
+            {
+                Debug.LogError("WeaponItemUI not found for the index: " + leftIndex);
+                return;
+            }
+
+            if (!TryGetWeaponItemUIFromSlotIndex(rightIndex, out WeaponItemUI rightItemUI))
+            {
+                Debug.LogError("WeaponItemUI not found for the index: " + rightIndex);
+                return;
+            }
+
+            Transform parentOfLeftItemUI = leftItemUI.transform.parent;
+            int slotIndexOfLeftItemUI = leftItemUI.SlotIndex;
+            int slotIndexOfRightItemUI = rightItemUI.SlotIndex;
+
+            DropWeaponItemUIToSlot(leftItemUI, transform.parent, slotIndexOfRightItemUI);
+            DropWeaponItemUIToSlot(rightItemUI, parentOfLeftItemUI, slotIndexOfLeftItemUI);
         }
 
         private bool TryGetWeaponItemUIFromSlotIndex(int index, out WeaponItemUI itemUI)

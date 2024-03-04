@@ -51,12 +51,19 @@ namespace Weapon_System.GameplayObjects.UI
             m_RectTransform = GetComponent<RectTransform>();
         }
 
+        // Need to implement later
         public void OnPointerDown(PointerEventData eventData)
         {
-            // Right click to drop item
+            if (eventData.button == PointerEventData.InputButton.Left)
+            {
+                Debug.Log("Left click on itemUI " + Name);
+                // Left click to use item
+            }
+
             if (eventData.button == PointerEventData.InputButton.Right)
             {
-                // Destroy this ItemUI from InventoryUI,
+                Debug.Log("Right click on itemUI " + Name);
+                // Right click to drop item
             }
         }
 
@@ -99,11 +106,15 @@ namespace Weapon_System.GameplayObjects.UI
 
             if (eventData.pointerDrag.TryGetComponent(out ItemUI itemUI))
             {
+                if (itemUI.Item is WeaponItem && StoredSlotType == SlotType.Inventory)
+                {
+                    itemUI.InventoryUI.AddWeaponItemToWeaponInventory((WeaponItem)itemUI.Item);
+                    return;
+                }
+
                 m_InventoryUI.OnItemUIDroppedOnSlotType(itemUI, StoredSlotType);
             }
         }
-
-
 
         public void SetItemDataAndShow(InventoryItem item, InventoryUI inventoryUI, SlotType storedSlotType)
         {

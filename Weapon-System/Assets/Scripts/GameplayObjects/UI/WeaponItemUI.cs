@@ -125,14 +125,7 @@ namespace Weapon_System.GameplayObjects.UI
                         return;
                     }
 
-                    Transform parentOfDroppedItemUI = droppedWeaponItemUI.transform.parent;
-                    int slotIndexOfDroppedItemUI = droppedWeaponItemUI.SlotIndex;
-                    int slotIndexOfThisItemUI = m_SlotIndex;
-
-                    m_WeaponUIMediator.DropWeaponItemUIToSlot(droppedWeaponItemUI, transform.parent, m_SlotIndex);
-                    m_WeaponUIMediator.DropWeaponItemUIToSlot(this, parentOfDroppedItemUI, slotIndexOfDroppedItemUI);
-
-                    m_WeaponUIMediator.BroadcastWeaponItemUIsSwappedEvent(slotIndexOfDroppedItemUI, slotIndexOfThisItemUI);
+                    m_WeaponUIMediator.SwapWeaponItemsInInventory(droppedWeaponItemUI.SlotIndex, m_SlotIndex);
                 }
             }
             else if (eventData.pointerDrag.TryGetComponent(out ItemUI itemUI))

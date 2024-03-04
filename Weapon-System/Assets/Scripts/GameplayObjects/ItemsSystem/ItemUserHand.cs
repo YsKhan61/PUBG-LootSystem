@@ -79,7 +79,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             m_OnWeaponItemAddedToWeaponInventoryEvent.OnEventRaised += OnWeaponItemAddedToWeaponInventoryEvent;
             m_OnWeaponItemRemovedFromWeaponInventoryEvent.OnEventRaised += OnWeaponItemRemovedFromWeaponInventoryEvent;
 
-            m_PickupInputEvent.OnEventRaised += CollectItem;
+            m_PickupInputEvent.OnEventRaised += OnPickupInputEvent;
             m_PrimaryWeaponSelectInputEvent.OnEventRaised += OnPrimaryWeaponSelect;
             m_SecondaryWeaponSelectInputEvent.OnEventRaised += OnSecondaryWeaponSelect;
             m_HolsterItemInputEvent.OnEventRaised += TryPutAwayItem;
@@ -110,7 +110,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             m_OnWeaponItemAddedToWeaponInventoryEvent.OnEventRaised -= OnWeaponItemAddedToWeaponInventoryEvent;
             m_OnWeaponItemRemovedFromWeaponInventoryEvent.OnEventRaised -= OnWeaponItemRemovedFromWeaponInventoryEvent;
 
-            m_PickupInputEvent.OnEventRaised -= CollectItem;
+            m_PickupInputEvent.OnEventRaised -= OnPickupInputEvent;
             m_PrimaryWeaponSelectInputEvent.OnEventRaised -= OnPrimaryWeaponSelect;
             m_SecondaryWeaponSelectInputEvent.OnEventRaised -= OnSecondaryWeaponSelect;
             m_HolsterItemInputEvent.OnEventRaised -= TryPutAwayItem;
@@ -118,6 +118,12 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         private void OnWeaponItemAddedToWeaponInventoryEvent(WeaponItem item, int index)
         {
+            if (item is not ICollectable collectable)
+            {
+                Debug.LogError("This cannot happen!");
+                return;
+            }
+            collectable.Collect(this);
             TryHoldItemInHand(item);
         }
 
@@ -128,6 +134,12 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         private void OnInventoryitemAddedToInventory(InventoryItem item)
         {
+            if (item is not ICollectable collecable)
+            {
+                Debug.LogError("This cannot happen!");
+                return;
+            }
+            collecable.Collect(this);
             TryHoldItemInHand(item as IHoldable);
         }
 
@@ -161,7 +173,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             }
         }
 
-        private void CollectItem(bool _)
+        private void OnPickupInputEvent(bool _)
         {
             if (m_CollectablesScanned.Count <= 0)
                 return;

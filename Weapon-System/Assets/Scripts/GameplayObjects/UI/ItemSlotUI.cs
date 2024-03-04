@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Weapon_System.GameplayObjects.ItemsSystem;
 
 
 namespace Weapon_System.GameplayObjects.UI
@@ -37,6 +38,12 @@ namespace Weapon_System.GameplayObjects.UI
 
             else if (eventData.pointerDrag.TryGetComponent(out ItemUI itemUI))
             {
+                if (itemUI.Item is WeaponItem)
+                {
+                    itemUI.InventoryUI.AddWeaponItemToWeaponInventory((WeaponItem)itemUI.Item);
+                    return;
+                }
+
                 itemUI.InventoryUI.OnItemUIDroppedOnSlotType(itemUI, m_SlotType);
             }
         }

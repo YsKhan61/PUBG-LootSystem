@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Weapon_System.Utilities;
 
 
 namespace Weapon_System.GameplayObjects.ItemsSystem
@@ -20,11 +21,17 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         [SerializeField, Tooltip("To remove an inventory item from inventory, this event is invoked")]
         InventoryItemEventChannelSO m_OnRemoveInventoryItemFromInventoryEvent;
 
+        [SerializeField, Tooltip("To add an weapon item in the inventory without any specific slot, this event is invoked")]
+        WeaponItemEventChannelSO m_OnAddWeaponItemToWeaponInventoryEvent;
+
         [SerializeField, Tooltip("To add an weapon item in the weapon inventory, this event is invoked")]
         WeaponItemIntEventChannelSO m_OnAddWeaponItemToWeaponInventoryToSpecificIndexEvent;
 
         [SerializeField, Tooltip("To remove an weapon item from weapon inventory, this event is invoked")]
         WeaponItemIntEventChannelSO m_OnRemoveWeaponItemFromWeaponInventoryFromSpecificIndexEvent;
+
+        [SerializeField, Tooltip("To swap two WeaponItemUI's in the inventory, this event is invoked")]
+        IntIntEventChannelSO m_OnSwapWeaponItemUIsInInventoryEvent;
 
 
         [Space(10)]
@@ -32,17 +39,23 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         [Header("Broadcast to")]
 
         [SerializeField, Tooltip("When an Inventory item is added to the inventory, this event is invoked")]
-        InventoryItemEventChannelSO m_OnInventoryItemAddedToInventory;
+        InventoryItemEventChannelSO m_OnInventoryItemAddedToInventory;      
 
         [SerializeField, Tooltip("When an Inventory item is removed from the inventory, this event is invoked")]
         InventoryItemEventChannelSO m_OnInventoryItemRemovedFromInventory;
 
+
         [SerializeField, Tooltip("When an Weapon item is added to the inventory to specific index, this event is invoked")]
         WeaponItemIntEventChannelSO m_OnWeaponItemAddedToWeaponInventoryToSpecificIndexEvent;
+
+        [SerializeField, Tooltip("Before an Weaopn item is removed from the inventory, this event is invoked")]
+        WeaponItemIntEventChannelSO m_OnBeforeWeaponItemRemovedFromWeaponInventoryEvent;
 
         [SerializeField, Tooltip("When an Weapon item is removed from the inventory from specific index, this event is invoked")]
         WeaponItemIntEventChannelSO m_OnWeaponItemRemovedFromWeaponInventoryFromSpecificIndexEvent;
 
+        [SerializeField, Tooltip("When two WeaponItemUI's are swapped with each other in the inventory, this event is invoked")]
+        IntIntEventChannelSO m_OnWeaponItemSwappedInInventoryEvent;
 
         [Space(10)]
 
@@ -74,8 +87,10 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             m_OnAddInventoryItemToInventoryEvent.OnEventRaised += AddItemToInventory;
             m_OnRemoveInventoryItemFromInventoryEvent.OnEventRaised += RemoveInventoryItem;
 
+            m_OnAddWeaponItemToWeaponInventoryEvent.OnEventRaised += AddWeaponItemToWeaponInventory;
             m_OnAddWeaponItemToWeaponInventoryToSpecificIndexEvent.OnEventRaised += OnAddWeaponItemToWeaponInventoryToSpecificIndex;
             m_OnRemoveWeaponItemFromWeaponInventoryFromSpecificIndexEvent.OnEventRaised += OnRemoveWeaponItemFromWeaponInventoryFromSpecificIndex;
+            m_OnSwapWeaponItemUIsInInventoryEvent.OnEventRaised += SwapWeaponItems;
         }
 
         private void OnDestroy()
@@ -83,8 +98,10 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             m_OnAddInventoryItemToInventoryEvent.OnEventRaised -= AddItemToInventory;
             m_OnRemoveInventoryItemFromInventoryEvent.OnEventRaised -= RemoveInventoryItem;
 
+            m_OnAddWeaponItemToWeaponInventoryEvent.OnEventRaised -= AddWeaponItemToWeaponInventory;
             m_OnAddWeaponItemToWeaponInventoryToSpecificIndexEvent.OnEventRaised -= OnAddWeaponItemToWeaponInventoryToSpecificIndex;
             m_OnRemoveWeaponItemFromWeaponInventoryFromSpecificIndexEvent.OnEventRaised -= OnRemoveWeaponItemFromWeaponInventoryFromSpecificIndex;
+            m_OnSwapWeaponItemUIsInInventoryEvent.OnEventRaised -= SwapWeaponItems;
         }
 
         public void AddItemToInventory(InventoryItem item)
@@ -141,8 +158,6 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         private void OnAddWeaponItemToWeaponInventoryToSpecificIndex(WeaponItem weaponItem, int index)
         {
-            // If there is already a weapon item in the index, then remove it first
-            TryRemoveWeaponItem(m_Weapons[index]);
             // Now add the new weapon item to the index
             AddWeaponItemToIndex(weaponItem, index);
         }
@@ -171,7 +186,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         }
 
         /// <summary>
-        /// Swap the gun items in the inventory
+        /// Swap the Weapon items in the inventory
         /// And set the new gun in hand matching the previous gun's index
         /// </summary>
         /// <param name="leftIndex"></param>
@@ -184,13 +199,29 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
                 return;
             }
 
-            WeaponItem temp = m_Weapons[leftIndex];
-            m_Weapons[leftIndex] = m_Weapons[rightIndex];
+            WeaponItem temp = null;
+
+            if (m_Weapons[leftIndex] != null)
+            {
+                temp = m_Weapons[leftIndex];
+            }
+            if (m_Weapons[rightIndex] != null)
+            {
+                m_Weapons[leftIndex] = m_Weapons[rightIndex];
+            }
+
             m_Weapons[rightIndex] = temp;
+
+            m_OnWeaponItemSwappedInInventoryEvent.RaiseEvent(leftIndex, rightIndex);
         }
 
         private void AddWeaponItemToIndex(WeaponItem weaponItem, int index)
         {
+            if (TryGetWeaponItem(index, out WeaponItem _))
+            {
+                Debug.LogError("Gun already present in the inventory at index: " + index);
+                return;
+            }
             // Store the new gun in the empty slot
             m_Weapons[index] = weaponItem;
             Debug.Log(weaponItem.Name + " added to inventory!");
@@ -198,9 +229,9 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             m_OnWeaponItemAddedToWeaponInventoryToSpecificIndexEvent.RaiseEvent(weaponItem, index);
         }
 
-        private void TryRemoveWeaponItem(WeaponItem item)
+        private void TryRemoveWeaponItem(in WeaponItem weaponItem)
         {
-            if (!TryGetIndexOfWeaopnItem(item, out int index))
+            if (!TryGetIndexOfWeaopnItem(weaponItem, out int index))
                 return;
 
             if (index < 0 || index >= m_Weapons.Length)
@@ -214,8 +245,8 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
                 Debug.LogError("UI was present, but gun is not present in the inventory!");
                 return;
             }
-
-            m_OnWeaponItemRemovedFromWeaponInventoryFromSpecificIndexEvent.RaiseEvent(m_Weapons[index], index);
+            m_OnBeforeWeaponItemRemovedFromWeaponInventoryEvent.RaiseEvent(weaponItem, index);
+            m_OnWeaponItemRemovedFromWeaponInventoryFromSpecificIndexEvent.RaiseEvent(weaponItem, index);
             m_Weapons[index] = null;
         }
 
