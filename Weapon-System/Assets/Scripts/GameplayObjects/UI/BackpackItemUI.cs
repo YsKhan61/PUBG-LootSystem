@@ -9,6 +9,16 @@ namespace Weapon_System.GameplayObjects.UI
     [RequireComponent(typeof(RectTransform), typeof(CanvasGroup))]
     public class BackpackItemUI : MonoBehaviour, IPointerDownHandler, IDropHandler
     {
+        [Header("Listens to")]
+
+        [SerializeField, Tooltip("When a backpack is added to the inventory, this event is invoked")]
+        BackpackItemEventChannelSO m_OnBackpackItemAddedToInventory;
+
+        [SerializeField, Tooltip("When a backpack is removed from the inventory, this event is invoked")]
+        BackpackItemEventChannelSO m_OnBackpackItemRemovedFromInventory;
+
+        [Space(10)]
+
         [SerializeField]
         ItemUIType m_ItemUIType;
         public ItemUIType ItemUIType => m_ItemUIType;
@@ -16,15 +26,27 @@ namespace Weapon_System.GameplayObjects.UI
         [SerializeField]
         Image m_Icon;
 
-        InventoryItem m_StoredItem;
-        public InventoryItem StoredItem => m_StoredItem;
+        [SerializeField]
+        InventoryUI m_InventoryUI;
+
+        BackpackItem m_StoredBackpack;
+        public BackpackItem StoredBackpack => m_StoredBackpack;
 
         private Color m_DefaultColor;
 
         private void Start()
         {
+            m_OnBackpackItemAddedToInventory.OnEventRaised += SetData;
+            m_OnBackpackItemRemovedFromInventory.OnEventRaised += ResetData;
+
             m_DefaultColor = m_Icon.color;
-            ResetData();
+            ResetData(null);
+        }
+
+        private void OnDestroy()
+        {
+            m_OnBackpackItemAddedToInventory.OnEventRaised -= SetData;
+            m_OnBackpackItemRemovedFromInventory.OnEventRaised -= ResetData;
         }
 
         public void OnPointerDown(PointerEventData eventData)
@@ -32,7 +54,12 @@ namespace Weapon_System.GameplayObjects.UI
             // Right click to drop item
             if (eventData.button == PointerEventData.InputButton.Right)
             {
-                // Drop backpack item
+                // Check if backpack is present
+                if (m_StoredBackpack == null)
+                    return;
+
+                // If yes, drop backpack
+                m_InventoryUI.TryRemoveAndDropBackpackFromInventory(m_StoredBackpack);
             }
         }
 
@@ -45,20 +72,28 @@ namespace Weapon_System.GameplayObjects.UI
             if (eventData.pointerDrag.TryGetComponent(out ItemUI droppedItemUI))
             {
                 // Check if it's UIType is same as this UIType
-                // If yes, store backpack
+                if (droppedItemUI.Item.ItemData.UIType == m_ItemUIType)
+                {
+                    // Check if backpack is present
+                    if (m_StoredBackpack != null)
+                        return;             // TODO - For now we return if there's already a backpack present, later we swap the old backpack with the new one.
+
+                    // If no, try store backpack
+                    m_InventoryUI.TryAddBackpackAndDestroyItemUI(droppedItemUI.Item as BackpackItem, droppedItemUI);
+                }
             }
         }
 
-        public void SetData(InventoryItem item)
+        public void SetData(BackpackItem item)
         {
-            m_StoredItem = item;
+            m_StoredBackpack = item;
             m_Icon.sprite = item.ItemData.IconSprite;
             m_Icon.color = new Color(1, 1, 1, 1);
         }
 
-        public void ResetData()
+        public void ResetData(BackpackItem _)
         {
-            m_StoredItem = null;
+            m_StoredBackpack = null;
             m_Icon.sprite = null;
             m_Icon.color = m_DefaultColor;
         }

@@ -17,7 +17,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
     ///  So, we have to make sure to inherit from InventoryItem, if we want to store the item in Inventory. 
     /// 
     /// </remarks>
-    public class InventoryItem : ItemBase, ICollectable, IStorable, IDroppable
+    public class InventoryItem : ItemBase, IStorable
     {
         public bool IsCollected { get; protected set; }
 

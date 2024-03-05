@@ -46,6 +46,16 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         [SerializeField, Tooltip("This event notifies the secondary use input performing")]
         BoolEventChannelSO m_SecondaryUseInputEvent;
 
+        [Space(10)]
+
+        [Header("Broadcast to")]
+
+        [SerializeField, Tooltip("When a backpack is added to the inventory, this event is invoked")]
+        BackpackItemEventChannelSO m_OnBackpackItemAddedToInventory;
+
+        [SerializeField, Tooltip("When a backpack is removed from the inventory, this event is invoked")]
+        BackpackItemEventChannelSO m_OnBackpackItemRemovedFromInventory;
+
 
         [Space(10)]
 
@@ -116,6 +126,39 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             m_HolsterItemInputEvent.OnEventRaised -= TryPutAwayItem;
         }
 
+
+        public bool TryCollectItem(ICollectable item)
+        {
+            return item.Collect(this);
+        }
+
+        public bool TryStoreAndCollectBackpackInInventory(BackpackItem backpackItem)
+        {
+            bool isStored = m_Inventory.TryAddBackpackToInventory(backpackItem);
+            if (!isStored)
+            {
+                return false;
+            }
+
+            TryCollectItem(backpackItem);
+            m_OnBackpackItemAddedToInventory.RaiseEvent(backpackItem);
+
+            return true;
+        }
+
+        public bool TryRemoveAndDropBackpackInInventory(BackpackItem backpackItem)
+        {
+            bool isRemoved = m_Inventory.TryRemoveBackpackFromInventory(backpackItem);
+            if (!isRemoved)
+            {
+                return false;
+            }
+            TryDropItem(backpackItem);
+            m_OnBackpackItemRemovedFromInventory.RaiseEvent(backpackItem);
+
+            return true;
+        }
+
         private void OnWeaponItemAddedToWeaponInventoryEvent(WeaponItem item, int index)
         {
             if (item is not ICollectable collectable)
@@ -178,22 +221,18 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             if (m_CollectablesScanned.Count <= 0)
                 return;
 
-            for (int i = 0; i < m_CollectablesScanned.Count; i++)
+            // Pickup the first item in the list
+            if (m_CollectablesScanned[0] is IStorable)
             {
-                if (!TryCollectItem(m_CollectablesScanned[i]))
-                    continue;
-
-                TryStoreCollectableInInventory(m_CollectablesScanned[i] as IStorable);
-                return;
+                TryStoreInInventory(m_CollectablesScanned[0] as IStorable);
             }
+
+            // TO DO - We need to check if store for IStorable items is successful before trying to collect
+
+            TryCollectItem(m_CollectablesScanned[0]);
         }
 
-        public bool TryCollectItem(ICollectable item)
-        {
-            return item.Collect(this);
-        }
-
-        public void TryStoreCollectableInInventory(IStorable item)
+        void TryStoreInInventory(IStorable item)
         {
             if (item == null)
                 return;
@@ -201,17 +240,26 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             // Each item can be stored in different places in the inventory,
             // hence we send the inventory to the item to store itself in the inventory
             // eg: Gun item, Armor, Ammo, etc.
-            if (item is WeaponItem weaponItem)
+            switch (item)
             {
-                m_Inventory.AddWeaponItemToWeaponInventory(weaponItem);
-            }
+                case WeaponItem weaponItem:
+                    m_Inventory.AddWeaponItemToWeaponInventory(weaponItem);
+                    break;
 
-            else if (item is InventoryItem inventoryItem)
-            {
-                m_Inventory.AddItemToInventoryAndRaiseEvent(inventoryItem);
+                case BackpackItem backpackItem:
+                    m_Inventory.TryAddBackpackToInventory(backpackItem);
+                    break;
+
+                case InventoryItem inventoryItem:
+                    m_Inventory.AddItemToInventoryAndRaiseEvent(inventoryItem);
+                    break;
+
+                default:
+                    // Handle other types or throw an exception if necessary
+                    break;
             }
         }
-
+        
         void TryHoldItemInHand(IHoldable item)
         {
             if (ItemInHand != null)

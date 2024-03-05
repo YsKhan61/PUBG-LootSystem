@@ -59,7 +59,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         [Space(10)]
 
         [SerializeField]
-        int m_Capacity = 50;
+        int m_SpaceAvailable = 50;
 
         [Header("---------Debug purposes----------")]
 
@@ -79,7 +79,10 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         [SerializeField]        // SerializeField is used only for Debug purposes
         WeaponItem[] m_Weapons;       // Only primary and secondary gun. For now only 2 guns are allowed
 
-        
+        [Header("Backpack")]
+
+        [SerializeField]        // SerializeField is used only for Debug purposes
+        BackpackItem m_BackpackItem;
 
 
         private void Start()
@@ -115,17 +118,17 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         /// <param name="item"></param>
         public bool TryAddItemToInventory(InventoryItem item)
         {
-            if (item.ItemData.SpaceRequired > m_Capacity)
+            int temp = m_SpaceAvailable - item.ItemData.SpaceRequired;
+            if (temp <= 0)
             {
-                Debug.LogError("Inventory capacity exceeded!");
+                Debug.Log("Inventory capacity exceeded!");
                 return false;
             }
 
             m_InventoryItems.Add(item);
-            m_Capacity -= item.ItemData.SpaceRequired;
+            m_SpaceAvailable = temp;
 
             Debug.Log(item.Name + " added to inventory!");
-
             return true;
         }
 
@@ -141,6 +144,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
                 return false;
 
             m_InventoryItems.Remove(item);
+            m_SpaceAvailable += item.ItemData.SpaceRequired;
             Debug.Log(item.Name + " removed from inventory!");
 
             return true;
@@ -187,18 +191,6 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             // Store the new gun in the empty slot
             AddWeaponItemToIndex(weaponItem, 0);
         }
-
-        private void OnAddWeaponItemToWeaponInventoryToSpecificIndex(WeaponItem weaponItem, int index)
-        {
-            // Now add the new weapon item to the index
-            AddWeaponItemToIndex(weaponItem, index);
-        }
-
-        private void OnRemoveWeaponItemFromWeaponInventoryFromSpecificIndex(WeaponItem weaponItem, int index)
-        {
-            TryRemoveWeaponItem(weaponItem);
-        }
-
         public bool TryGetWeaponItem(int index, out WeaponItem weaponItem)
         {
             weaponItem = null;
@@ -215,6 +207,38 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
             weaponItem = m_Weapons[index];
             return true;
+        }
+
+        public bool TryAddBackpackToInventory(BackpackItem backpackItem)
+        {
+            m_SpaceAvailable -= backpackItem.ItemData.SpaceRequired;       // Here backpackItem.ItemData.SpaceRequired will be provided as negative value
+            m_BackpackItem = backpackItem;
+            return true;
+        }
+
+        public bool TryRemoveBackpackFromInventory(BackpackItem backpackItem)
+        {
+            int temp = m_SpaceAvailable + backpackItem.ItemData.SpaceRequired;       // Here backpackItem.ItemData.SpaceRequired will be provided as positive value
+            if (temp < 0)
+            {
+                Debug.Log("Can't remove backpack. Items will overflow!");
+                return false;
+            }
+
+            m_SpaceAvailable = temp;
+            m_BackpackItem = null;
+            return true;
+        }
+
+        private void OnAddWeaponItemToWeaponInventoryToSpecificIndex(WeaponItem weaponItem, int index)
+        {
+            // Now add the new weapon item to the index
+            AddWeaponItemToIndex(weaponItem, index);
+        }
+
+        private void OnRemoveWeaponItemFromWeaponInventoryFromSpecificIndex(WeaponItem weaponItem, int index)
+        {
+            TryRemoveWeaponItem(weaponItem);
         }
 
         /// <summary>

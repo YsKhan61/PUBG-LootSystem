@@ -119,6 +119,11 @@ namespace Weapon_System.GameplayObjects.UI
                 return;
             }
 
+            else if (droppedItemUI.Item is BackpackItem && slotTypeOfOtherItemUI == SlotType.Inventory)
+            {
+                TryAddBackpackAndDestroyItemUI((BackpackItem)droppedItemUI.Item, droppedItemUI);
+            }
+
             switch (slotTypeOfOtherItemUI)
             {
                 case SlotType.Inventory:
@@ -167,6 +172,20 @@ namespace Weapon_System.GameplayObjects.UI
         public void AddItemToInventory(InventoryItem item)
         {
             m_Inventory.TryAddItemToInventory(item);
+        }
+
+        public void TryAddBackpackAndDestroyItemUI(BackpackItem backpackItem, ItemUI itemUI)
+        {
+            bool success = m_ItemUserHand.TryStoreAndCollectBackpackInInventory(backpackItem);
+            if (success)
+            {
+                ReleaseItemUIToPool(itemUI);
+            }
+        }
+
+        public bool TryRemoveAndDropBackpackFromInventory(BackpackItem backpackItem)
+        {
+            return m_ItemUserHand.TryRemoveAndDropBackpackInInventory(backpackItem);
         }
 
         private void RefreshAndDisplayScannedCollectables()
