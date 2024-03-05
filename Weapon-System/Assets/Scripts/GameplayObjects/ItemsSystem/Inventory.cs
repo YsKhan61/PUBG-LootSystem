@@ -83,6 +83,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         [SerializeField]        // SerializeField is used only for Debug purposes
         BackpackItem m_BackpackItem;
+        public BackpackItem BackpackItem => m_BackpackItem;
 
 
         private void Start()
@@ -213,9 +214,6 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         {
             if (m_BackpackItem != null)
             {
-                // For now we are not swapping backpacks, so return false
-                // TODO - Later we need to swap backpacks
-
                 Debug.Log("Backpack already present in the inventory!");
                 return false;
             }

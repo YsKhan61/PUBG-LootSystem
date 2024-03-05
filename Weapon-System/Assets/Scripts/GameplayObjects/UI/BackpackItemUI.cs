@@ -73,10 +73,6 @@ namespace Weapon_System.GameplayObjects.UI
                 // Check if it's UIType is same as this UIType
                 if (droppedItemUI.Item.ItemData.UIType == m_ItemUIType)
                 {
-                    // Check if backpack is present
-                    if (m_StoredBackpack != null)
-                        return;             // TODO - For now we return if there's already a backpack present, later we swap the old backpack with the new one.
-
                     // If no, try store backpack
                     m_InventoryUI.TryAddBackpackAndDestroyItemUI(droppedItemUI.Item as BackpackItem, droppedItemUI);
                 }

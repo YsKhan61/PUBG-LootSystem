@@ -132,8 +132,24 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             return item.Collect(this);
         }
 
+        /// <summary>
+        /// Try to store the backpack in the inventory and collect it.
+        /// Before trying to store, we check if there is already a backpack in the inventory.
+        /// If yes, we try remove it first.
+        /// </summary>
+        /// <param name="backpackItem"></param>
+        /// <returns></returns>
         public bool TryStoreAndCollectBackpackInInventory(BackpackItem backpackItem)
         {
+            if (m_Inventory.BackpackItem != null)
+            {
+                bool isRemoved = TryRemoveAndDropBackpackInInventory(m_Inventory.BackpackItem);
+                if (!isRemoved)
+                {
+                    return false;
+                }
+            }
+
             bool isStored = m_Inventory.TryAddBackpackToInventory(backpackItem);
             if (!isStored)
             {
