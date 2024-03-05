@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Weapon_System.Utilities;
@@ -59,6 +58,9 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         [Space(10)]
 
+        [SerializeField]
+        int m_Capacity = 50;
+
         [Header("---------Debug purposes----------")]
 
         [Header("Inventory items")]
@@ -76,6 +78,8 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         [SerializeField]        // SerializeField is used only for Debug purposes
         WeaponItem[] m_Weapons;       // Only primary and secondary gun. For now only 2 guns are allowed
+
+        
 
 
         private void Start()
@@ -111,7 +115,15 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         /// <param name="item"></param>
         public bool TryAddItemToInventory(InventoryItem item)
         {
+            if (item.ItemData.SpaceRequired > m_Capacity)
+            {
+                Debug.LogError("Inventory capacity exceeded!");
+                return false;
+            }
+
             m_InventoryItems.Add(item);
+            m_Capacity -= item.ItemData.SpaceRequired;
+
             Debug.Log(item.Name + " added to inventory!");
 
             return true;
