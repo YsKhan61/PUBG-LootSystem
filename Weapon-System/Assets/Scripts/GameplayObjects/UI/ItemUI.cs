@@ -104,16 +104,11 @@ namespace Weapon_System.GameplayObjects.UI
                 return;
             }
 
-            if (eventData.pointerDrag.TryGetComponent(out ItemUI itemUI))
+            if (!eventData.pointerDrag.TryGetComponent(out ItemUI itemUI))
             {
-                if (itemUI.Item is WeaponItem && StoredSlotType == SlotType.Inventory)
-                {
-                    itemUI.InventoryUI.AddWeaponItemToWeaponInventory((WeaponItem)itemUI.Item);
-                    return;
-                }
-
-                m_InventoryUI.OnItemUIDroppedOnSlotType(itemUI, StoredSlotType);
+                return;
             }
+            m_InventoryUI.OnItemUIDroppedOnSlotType(itemUI, StoredSlotType);
         }
 
         public void SetItemDataAndShow(InventoryItem item, InventoryUI inventoryUI, SlotType storedSlotType)

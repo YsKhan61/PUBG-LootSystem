@@ -113,6 +113,12 @@ namespace Weapon_System.GameplayObjects.UI
                 return;
             }
 
+            if (droppedItemUI.Item is WeaponItem && slotTypeOfOtherItemUI == SlotType.Inventory)
+            {
+                AddWeaponItemToWeaponInventory((WeaponItem)droppedItemUI.Item);
+                return;
+            }
+
             switch (slotTypeOfOtherItemUI)
             {
                 case SlotType.Inventory:

@@ -44,7 +44,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
     /// Interface for the storable items
     /// eg: Ammo, Heals, Attachments, etc.
     /// </summary>
-    public interface IStorable
+    public interface IStorable : ICollectable, IDroppable
     {
         /// <summary>
         /// Store the item in the inventory
