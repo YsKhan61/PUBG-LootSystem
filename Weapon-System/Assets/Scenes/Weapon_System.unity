@@ -741,16 +741,11 @@ MonoBehaviour:
     type: 2}
   m_OnWeaponItemSwappedInInventoryEvent: {fileID: 11400000, guid: 734bafa2b72e3f146ae1036e117ce876,
     type: 2}
-  m_OnAddWeaponItemToWeaponInventoryInSpecificIndexEvent: {fileID: 11400000, guid: be45e1c1109c1bb4399ee7d3cd384227,
-    type: 2}
-  m_OnRemoveWeaponItemFromWeaponInventoryEvent: {fileID: 11400000, guid: d1da3780507513c4ea33aee5b4ba0a8e,
-    type: 2}
-  m_OnSwapWeaponItemUIsInInventoryEvent: {fileID: 11400000, guid: dc5f38b2f421b8f4084fa52ab7adfe39,
-    type: 2}
   m_Canvas: {fileID: 738153175}
   m_WeaponItemUIs:
   - {fileID: 7993000985656380377}
   - {fileID: 1400475445}
+  m_ItemUserHand: {fileID: 1898064524}
 --- !u!114 &218537254
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6740,6 +6735,12 @@ PrefabInstance:
         type: 2}
     - target: {fileID: 6801109740986997673, guid: cbc1839e74f3092489e9d3200098973f,
         type: 3}
+      propertyPath: m_OnWeaponItemSwappedInInventoryEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: 734bafa2b72e3f146ae1036e117ce876,
+        type: 2}
+    - target: {fileID: 6801109740986997673, guid: cbc1839e74f3092489e9d3200098973f,
+        type: 3}
       propertyPath: m_OnWeaponItemAddedToWeaponInventoryEvent
       value: 
       objectReference: {fileID: 11400000, guid: 5eec038a6de2f5243b6e0db3ab98e689,
@@ -6747,6 +6748,24 @@ PrefabInstance:
     - target: {fileID: 6801109740986997673, guid: cbc1839e74f3092489e9d3200098973f,
         type: 3}
       propertyPath: m_OnWeaponItemRemovedFromWeaponInventoryEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: 19db8f6374cebb94791464f5e6b0e88f,
+        type: 2}
+    - target: {fileID: 6801109740986997673, guid: cbc1839e74f3092489e9d3200098973f,
+        type: 3}
+      propertyPath: m_OnBeforeWeaponItemRemovedFromWeaponInventoryEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: 0f2a273ae29ef0b4caebad2bec5c92e4,
+        type: 2}
+    - target: {fileID: 6801109740986997673, guid: cbc1839e74f3092489e9d3200098973f,
+        type: 3}
+      propertyPath: m_OnWeaponItemAddedToWeaponInventoryToSpecificIndexEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: 5eec038a6de2f5243b6e0db3ab98e689,
+        type: 2}
+    - target: {fileID: 6801109740986997673, guid: cbc1839e74f3092489e9d3200098973f,
+        type: 3}
+      propertyPath: m_OnAfterWeaponItemRemovedFromWeaponInventoryFromSpecificIndexEvent
       value: 
       objectReference: {fileID: 11400000, guid: 19db8f6374cebb94791464f5e6b0e88f,
         type: 2}

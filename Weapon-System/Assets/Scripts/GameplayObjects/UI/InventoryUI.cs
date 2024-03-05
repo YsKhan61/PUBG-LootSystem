@@ -30,9 +30,6 @@ namespace Weapon_System.GameplayObjects.UI
 
         [Header("Broadcast to")]
 
-        [SerializeField, Tooltip("To add an weapon item in the inventory without any specific slot, this event is invoked")]
-        WeaponItemEventChannelSO m_OnAddWeaponItemToWeaponInventoryEvent;
-
         [SerializeField, Tooltip("To add an inventory item in the inventory, this event is invoked")]
         InventoryItemEventChannelSO m_OnAddInventoryItemToInventoryEvent;
 
@@ -115,13 +112,13 @@ namespace Weapon_System.GameplayObjects.UI
 
             if (droppedItemUI.Item is WeaponItem && slotTypeOfOtherItemUI == SlotType.Inventory)
             {
-                AddWeaponItemToWeaponInventory((WeaponItem)droppedItemUI.Item);
+                TryAddWeaponAndDestroyItemUI(droppedItemUI);
                 return;
             }
 
             if (droppedItemUI.Item is BackpackItem && slotTypeOfOtherItemUI == SlotType.Inventory)
             {
-                TryAddBackpackAndDestroyItemUI((BackpackItem)droppedItemUI.Item, droppedItemUI);
+                TryAddBackpackAndDestroyItemUI(droppedItemUI);
                 return;
             }
 
@@ -160,9 +157,13 @@ namespace Weapon_System.GameplayObjects.UI
             }
         }
 
-        public void AddWeaponItemToWeaponInventory(WeaponItem weaponItem)
+        public void TryAddWeaponAndDestroyItemUI(ItemUI droppedItemUI)
         {
-            m_OnAddWeaponItemToWeaponInventoryEvent.RaiseEvent(weaponItem);
+            bool success = m_ItemUserHand.TryStoreAndCollectWeaponInWeaponStorage(droppedItemUI.Item as WeaponItem);
+            if (success)
+            {
+                ReleaseItemUIToPool(droppedItemUI);
+            }
         }
 
         public bool TryCollectItem(InventoryItem item)
@@ -175,18 +176,18 @@ namespace Weapon_System.GameplayObjects.UI
             m_Inventory.TryAddItemToInventory(item);
         }
 
-        public void TryAddBackpackAndDestroyItemUI(BackpackItem backpackItem, ItemUI itemUI)
+        internal void TryAddBackpackAndDestroyItemUI(ItemUI droppedItemUI)
         {
-            bool success = m_ItemUserHand.TryStoreAndCollectBackpackInInventory(backpackItem);
+            bool success = m_ItemUserHand.TryStoreAndCollectBackpack(droppedItemUI.Item as BackpackItem);
             if (success)
             {
-                ReleaseItemUIToPool(itemUI);
+                ReleaseItemUIToPool(droppedItemUI);
             }
         }
 
-        public bool TryRemoveAndDropBackpackFromInventory(BackpackItem backpackItem)
+        internal bool TryRemoveAndDropBackpackFromInventory(BackpackItem backpackItem)
         {
-            return m_ItemUserHand.TryRemoveAndDropBackpackInInventory(backpackItem);
+            return m_ItemUserHand.TryRemoveAndDropBackpack(backpackItem);
         }
 
         private void RefreshAndDisplayScannedCollectables()

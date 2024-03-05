@@ -108,6 +108,7 @@ namespace Weapon_System.GameplayObjects.UI
             {
                 return;
             }
+
             m_InventoryUI.OnItemUIDroppedOnSlotType(itemUI, StoredSlotType);
         }
 

@@ -20,12 +20,6 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         [SerializeField, Tooltip("When an Inventory item is removed from the inventory, this event is invoked")]
         InventoryItemEventChannelSO m_OnInventoryItemRemovedFromInventory;
 
-        [SerializeField, Tooltip("When an Weapon item is added to the inventory, this event is invoked")]
-        WeaponItemIntEventChannelSO m_OnWeaponItemAddedToWeaponInventoryEvent;
-
-        [SerializeField, Tooltip("When an Weapon item is removed from the inventory, this event is invoked")]
-        WeaponItemIntEventChannelSO m_OnWeaponItemRemovedFromWeaponInventoryEvent;
-
 
 
         [SerializeField, Tooltip("Listen to this event to hold the primary weapon in hand.")]
@@ -55,6 +49,18 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         [SerializeField, Tooltip("When a backpack is removed from the inventory, this event is invoked")]
         BackpackItemEventChannelSO m_OnBackpackItemRemovedFromInventory;
+
+        [SerializeField, Tooltip("When an Weapon item is added to the inventory to specific index, this event is invoked")]
+        WeaponItemIntEventChannelSO m_OnWeaponItemAddedToWeaponInventoryToSpecificIndexEvent;
+
+        [SerializeField, Tooltip("Before an Weaopn item is removed from the inventory, this event is invoked")]
+        WeaponItemIntEventChannelSO m_OnBeforeWeaponItemRemovedFromWeaponInventoryEvent;
+
+        [SerializeField, Tooltip("When an Weapon item is removed from the inventory from specific index, this event is invoked")]
+        WeaponItemIntEventChannelSO m_OnAfterWeaponItemRemovedFromWeaponInventoryFromSpecificIndexEvent;
+
+        [SerializeField, Tooltip("When two WeaponItemUI's are swapped with each other in the inventory, this event is invoked")]
+        IntIntEventChannelSO m_OnWeaponItemSwappedInInventoryEvent;
 
 
         [Space(10)]
@@ -86,9 +92,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
             m_OnInventoryItemAddedToInventory.OnEventRaised += OnInventoryitemAddedToInventory;
             m_OnInventoryItemRemovedFromInventory.OnEventRaised += OnInventoryItemRemovedFromInventory;
-            m_OnWeaponItemAddedToWeaponInventoryEvent.OnEventRaised += OnWeaponItemAddedToWeaponInventoryEvent;
-            m_OnWeaponItemRemovedFromWeaponInventoryEvent.OnEventRaised += OnWeaponItemRemovedFromWeaponInventoryEvent;
-
+            
             m_PickupInputEvent.OnEventRaised += OnPickupInputEvent;
             m_PrimaryWeaponSelectInputEvent.OnEventRaised += OnPrimaryWeaponSelect;
             m_SecondaryWeaponSelectInputEvent.OnEventRaised += OnSecondaryWeaponSelect;
@@ -117,9 +121,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         {
             m_OnInventoryItemAddedToInventory.OnEventRaised -= OnInventoryitemAddedToInventory;
             m_OnInventoryItemRemovedFromInventory.OnEventRaised -= OnInventoryItemRemovedFromInventory;
-            m_OnWeaponItemAddedToWeaponInventoryEvent.OnEventRaised -= OnWeaponItemAddedToWeaponInventoryEvent;
-            m_OnWeaponItemRemovedFromWeaponInventoryEvent.OnEventRaised -= OnWeaponItemRemovedFromWeaponInventoryEvent;
-
+            
             m_PickupInputEvent.OnEventRaised -= OnPickupInputEvent;
             m_PrimaryWeaponSelectInputEvent.OnEventRaised -= OnPrimaryWeaponSelect;
             m_SecondaryWeaponSelectInputEvent.OnEventRaised -= OnSecondaryWeaponSelect;
@@ -139,11 +141,11 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         /// </summary>
         /// <param name="backpackItem"></param>
         /// <returns></returns>
-        public bool TryStoreAndCollectBackpackInInventory(BackpackItem backpackItem)
+        public bool TryStoreAndCollectBackpack(BackpackItem backpackItem)
         {
             if (m_Inventory.BackpackItem != null)
             {
-                bool isRemoved = TryRemoveAndDropBackpackInInventory(m_Inventory.BackpackItem);
+                bool isRemoved = TryRemoveAndDropBackpack(m_Inventory.BackpackItem);
                 if (!isRemoved)
                 {
                     return false;
@@ -162,7 +164,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             return true;
         }
 
-        public bool TryRemoveAndDropBackpackInInventory(BackpackItem backpackItem)
+        public bool TryRemoveAndDropBackpack(BackpackItem backpackItem)
         {
             bool isRemoved = m_Inventory.TryRemoveBackpackFromInventory(backpackItem);
             if (!isRemoved)
@@ -175,20 +177,91 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             return true;
         }
 
-        private void OnWeaponItemAddedToWeaponInventoryEvent(WeaponItem item, int index)
+        public bool TryStoreAndCollectWeaponInWeaponStorage(WeaponItem wepaonItem)
         {
-            if (item is not ICollectable collectable)
+            bool added = false;
+            int index;
+
+            bool emptyIndexFound = m_Inventory.TryGetEmptyWeaponStorageIndex(out index);
+            if (emptyIndexFound)
             {
-                Debug.LogError("This cannot happen!");
-                return;
+                // Store weapon in that index
+                added = m_Inventory.AddWeaponItemToStorageIndex(wepaonItem, index);
             }
-            collectable.Collect(this);
-            TryHoldItemInHand(item);
+
+            if (!added)
+            {
+                bool weaponInHandFound = m_Inventory.TryGetIndexOfWeaponInHand(out index);
+                if (weaponInHandFound)
+                {
+                    bool isRemoved = TryRemoveWeaponFromWeaponStorageIndex(index);
+                    if (!isRemoved)
+                    {
+                        return false;
+                    }
+                    // Store weapon in that index
+                    added = m_Inventory.AddWeaponItemToStorageIndex(wepaonItem, index);
+                }
+            }
+
+            if (!added)
+            {
+                index = 0;
+                // Remove weapon from first index and store the new weapon in that index
+                bool isRemoved = TryRemoveWeaponFromWeaponStorageIndex(index);
+                if (!isRemoved)
+                {
+                    return false;
+                }
+
+                added = m_Inventory.AddWeaponItemToStorageIndex(wepaonItem, index);
+            }
+            
+            if (!added)
+            {
+                return false;
+            }
+
+            TryCollectItem(wepaonItem);
+            TryHoldItemInHand(wepaonItem);
+
+            m_OnWeaponItemAddedToWeaponInventoryToSpecificIndexEvent.RaiseEvent(wepaonItem, index);
+
+            return true;
         }
 
-        private void OnWeaponItemRemovedFromWeaponInventoryEvent(WeaponItem item, int index)
+        public bool TryRemoveWeaponFromWeaponStorageIndex(in int index)
         {
-            TryDropItem(item);
+            bool isFound = m_Inventory.TryGetWeaponItem(index, out WeaponItem weaponItem);
+            if (!isFound)
+            {
+                return false;
+            }
+
+            m_OnBeforeWeaponItemRemovedFromWeaponInventoryEvent.RaiseEvent(weaponItem, index);
+
+            bool isRemoved = m_Inventory.TryRemoveWeaponItemFromStorage(index);
+            if (!isRemoved)
+            {
+                return false;
+            }
+
+            TryDropItem(weaponItem);
+
+            m_OnAfterWeaponItemRemovedFromWeaponInventoryFromSpecificIndexEvent.RaiseEvent(weaponItem, index);
+            return true;
+        }
+
+        public bool SwapWeaponsInWeaponStorage(int leftIndex, int rightIndex)
+        {
+            bool isSwapped = m_Inventory.TrySwapWeaponItemsInWeaponStorage(leftIndex, rightIndex);
+            if (!isSwapped)
+            {
+                return false;
+            }
+
+            m_OnWeaponItemSwappedInInventoryEvent.RaiseEvent(leftIndex, rightIndex);
+            return true;
         }
 
         private void OnInventoryitemAddedToInventory(InventoryItem item)
@@ -239,47 +312,28 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
             if (m_CollectablesScanned[0] is BackpackItem backpackItem)
             {
-                TryStoreAndCollectBackpackInInventory(backpackItem);
+                TryStoreAndCollectBackpack(backpackItem);
+                return;
+            }
+
+            if (m_CollectablesScanned[0] is WeaponItem weaponItem)
+            {
+                TryStoreAndCollectWeaponInWeaponStorage(weaponItem);
                 return;
             }
 
             // Pickup the first item in the list
             if (m_CollectablesScanned[0] is IStorable)
             {
-                TryStoreInInventory(m_CollectablesScanned[0] as IStorable);
+                TryStoreAndCollectInventoryItem(m_CollectablesScanned[0] as IStorable);
+                return;
             }
-
-            // TO DO - We need to check if store for IStorable items is successful before trying to collect
-
-            TryCollectItem(m_CollectablesScanned[0]);
         }
 
-        void TryStoreInInventory(IStorable item)
+        void TryStoreAndCollectInventoryItem(IStorable item)
         {
-            if (item == null)
-                return;
-
-            // Each item can be stored in different places in the inventory,
-            // hence we send the inventory to the item to store itself in the inventory
-            // eg: Gun item, Armor, Ammo, etc.
-            switch (item)
-            {
-                case WeaponItem weaponItem:
-                    m_Inventory.AddWeaponItemToWeaponInventory(weaponItem);
-                    break;
-
-                case BackpackItem backpackItem:
-                    m_Inventory.TryAddBackpackToInventory(backpackItem);
-                    break;
-
-                case InventoryItem inventoryItem:
-                    m_Inventory.AddItemToInventoryAndRaiseEvent(inventoryItem);
-                    break;
-
-                default:
-                    // Handle other types or throw an exception if necessary
-                    break;
-            }
+            m_Inventory.AddItemToInventoryAndRaiseEvent(item as InventoryItem);
+            TryCollectItem(m_CollectablesScanned[0]);
         }
         
         void TryHoldItemInHand(IHoldable item)

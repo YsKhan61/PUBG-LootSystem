@@ -74,7 +74,7 @@ namespace Weapon_System.GameplayObjects.UI
                 if (droppedItemUI.Item.ItemData.UIType == m_ItemUIType)
                 {
                     // If no, try store backpack
-                    m_InventoryUI.TryAddBackpackAndDestroyItemUI(droppedItemUI.Item as BackpackItem, droppedItemUI);
+                    m_InventoryUI.TryAddBackpackAndDestroyItemUI(droppedItemUI);
                 }
             }
         }

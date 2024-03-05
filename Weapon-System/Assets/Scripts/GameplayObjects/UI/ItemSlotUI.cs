@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
-using Weapon_System.GameplayObjects.ItemsSystem;
 
 
 namespace Weapon_System.GameplayObjects.UI
@@ -27,25 +26,12 @@ namespace Weapon_System.GameplayObjects.UI
             if (eventData.pointerDrag == null)
                 return;
 
-            // If slot type is vicinity, then if we drag and drop a WeaponItemUI, then remove it from the inventory and drop the weapon item
-            if (eventData.pointerDrag.TryGetComponent(out WeaponItemUI weaponItemUI))
+            if (!eventData.pointerDrag.TryGetComponent(out ItemUI itemUI))
             {
-                if (m_SlotType != SlotType.Vicinity)
-                    return;
-
-                weaponItemUI.WeaponUIMediator.RemoveWeaponItemFromInventory(weaponItemUI.StoredGunItem, weaponItemUI.SlotIndex);
+                return;
             }
 
-            else if (eventData.pointerDrag.TryGetComponent(out ItemUI itemUI))
-            {
-                if (itemUI.Item is WeaponItem)
-                {
-                    itemUI.InventoryUI.AddWeaponItemToWeaponInventory((WeaponItem)itemUI.Item);
-                    return;
-                }
-
-                itemUI.InventoryUI.OnItemUIDroppedOnSlotType(itemUI, m_SlotType);
-            }
+            itemUI.InventoryUI.OnItemUIDroppedOnSlotType(itemUI, m_SlotType);
         }
     }
 }

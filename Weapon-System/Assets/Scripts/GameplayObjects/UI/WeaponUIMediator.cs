@@ -21,28 +21,18 @@ namespace Weapon_System.GameplayObjects.UI
         [SerializeField, Tooltip("When two WeaponItemUI's are swapped with each other in the inventory, this event is invoked")]
         IntIntEventChannelSO m_OnWeaponItemSwappedInInventoryEvent;
 
+
         [Space(10)]
-
-        [Header("Broadcast to")]
-
-        [SerializeField, Tooltip("To add an weapon item in the weapon inventory, this event is invoked")]
-        WeaponItemIntEventChannelSO m_OnAddWeaponItemToWeaponInventoryInSpecificIndexEvent;
-
-        [SerializeField, Tooltip("To remove an weapon item from weapon inventory, this event is invoked")]
-        WeaponItemIntEventChannelSO m_OnRemoveWeaponItemFromWeaponInventoryEvent;
-
-        [SerializeField, Tooltip("To swap two WeaponItemUI's in the inventory, this event is invoked")]
-        IntIntEventChannelSO m_OnSwapWeaponItemUIsInInventoryEvent;
 
         [SerializeField]
         Canvas m_Canvas;
         public Transform CanvasTransform => m_Canvas.transform;
 
-
-        [Space(10)]
-
         [SerializeField]
         WeaponItemUI[] m_WeaponItemUIs;
+
+        [SerializeField]
+        ItemUserHand m_ItemUserHand;
 
 
         private void Start()
@@ -59,9 +49,13 @@ namespace Weapon_System.GameplayObjects.UI
             m_OnWeaponItemSwappedInInventoryEvent.OnEventRaised -= OnWeaponItemSwappedInInventoryEvent;
         }
 
-        internal void AddWeaponItemToInventory(WeaponItem weaponItem, int index)
+        internal void TryAddWeaponAndDestroyItemUI(ItemUI droppedItemUI)
         {
-            m_OnAddWeaponItemToWeaponInventoryInSpecificIndexEvent.RaiseEvent(weaponItem, index);
+            bool success = m_ItemUserHand.TryStoreAndCollectWeaponInWeaponStorage(droppedItemUI.Item as WeaponItem);
+            if (success)
+            {
+                droppedItemUI.InventoryUI.ReleaseItemUIToPool(droppedItemUI);
+            }
         }
 
         /// <remarks>
@@ -69,17 +63,22 @@ namespace Weapon_System.GameplayObjects.UI
         /// Weapon can be removed from inventory by dropping the weapon item UI to vicinity
         /// or right clicking on the weapon item UI in the inventory
         /// </remarks>
-        internal void RemoveWeaponItemFromInventory(WeaponItem weaponItem, int index)
+        internal bool TryRemoveWeaponItemFromInventory(WeaponItem weaponItem, int index)
         {
-            m_OnRemoveWeaponItemFromWeaponInventoryEvent.RaiseEvent(weaponItem, index);
+            if (weaponItem == null)
+            {
+                return false;
+            }
+
+            return m_ItemUserHand.TryRemoveWeaponFromWeaponStorageIndex(index);
         }
 
         internal void SwapWeaponItemsInInventory(int leftIndex, int rightIndex)
         {
-            m_OnSwapWeaponItemUIsInInventoryEvent.RaiseEvent(leftIndex, rightIndex);
+            m_ItemUserHand.SwapWeaponsInWeaponStorage(leftIndex, rightIndex);
         }
 
-        public bool TryGetWeaopnItemFromWeaponInventoryUI(int index, out WeaponItem gun)
+        internal bool TryGetWeaopnItemFromWeaponInventoryUI(int index, out WeaponItem gun)
         {
             gun = null;
 
@@ -97,7 +96,7 @@ namespace Weapon_System.GameplayObjects.UI
         /// <param name="itemUI"></param>
         /// <param name="slotTransform"></param>
         /// <param name="slotIndex"></param>
-        public void DropWeaponItemUIToSlot(WeaponItemUI itemUI, Transform slotTransform, int slotIndex)
+        private void DropWeaponItemUIToSlot(WeaponItemUI itemUI, Transform slotTransform, int slotIndex)
         {
             itemUI.transform.SetParent(slotTransform);
             itemUI.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;

@@ -41,11 +41,11 @@ namespace Weapon_System.GameplayObjects.UI
 
         private Vector2 m_lastAnchoredPosition;
         
-        private WeaponItem m_StoredGunItem;
+        private WeaponItem m_StoredWeapontem;
         /// <summary>
         /// This stores the GunItem data of this ItemUI, from the Inventory
         /// </summary>
-        public WeaponItem StoredGunItem => m_StoredGunItem;
+        public WeaponItem StoredGunItem => m_StoredWeapontem;
 
         [HideInInspector]
         public bool IsDragSuccess;
@@ -77,11 +77,11 @@ namespace Weapon_System.GameplayObjects.UI
             // Right click to drop item
             if (eventData.button == PointerEventData.InputButton.Right)
             {
-                // Check if GunItem is present in the ItemUI
-                if (m_StoredGunItem == null)
+                // Check if WeaponItem is present in the ItemUI
+                if (m_StoredWeapontem == null)
                     return;
 
-                m_WeaponUIMediator.RemoveWeaponItemFromInventory(m_StoredGunItem, m_SlotIndex);
+                m_WeaponUIMediator.TryRemoveWeaponItemFromInventory(m_StoredWeapontem, m_SlotIndex);
             }
         }
 
@@ -135,29 +135,17 @@ namespace Weapon_System.GameplayObjects.UI
                     m_WeaponUIMediator.SwapWeaponItemsInInventory(droppedWeaponItemUI.SlotIndex, m_SlotIndex);
                 }
             }
-            else if (eventData.pointerDrag.TryGetComponent(out ItemUI itemUI))
+            else if (eventData.pointerDrag.TryGetComponent(out ItemUI droppedItemUI))
             {
-                if (itemUI.Item is not WeaponItem weaponItem)
+                if (droppedItemUI.Item is not WeaponItem)
                     return;
 
-                if (itemUI.Item.ItemData.UIType == m_ItemUIType)
+                if (droppedItemUI.Item.ItemData.UIType == m_ItemUIType)
                 {
                     // This is an ItemUI of a Weapon Item,
-
-                    // If there is already a Stored WeaponItem in this ItemUI , Drop it first
-                    if (StoredGunItem != null)
-                    {
-                        m_WeaponUIMediator.RemoveWeaponItemFromInventory(StoredGunItem, SlotIndex);
-                    }
-
-                    m_WeaponUIMediator.AddWeaponItemToInventory(weaponItem, SlotIndex);
-
-                    // Destroying the ItemUI here, but make sure, if it is better to destroy it
-                    // after we recieve the callback of OnWeaponItemAddedToWeaponInventoryEvent inside WeaponUIMediator
-                    itemUI.InventoryUI.ReleaseItemUIToPool(itemUI);
+                    m_WeaponUIMediator.TryAddWeaponAndDestroyItemUI(droppedItemUI);
                 }
             }
-            
         }
 
         public void SetSlotIndex(int index)
@@ -167,7 +155,7 @@ namespace Weapon_System.GameplayObjects.UI
 
         public void SetItemDataAndShow(WeaponItem item)
         {
-            m_StoredGunItem = item;
+            m_StoredWeapontem = item;
             m_Icon.sprite = StoredGunItem.ItemData.IconSprite;
             m_NameText.text = StoredGunItem.ItemData.name;
 
@@ -176,7 +164,7 @@ namespace Weapon_System.GameplayObjects.UI
 
         public void ResetDataAndHideGunItemUI()
         {
-            m_StoredGunItem = null;
+            m_StoredWeapontem = null;
             m_Icon.sprite = null;
             m_NameText.text = "";
 
