@@ -211,6 +211,15 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         public bool TryAddBackpackToInventory(BackpackItem backpackItem)
         {
+            if (m_BackpackItem != null)
+            {
+                // For now we are not swapping backpacks, so return false
+                // TODO - Later we need to swap backpacks
+
+                Debug.Log("Backpack already present in the inventory!");
+                return false;
+            }
+
             m_SpaceAvailable -= backpackItem.ItemData.SpaceRequired;       // Here backpackItem.ItemData.SpaceRequired will be provided as negative value
             m_BackpackItem = backpackItem;
             return true;

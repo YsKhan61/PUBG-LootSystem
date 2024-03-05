@@ -6,7 +6,6 @@ using Weapon_System.GameplayObjects.ItemsSystem;
 
 namespace Weapon_System.GameplayObjects.UI
 {
-    [RequireComponent(typeof(RectTransform), typeof(CanvasGroup))]
     public class BackpackItemUI : MonoBehaviour, IPointerDownHandler, IDropHandler
     {
         [Header("Listens to")]

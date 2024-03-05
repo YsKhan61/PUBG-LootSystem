@@ -221,6 +221,12 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             if (m_CollectablesScanned.Count <= 0)
                 return;
 
+            if (m_CollectablesScanned[0] is BackpackItem backpackItem)
+            {
+                TryStoreAndCollectBackpackInInventory(backpackItem);
+                return;
+            }
+
             // Pickup the first item in the list
             if (m_CollectablesScanned[0] is IStorable)
             {

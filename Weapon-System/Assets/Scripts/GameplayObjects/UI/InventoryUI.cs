@@ -119,9 +119,10 @@ namespace Weapon_System.GameplayObjects.UI
                 return;
             }
 
-            else if (droppedItemUI.Item is BackpackItem && slotTypeOfOtherItemUI == SlotType.Inventory)
+            if (droppedItemUI.Item is BackpackItem && slotTypeOfOtherItemUI == SlotType.Inventory)
             {
                 TryAddBackpackAndDestroyItemUI((BackpackItem)droppedItemUI.Item, droppedItemUI);
+                return;
             }
 
             switch (slotTypeOfOtherItemUI)
