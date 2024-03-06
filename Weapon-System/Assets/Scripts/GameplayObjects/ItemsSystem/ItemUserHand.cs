@@ -73,6 +73,10 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         Transform m_BackpackHolderTransform;
         public Transform BackpackHolderTransform => m_BackpackHolderTransform;
 
+        [SerializeField, Tooltip("The helmet will be made child to this transform")]
+        Transform m_HelmetHolderTransform;
+        public Transform HelmetHolderTransform => m_HelmetHolderTransform;
+
         public Transform Transform => transform;
 
         /// <remarks>

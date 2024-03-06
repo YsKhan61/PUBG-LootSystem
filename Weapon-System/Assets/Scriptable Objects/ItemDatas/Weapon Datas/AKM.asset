@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: AKM
   m_EditorClassIdentifier: 
   m_ItemTag: {fileID: 11400000, guid: b2765a201aa8dce4f8edc11df58f9b8e, type: 2}
-  m_UIType: 1
+  m_UITag: {fileID: 11400000, guid: 33139a9e371ef9a46ba2c458bf15cf0c, type: 2}
   m_IconSprite: {fileID: 21300000, guid: 72f44b46a69279a44b471dc02c331dd4, type: 3}
+  m_SpaceRequired: 0
   m_ADSZoomValue: 2
   m_AllowedSightAttachments:
   - {fileID: 11400000, guid: 351f48ffa23c68943be98de56550b22f, type: 2}
@@ -23,3 +24,5 @@ MonoBehaviour:
   m_AllowedGripAttachments: []
   m_AllowedMuzzleAttachments:
   - {fileID: 11400000, guid: fc64339493a7adf439eb9085ed0e0b8d, type: 2}
+  m_AllowedMagazineAttachments: []
+  m_AllowedStockAttachments: []

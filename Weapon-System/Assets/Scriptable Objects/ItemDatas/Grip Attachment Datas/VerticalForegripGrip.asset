@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: VerticalForegripGrip
   m_EditorClassIdentifier: 
   m_ItemTag: {fileID: 11400000, guid: dab8f52ad2ba6714db872ba8825cc99d, type: 2}
-  m_UIType: 8
+  m_UITag: {fileID: 11400000, guid: 5feef1de148f1d14386c4d168d6d16a3, type: 2}
   m_IconSprite: {fileID: 21300000, guid: 7c13b0de0db59a648ae1e2e48b2a6b34, type: 3}
+  m_SpaceRequired: 0
   m_RecoilReductionValue: 10

@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: M416
   m_EditorClassIdentifier: 
   m_ItemTag: {fileID: 11400000, guid: badb1b7175e3eb84cb0733f3a46563f1, type: 2}
-  m_UIType: 1
+  m_UITag: {fileID: 11400000, guid: 33139a9e371ef9a46ba2c458bf15cf0c, type: 2}
   m_IconSprite: {fileID: 21300000, guid: a5684b65aef70014e9429daf22f88ec7, type: 3}
+  m_SpaceRequired: 0
   m_ADSZoomValue: 2
   m_AllowedSightAttachments:
   - {fileID: 11400000, guid: 351f48ffa23c68943be98de56550b22f, type: 2}
@@ -24,3 +25,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: dab8f52ad2ba6714db872ba8825cc99d, type: 2}
   m_AllowedMuzzleAttachments:
   - {fileID: 11400000, guid: fc64339493a7adf439eb9085ed0e0b8d, type: 2}
+  m_AllowedMagazineAttachments: []
+  m_AllowedStockAttachments: []

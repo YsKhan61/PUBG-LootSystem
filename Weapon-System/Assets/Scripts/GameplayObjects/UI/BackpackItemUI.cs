@@ -19,8 +19,8 @@ namespace Weapon_System.GameplayObjects.UI
         [Space(10)]
 
         [SerializeField]
-        ItemUIType m_ItemUIType;
-        public ItemUIType ItemUIType => m_ItemUIType;
+        ItemUITagSO m_ItemUITag;
+        public ItemUITagSO ItemUITag => m_ItemUITag;
 
         [SerializeField]
         Image m_Icon;
@@ -71,7 +71,7 @@ namespace Weapon_System.GameplayObjects.UI
             if (eventData.pointerDrag.TryGetComponent(out ItemUI droppedItemUI))
             {
                 // Check if it's UIType is same as this UIType
-                if (droppedItemUI.StoredItem.ItemData.UIType == m_ItemUIType)
+                if (droppedItemUI.StoredItem.ItemData.UITag == m_ItemUITag)
                 {
                     // If no, try store backpack
                     m_InventoryUI.TryAddBackpackAndDestroyItemUI(droppedItemUI);

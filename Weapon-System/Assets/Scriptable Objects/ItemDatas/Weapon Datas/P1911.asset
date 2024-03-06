@@ -13,10 +13,14 @@ MonoBehaviour:
   m_Name: P1911
   m_EditorClassIdentifier: 
   m_ItemTag: {fileID: 11400000, guid: ab1461bfae4bf494d8d4084e26c3ff6d, type: 2}
-  m_UIType: 1
+  m_UITag: {fileID: 11400000, guid: 7689a8e848168b347987e6245a451367, type: 2}
   m_IconSprite: {fileID: 21300000, guid: b5329082547ac1b4bb96b470a3a1b77b, type: 3}
+  m_SpaceRequired: 0
   m_ADSZoomValue: 2
   m_AllowedSightAttachments:
   - {fileID: 11400000, guid: 88aca3813d3885c44841b1c1967d1132, type: 2}
   - {fileID: 11400000, guid: 2c199787c0b1d0e4b927758c68cfe9d7, type: 2}
   m_AllowedGripAttachments: []
+  m_AllowedMuzzleAttachments: []
+  m_AllowedMagazineAttachments: []
+  m_AllowedStockAttachments: []

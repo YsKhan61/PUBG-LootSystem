@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: Painkiller
   m_EditorClassIdentifier: 
   m_ItemTag: {fileID: 11400000, guid: af015aaac939d69459406e7df18efb7b, type: 2}
-  m_UIType: 0
+  m_UITag: {fileID: 11400000, guid: 1a4204c8a70f42a49bdf30dd373bfd9c, type: 2}
   m_IconSprite: {fileID: 21300000, guid: c71dffa73fe13844f9c6b6cc70105719, type: 3}
+  m_SpaceRequired: 0

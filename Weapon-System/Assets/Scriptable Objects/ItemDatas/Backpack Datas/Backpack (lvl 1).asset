@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 335e186429c56b44a971b772cd5b294d, type: 3}
-  m_Name: BackpackLevel3
+  m_Name: Backpack (lvl 1)
   m_EditorClassIdentifier: 
-  m_ItemTag: {fileID: 11400000, guid: 5c8a6132187a6ba498da6f5f116cd283, type: 2}
-  m_UIType: 9
-  m_IconSprite: {fileID: 21300000, guid: 188c00ae933479945a99e817f168e7fd, type: 3}
-  m_SpaceRequired: -150
+  m_ItemTag: {fileID: 11400000, guid: 49c0dd13e3636024ba9dbd0e5ad34dde, type: 2}
+  m_UITag: {fileID: 11400000, guid: 1ff313ca26886ab47a5e007c75ec1ed4, type: 2}
+  m_IconSprite: {fileID: 21300000, guid: 731214f6720dbbb4794d08ec1d662c3d, type: 3}
+  m_SpaceRequired: -50

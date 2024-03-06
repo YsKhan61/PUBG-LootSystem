@@ -25,6 +25,10 @@ namespace Weapon_System.GameplayObjects.UI
         [Space(10)]
 
         [SerializeField]
+        ItemUITagSO m_ItemUITag;
+        public ItemUITagSO ItemUITag => m_ItemUITag;
+
+        [SerializeField]
         Canvas m_Canvas;
         public Transform CanvasTransform => m_Canvas.transform;
 

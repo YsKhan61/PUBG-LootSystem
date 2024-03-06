@@ -12,14 +12,14 @@ namespace Weapon_System.GameplayObjects.UI
     /// eg: SightAttachment, MuzzleAttachment, GripAttachment, MagazineAttachment, StockAttachment
     /// NOTE - Every type of AttachmentItemUI should have a separate AttachmentUIMediator
     /// </summary>
-    public class AttachmentUIMediator : MonoBehaviour
+    public abstract class AttachmentUIMediator : MonoBehaviour
     {
         /// <remark>
         /// Keep this field on top, so that it's recognizable in the inspector
         /// </remark>
         [SerializeField, Tooltip("The type of this instance of the class!")]
-        ItemUIType m_ItemUIType;
-        public ItemUIType ItemUIType => m_ItemUIType;
+        ItemUITagSO m_ItemUITag;
+        public ItemUITagSO ItemUITag => m_ItemUITag;
 
 
         [Space(10)]
@@ -93,7 +93,7 @@ namespace Weapon_System.GameplayObjects.UI
             }
 
             // return if the dropped ItemUI's ItemUIType is not compatible with this ItemUI's ItemUIType
-            if (droppedAttachmentItemUI.Mediator.ItemUIType != ItemUIType)
+            if (droppedAttachmentItemUI.Mediator.ItemUITag != ItemUITag)
             {
                 return;
             }
@@ -173,7 +173,7 @@ namespace Weapon_System.GameplayObjects.UI
             }
 
             // Check if the ItemUI is of the same type as this ItemUI
-            if (droppedItemUI.StoredItem.ItemData.UIType != ItemUIType)
+            if (droppedItemUI.StoredItem.ItemData.UITag != ItemUITag)
             {
                 return;
             }
@@ -319,23 +319,6 @@ namespace Weapon_System.GameplayObjects.UI
         /// </summary>
         /// <param name="weaponData"></param>
         /// <returns></returns>
-        private bool IsWeaponCompatible(in WeaponDataSO weaponData)
-        {
-            switch (m_ItemUIType)
-            {
-                case ItemUIType.SightAttachment:
-                    return weaponData.AllowedSightAttachments.Length > 0;
-                case ItemUIType.MuzzleAttachment:
-                    return weaponData.AllowedMuzzleAttachments.Length > 0;
-                case ItemUIType.GripAttachment:
-                    return weaponData.AllowedGripAttachments.Length > 0;
-                case ItemUIType.MagazineAttachment:
-                    return weaponData.AllowedMagazineAttachments.Length > 0;
-                case ItemUIType.StockAttachment:
-                    return weaponData.AllowedStockAttachments.Length > 0;
-            }
-
-            return false;
-        }
+        protected abstract bool IsWeaponCompatible(in WeaponDataSO weaponData);
     }
 }

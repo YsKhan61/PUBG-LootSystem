@@ -15,10 +15,6 @@ namespace Weapon_System.GameplayObjects.UI
     public class WeaponItemUI : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler
     {
         [SerializeField]
-        ItemUIType m_ItemUIType;
-        public ItemUIType ItemUIType => m_ItemUIType;
-
-        [SerializeField]
         Image m_Icon;
 
         [SerializeField]
@@ -122,25 +118,22 @@ namespace Weapon_System.GameplayObjects.UI
 
             if (eventData.pointerDrag.TryGetComponent(out WeaponItemUI droppedWeaponItemUI))
             {
-                if (droppedWeaponItemUI.ItemUIType == m_ItemUIType)
+                // If there is already a Stored WeaponItem in this ItemUI ,
+                // Check if the GunItem Type of dropped WeaponItemUI is same as this WeaponItemUI
+                if (StoredGunItem != null &&
+                    droppedWeaponItemUI.StoredGunItem.ItemData.ItemTag == StoredGunItem.ItemData.ItemTag)
                 {
-                    // If there is already a Stored WeaponItem in this ItemUI ,
-                    // Check if the GunItem Type of dropped WeaponItemUI is same as this WeaponItemUI
-                    if (StoredGunItem != null && 
-                        droppedWeaponItemUI.StoredGunItem.ItemData.ItemTag == StoredGunItem.ItemData.ItemTag)
-                    {
-                        return;
-                    }
-
-                    m_WeaponUIMediator.SwapWeaponItemsInInventory(droppedWeaponItemUI.SlotIndex, m_SlotIndex);
+                    return;
                 }
+
+                m_WeaponUIMediator.SwapWeaponItemsInInventory(droppedWeaponItemUI.SlotIndex, m_SlotIndex);
             }
             else if (eventData.pointerDrag.TryGetComponent(out ItemUI droppedItemUI))
             {
                 if (droppedItemUI.StoredItem is not WeaponItem)
                     return;
 
-                if (droppedItemUI.StoredItem.ItemData.UIType == m_ItemUIType)
+                if (droppedItemUI.StoredItem.ItemData.UITag == m_WeaponUIMediator.ItemUITag)
                 {
                     // This is an ItemUI of a Weapon Item,
                     m_WeaponUIMediator.TryAddWeaponAndDestroyItemUI(droppedItemUI);
