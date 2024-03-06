@@ -137,10 +137,10 @@ namespace Weapon_System.GameplayObjects.UI
             }
             else if (eventData.pointerDrag.TryGetComponent(out ItemUI droppedItemUI))
             {
-                if (droppedItemUI.Item is not WeaponItem)
+                if (droppedItemUI.StoredItem is not WeaponItem)
                     return;
 
-                if (droppedItemUI.Item.ItemData.UIType == m_ItemUIType)
+                if (droppedItemUI.StoredItem.ItemData.UIType == m_ItemUIType)
                 {
                     // This is an ItemUI of a Weapon Item,
                     m_WeaponUIMediator.TryAddWeaponAndDestroyItemUI(droppedItemUI);

@@ -759,21 +759,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ItemUIType: 5
-  m_OnAddInventoryItemToInventoryEvent: {fileID: 11400000, guid: 9fc8d72ca1c60dd459ffee1d6357ac9f,
-    type: 2}
-  m_OnRemoveInventoryItemFromInventoryEvent: {fileID: 11400000, guid: a7879200c488cbe40b19e42a86467c4c,
-    type: 2}
   m_OnWeaponItemAddedToInventoryEvent: {fileID: 11400000, guid: 5eec038a6de2f5243b6e0db3ab98e689,
     type: 2}
   m_OnBeforeWeaponItemRemovedFromWeaponInventoryEvent: {fileID: 11400000, guid: 0f2a273ae29ef0b4caebad2bec5c92e4,
     type: 2}
   m_OnWeaponItemSwappedInInventoryEvent: {fileID: 11400000, guid: 734bafa2b72e3f146ae1036e117ce876,
     type: 2}
-  m_WeaponUIMediator: {fileID: 218537252}
-  m_InventoryUI: {fileID: 655449599}
+  m_ItemUserHand: {fileID: 1898064524}
   m_AttachmentItemUIs:
   - {fileID: 685930057}
   - {fileID: 14023520}
+  m_CanvasTransform: {fileID: 738153172}
 --- !u!114 &218537255
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -787,21 +783,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ItemUIType: 8
-  m_OnAddInventoryItemToInventoryEvent: {fileID: 11400000, guid: 9fc8d72ca1c60dd459ffee1d6357ac9f,
-    type: 2}
-  m_OnRemoveInventoryItemFromInventoryEvent: {fileID: 11400000, guid: a7879200c488cbe40b19e42a86467c4c,
-    type: 2}
   m_OnWeaponItemAddedToInventoryEvent: {fileID: 11400000, guid: 5eec038a6de2f5243b6e0db3ab98e689,
     type: 2}
   m_OnBeforeWeaponItemRemovedFromWeaponInventoryEvent: {fileID: 11400000, guid: 0f2a273ae29ef0b4caebad2bec5c92e4,
     type: 2}
   m_OnWeaponItemSwappedInInventoryEvent: {fileID: 11400000, guid: 734bafa2b72e3f146ae1036e117ce876,
     type: 2}
-  m_WeaponUIMediator: {fileID: 218537252}
-  m_InventoryUI: {fileID: 655449599}
+  m_ItemUserHand: {fileID: 1898064524}
   m_AttachmentItemUIs:
   - {fileID: 722403868}
   - {fileID: 1570639779}
+  m_CanvasTransform: {fileID: 738153172}
 --- !u!114 &218537256
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -815,21 +807,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ItemUIType: 4
-  m_OnAddInventoryItemToInventoryEvent: {fileID: 11400000, guid: 9fc8d72ca1c60dd459ffee1d6357ac9f,
-    type: 2}
-  m_OnRemoveInventoryItemFromInventoryEvent: {fileID: 11400000, guid: a7879200c488cbe40b19e42a86467c4c,
-    type: 2}
   m_OnWeaponItemAddedToInventoryEvent: {fileID: 11400000, guid: 5eec038a6de2f5243b6e0db3ab98e689,
     type: 2}
   m_OnBeforeWeaponItemRemovedFromWeaponInventoryEvent: {fileID: 11400000, guid: 0f2a273ae29ef0b4caebad2bec5c92e4,
     type: 2}
   m_OnWeaponItemSwappedInInventoryEvent: {fileID: 11400000, guid: 734bafa2b72e3f146ae1036e117ce876,
     type: 2}
-  m_WeaponUIMediator: {fileID: 218537252}
-  m_InventoryUI: {fileID: 655449599}
+  m_ItemUserHand: {fileID: 1898064524}
   m_AttachmentItemUIs:
   - {fileID: 1848328053}
   - {fileID: 1224227113}
+  m_CanvasTransform: {fileID: 738153172}
 --- !u!114 &218537257
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -843,21 +831,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ItemUIType: 6
-  m_OnAddInventoryItemToInventoryEvent: {fileID: 11400000, guid: 9fc8d72ca1c60dd459ffee1d6357ac9f,
-    type: 2}
-  m_OnRemoveInventoryItemFromInventoryEvent: {fileID: 11400000, guid: a7879200c488cbe40b19e42a86467c4c,
-    type: 2}
   m_OnWeaponItemAddedToInventoryEvent: {fileID: 11400000, guid: 5eec038a6de2f5243b6e0db3ab98e689,
     type: 2}
   m_OnBeforeWeaponItemRemovedFromWeaponInventoryEvent: {fileID: 11400000, guid: 0f2a273ae29ef0b4caebad2bec5c92e4,
     type: 2}
   m_OnWeaponItemSwappedInInventoryEvent: {fileID: 11400000, guid: 734bafa2b72e3f146ae1036e117ce876,
     type: 2}
-  m_WeaponUIMediator: {fileID: 218537252}
-  m_InventoryUI: {fileID: 655449599}
+  m_ItemUserHand: {fileID: 1898064524}
   m_AttachmentItemUIs:
   - {fileID: 726412312}
   - {fileID: 1746935688}
+  m_CanvasTransform: {fileID: 738153172}
 --- !u!1 &328944623
 GameObject:
   m_ObjectHideFlags: 0
@@ -1686,14 +1670,6 @@ MonoBehaviour:
   m_OnToggleInventoryUIEvent: {fileID: 11400000, guid: 839a9b09f40946b4589534a87d46908b,
     type: 2}
   m_OnInventoryItemAddedToInventory: {fileID: 11400000, guid: a232a433ebe571f4f97973b1bc5d5073,
-    type: 2}
-  m_OnInventoryItemRemovedFromInventory: {fileID: 11400000, guid: 7b2daeeab0cd74e40b59aa4374ac4ee6,
-    type: 2}
-  m_OnAddWeaponItemToWeaponInventoryEvent: {fileID: 11400000, guid: 4f719061b29732f408effd265cf49e20,
-    type: 2}
-  m_OnAddInventoryItemToInventoryEvent: {fileID: 11400000, guid: 9fc8d72ca1c60dd459ffee1d6357ac9f,
-    type: 2}
-  m_OnRemoveInventoryItemFromInventoryEvent: {fileID: 11400000, guid: a7879200c488cbe40b19e42a86467c4c,
     type: 2}
   m_ItemUIPrefab: {fileID: 3163105790329499988, guid: 31b90ab2993f3714b9c2257a7f0c026c,
     type: 3}

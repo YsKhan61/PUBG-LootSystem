@@ -132,30 +132,43 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         public bool TryStoreAndCollectInventoryItem(InventoryItem item)
         {
+            bool isStored = TryStoreInventoryItemAndRaiseEvent(item);
+
+            if (!isStored)
+            {
+                return false;
+            }
+
+            return TryCollectItem(item);
+        }
+
+        public bool TryStoreInventoryItemAndRaiseEvent(InventoryItem item)
+        {
             bool isStored = m_Inventory.TryAddItemToInventory(item);
             if (!isStored)
             {
                 return false;
             }
 
-            TryCollectItem(item);
             m_OnInventoryItemAddedToInventory.RaiseEvent(item);
-
             return true;
         }
 
         public bool TryRemoveAndDropInventoryItem(InventoryItem item)
         {
-            bool isRemoved = m_Inventory.TryRemoveItemFromInventory(item);
+            bool isRemoved = TryRemoveInventoryItem(item);
             if (!isRemoved)
             {
                 return false;
             }
-            TryDropItem(item);
 
+            return TryDropItem(item);        
+        }
+
+        public bool TryRemoveInventoryItem(InventoryItem item)
+        {
+            return m_Inventory.TryRemoveItemFromInventory(item);
             // No event needed yet, if needed later we raise the event here.
-            
-            return true;
         }
 
         /// <summary>
@@ -200,6 +213,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
             return true;
         }
+
 
         public bool TryStoreAndCollectWeaponInWeaponStorage(WeaponItem wepaonItem)
         {
@@ -287,6 +301,12 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             m_OnWeaponItemSwappedInInventoryEvent.RaiseEvent(leftIndex, rightIndex);
             return true;
         }
+
+        public bool TryGetWeaponItemFromWeaponInventory(int index, out WeaponItem weaponItem)
+        {
+            return m_Inventory.TryGetWeaponItem(index, out weaponItem);
+        }
+
 
         private void ScanNearbyItems()
         {
@@ -383,14 +403,14 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             ItemInHand?.Hold();
         }
 
-        private void TryDropItem(IDroppable item)
+        private bool TryDropItem(IDroppable item)
         {
             if (item as IHoldable == ItemInHand)
             {
                 TryPutAwayItem(true);
             }
 
-            item.Drop();
+            return item.Drop();
         }
 
         #region Debug purposes

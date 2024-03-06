@@ -71,7 +71,7 @@ namespace Weapon_System.GameplayObjects.UI
             if (eventData.pointerDrag.TryGetComponent(out ItemUI droppedItemUI))
             {
                 // Check if it's UIType is same as this UIType
-                if (droppedItemUI.Item.ItemData.UIType == m_ItemUIType)
+                if (droppedItemUI.StoredItem.ItemData.UIType == m_ItemUIType)
                 {
                     // If no, try store backpack
                     m_InventoryUI.TryAddBackpackAndDestroyItemUI(droppedItemUI);

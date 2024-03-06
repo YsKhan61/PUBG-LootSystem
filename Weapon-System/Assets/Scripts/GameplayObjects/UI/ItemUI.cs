@@ -25,7 +25,7 @@ namespace Weapon_System.GameplayObjects.UI
         public InventoryUI InventoryUI => m_InventoryUI;
 
         private InventoryItem m_Item;
-        public InventoryItem Item => m_Item;
+        public InventoryItem StoredItem => m_Item;
 
         public string Name => gameObject.name;
 

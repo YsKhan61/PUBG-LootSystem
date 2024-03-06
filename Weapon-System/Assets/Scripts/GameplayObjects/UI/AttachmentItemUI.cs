@@ -9,10 +9,6 @@ namespace Weapon_System.GameplayObjects.UI
     [RequireComponent(typeof(RectTransform), typeof(CanvasGroup))]
     public class AttachmentItemUI : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler
     {
-        /*[SerializeField]
-        ItemUIType m_ItemUIType;
-        public ItemUIType ItemUIType => m_ItemUIType;*/
-
         [SerializeField]
         Image m_Icon;
 
@@ -114,7 +110,6 @@ namespace Weapon_System.GameplayObjects.UI
 
             if (eventData.pointerDrag.TryGetComponent(out AttachmentItemUI droppedAttachmentItemUI))
             {
-                // another AttachmentItemUI is being dropped on this ItemUI
                 m_Mediator.OnAttachmentItemUIDroppedInAttachmentItemUI(droppedAttachmentItemUI, this);
             }
             else if (eventData.pointerDrag.TryGetComponent(out ItemUI droppedItemUI))
