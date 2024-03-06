@@ -9,33 +9,16 @@ namespace Weapon_System.GameplayObjects.UI
 {
     /// <summary>
     /// The UI of the inventory that will showcase all the picked up items.
-    /// It is the main UI of the game scene. 
-    /// It will be toggled on/off by the player.
     /// </summary>
     public class InventoryUI : MonoBehaviour
     {
         [Header("Listens to")]
 
-        [SerializeField, Tooltip("When Toggle Inventory UI input is performed, this event is invoked")]
+        [SerializeField, Tooltip("When Toggle Inventory UI input is performed, this event is invoked. It is used to scan the nearby items only when Loot UI is visible in screen")]
         BoolEventChannelSO m_OnToggleInventoryUIEvent;
 
         [SerializeField, Tooltip("When an Inventory item is added to the inventory, this event is invoked")]
         InventoryItemEventChannelSO m_OnInventoryItemAddedToInventory;
-
-        [SerializeField, Tooltip("When an Inventory item is removed from the inventory, this event is invoked")]
-        InventoryItemEventChannelSO m_OnInventoryItemRemovedFromInventory;
-
-
-        [Space(10)]
-
-        [Header("Broadcast to")]
-
-        [SerializeField, Tooltip("To add an inventory item in the inventory, this event is invoked")]
-        InventoryItemEventChannelSO m_OnAddInventoryItemToInventoryEvent;
-
-        [SerializeField, Tooltip("To remove an inventory item from inventory, this event is invoked")]
-        InventoryItemEventChannelSO m_OnRemoveInventoryItemFromInventoryEvent;
-
 
 
         [Space(10)]
@@ -69,19 +52,12 @@ namespace Weapon_System.GameplayObjects.UI
 
         List<ItemUI> m_ViscinityItemUIs;
 
-        /// <summary>
-        /// This is a temporary ItemUI that will be used to store the ItemUI 
-        /// that is being dragged after it's item in it is stored in inventory
-        /// </summary>
-        ItemUI m_TempItemUI;
-
 
         private void Start()
         {
             m_ViscinityItemUIs = new List<ItemUI>();
 
-            m_OnInventoryItemAddedToInventory.OnEventRaised += OnInventoryItemAddedToInventory;
-            m_OnInventoryItemRemovedFromInventory.OnEventRaised += OnInventoryItemRemovedFromInventory;
+            m_OnInventoryItemAddedToInventory.OnEventRaised += CreateItemUIInInventorySlot;
         }
 
         private void Update()
@@ -91,10 +67,8 @@ namespace Weapon_System.GameplayObjects.UI
 
         private void OnDestroy()
         {
-            m_OnInventoryItemAddedToInventory.OnEventRaised -= OnInventoryItemAddedToInventory;
-            m_OnInventoryItemRemovedFromInventory.OnEventRaised -= OnInventoryItemRemovedFromInventory;
+            m_OnInventoryItemAddedToInventory.OnEventRaised -= CreateItemUIInInventorySlot;
         }
-
         
 
         /// <summary>
@@ -236,49 +210,26 @@ namespace Weapon_System.GameplayObjects.UI
 
         void OnItemUIDroppedFromViscinityToInventory(ItemUI itemUI)
         {
-            m_TempItemUI = itemUI;
-            m_OnAddInventoryItemToInventoryEvent.RaiseEvent(itemUI.Item);
+            bool success = m_ItemUserHand.TryStoreAndCollectInventoryItem(itemUI.Item);
+            if (success)
+            {
+                ReleaseItemUIToPool(itemUI);
+            }
+
+            // NOTE - Here we could reposition the ItemUI from VicinitySlot to InventorySlot
+            // But, we are not doing it, as when we pickup inventory item by pressing pickup input,
+            // we dont have vicinity slot's ItemUI to reposition.
+            // Hence we are creating a new ItemUI in InventorySlot after we recieve an event
+            // that an item is added to inventory.
         }
 
         void OnItemUIDroppedFromInventoryToViscinity(ItemUI itemUI)
         {
-            m_TempItemUI = itemUI;
-            m_OnRemoveInventoryItemFromInventoryEvent.RaiseEvent(itemUI.Item);
-        }
-
-        private void OnInventoryItemAddedToInventory(InventoryItem item)
-        {
-            if (m_TempItemUI == null)
+            bool success = m_ItemUserHand.TryRemoveAndDropInventoryItem(itemUI.Item);
+            if (success)
             {
-                // THis happens when we press an input button to pick up item
-                CreateItemUIInInventorySlot(item);
-                return;
+                ReleaseItemUIToPool(itemUI);
             }
-
-            
-            if (item != m_TempItemUI.Item)
-            {
-                Debug.LogError("This should never happen!");
-                return;
-            }
-
-            // This happens when we drop an ItemUI from Viscinity to Inventory
-            m_TempItemUI.transform.SetParent(m_InventoryContentTransform);
-            m_TempItemUI.OnDragSuccess(SlotType.Inventory);
-            m_ViscinityItemUIs.Remove(m_TempItemUI);
-            m_TempItemUI = null;
-        }
-
-        private void OnInventoryItemRemovedFromInventory(InventoryItem item)
-        {
-            if (item != m_TempItemUI.Item)
-            {
-                Debug.LogError("This should never happen!");
-                return;
-            }
-
-            // We destroy this ItemUI from InventoryUI, after it's item is already dropped.
-            ReleaseItemUIToPool(m_TempItemUI);
         }
     }
 }

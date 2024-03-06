@@ -1,18 +1,17 @@
 using System.Collections.Generic;
 using UnityEngine;
-using Weapon_System.Utilities;
 
 
 namespace Weapon_System.GameplayObjects.ItemsSystem
 {
     /// <summary>
     /// The main Inventory of the Game, where player will store all collected and storable items
-    /// This will be only listening to events, and will not be broadcasting any event.
-    /// It will listen to directly collected item event, or when event is raised by ItemUI added to the InventoryUI
+    /// Only ItemUserHand is allowed to access this class.
+    /// Follow FlowDiagram for more details.
     /// </summary>
     public class Inventory : MonoBehaviour
     {
-        [Header("Listens to")]
+        /*[Header("Listens to")]
 
         [SerializeField, Tooltip("To add an inventory item in the inventory, this event is invoked")]
         InventoryItemEventChannelSO m_OnAddInventoryItemToInventoryEvent;
@@ -26,20 +25,20 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         [Header("Broadcast to")]
 
         [SerializeField, Tooltip("When an Inventory item is added to the inventory, this event is invoked")]
-        InventoryItemEventChannelSO m_OnInventoryItemAddedToInventory;      
+        InventoryItemEventChannelSO m_OnInventoryItemAddedToInventory;
 
         [SerializeField, Tooltip("When an Inventory item is removed from the inventory, this event is invoked")]
         InventoryItemEventChannelSO m_OnInventoryItemRemovedFromInventory;
-        
 
-        [Space(10)]
+
+        [Space(10)]*/
 
         [SerializeField]
         int m_SpaceAvailable = 50;
 
-        [Header("---------Debug purposes----------")]
+        [Header("---------Debug purposes----------")]           // For Debug purposes only
 
-        [Header("Inventory items")]
+        [Header("Inventory items")]                             // For Debug purposes only
 
         /// <summary>
         /// We are not using IStorable interface rather using InventoryItem,
@@ -66,16 +65,6 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         {
             m_InventoryItems = new List<InventoryItem>();
             m_Weapons = new WeaponItem[2];                    // For now only 2 guns are allowed
-
-            
-            m_OnAddInventoryItemToInventoryEvent.OnEventRaised += AddItemToInventoryAndRaiseEvent;
-            m_OnRemoveInventoryItemFromInventoryEvent.OnEventRaised += RemoveItemFromInventoryAndRaiseEvent;
-        }
-
-        private void OnDestroy()
-        {
-            m_OnAddInventoryItemToInventoryEvent.OnEventRaised -= AddItemToInventoryAndRaiseEvent;
-            m_OnRemoveInventoryItemFromInventoryEvent.OnEventRaised -= RemoveItemFromInventoryAndRaiseEvent;
         }
 
         /// <summary>
@@ -99,12 +88,6 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             return true;
         }
 
-        public void AddItemToInventoryAndRaiseEvent(InventoryItem item)
-        {
-            TryAddItemToInventory(item);
-            m_OnInventoryItemAddedToInventory.RaiseEvent(item);
-        }
-
         public bool TryRemoveItemFromInventory(InventoryItem item)
         {
             if (!m_InventoryItems.Contains(item))
@@ -115,48 +98,6 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             Debug.Log(item.Name + " removed from inventory!");
 
             return true;
-        }
-
-        public void RemoveItemFromInventoryAndRaiseEvent(InventoryItem item)
-        {
-            TryRemoveItemFromInventory(item);
-            m_OnInventoryItemRemovedFromInventory.RaiseEvent(item);
-        }
-
-        /// <summary>
-        /// Stores the gun in separate array.
-        /// </summary>
-        /// <param name="weaponItem">The gun item to store</param>
-        public void AddWeaponItemToWeaponInventory(WeaponItem weaponItem)
-        {
-            // Try add to the first empty slot
-            for (int i = 0; i < m_Weapons.Length; i++)
-            {
-                if (m_Weapons[i] != null)
-                    continue;
-
-                AddWeaponItemToStorageIndex(weaponItem, i);
-                return;
-            }
-
-            // Try replacing the gun in hand with the new gun
-            for (int i = 0; i < m_Weapons.Length; i++)
-            {
-                if (!m_Weapons[i].IsInHand)
-                    continue;
-
-                TryRemoveWeaponItem(m_Weapons[i]);
-
-                AddWeaponItemToStorageIndex(weaponItem, i);
-                return;
-            }
-
-            // If no empty slot is present, nor is there any gun in hand,
-            // replace the first gun with the new gun.
-            TryRemoveWeaponItem(m_Weapons[0]);
-
-            // Store the new gun in the empty slot
-            AddWeaponItemToStorageIndex(weaponItem, 0);
         }
 
         public bool AddWeaponItemToStorageIndex(in WeaponItem weaponItem, in int index)
@@ -290,41 +231,5 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             return true;
         }
 
-        private void OnAddWeaponItemToWeaponInventoryToSpecificIndex(WeaponItem weaponItem, int index)
-        {
-            // Now add the new weapon item to the index
-            AddWeaponItemToStorageIndex(weaponItem, index);
-        }
-
-        private void OnRemoveWeaponItemFromWeaponInventoryFromSpecificIndex(WeaponItem weaponItem, int index)
-        {
-            TryRemoveWeaponItem(weaponItem);
-        }
-
-        private bool TryRemoveWeaponItem(in WeaponItem weaponItem)
-        {
-            if (!TryGetIndexOfWeaopnItem(weaponItem, out int index))
-                return false;
-
-            // m_OnBeforeWeaponItemRemovedFromWeaponInventoryEvent.RaiseEvent(weaponItem, index);
-            // m_OnWeaponItemRemovedFromWeaponInventoryFromSpecificIndexEvent.RaiseEvent(weaponItem, index);
-            m_Weapons[index] = null;
-            return true;
-        }
-
-        private bool TryGetIndexOfWeaopnItem(WeaponItem item, out int index)
-        {
-            index = -1;
-            for (int i = 0; i < m_Weapons.Length; i++)
-            {
-                if (m_Weapons[i] == item)
-                {
-                    index = i;
-                    return true;
-                }
-            }
-
-            return false;
-        }
     }
 }
