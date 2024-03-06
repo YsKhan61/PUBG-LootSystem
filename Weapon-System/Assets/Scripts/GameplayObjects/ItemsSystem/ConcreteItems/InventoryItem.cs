@@ -27,7 +27,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         [SerializeField, Tooltip("The root game object of this item")]
         protected GameObject m_RootGO;
 
-        Transform m_handTransform;
+        protected Transform m_handTransform;
 
         public virtual bool Collect(ItemUserHand hand)
         {

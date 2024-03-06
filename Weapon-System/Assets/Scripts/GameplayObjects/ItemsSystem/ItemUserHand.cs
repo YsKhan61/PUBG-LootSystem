@@ -69,6 +69,10 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         [SerializeField, Tooltip("This radius will be used for the OverlapSphere that will detect the collectable items nearby")]
         float m_Radius = 1f;
 
+        [SerializeField, Tooltip("The backpack will be made child to this transform")]
+        Transform m_BackpackHolderTransform;
+        public Transform BackpackHolderTransform => m_BackpackHolderTransform;
+
         public Transform Transform => transform;
 
         /// <remarks>
