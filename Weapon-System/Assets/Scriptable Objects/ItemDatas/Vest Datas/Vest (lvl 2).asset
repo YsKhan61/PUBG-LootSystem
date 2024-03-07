@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15fdde7965d942940980ec97531e4cd0, type: 3}
+  m_Name: Vest (lvl 2)
+  m_EditorClassIdentifier: 
+  m_ItemTag: {fileID: 11400000, guid: e137f319ca26313498a2bf7ff06edb11, type: 2}
+  m_UITag: {fileID: 11400000, guid: ac131fff990e0aa45a7e94391436c18d, type: 2}
+  m_IconSprite: {fileID: 21300000, guid: 22306c64fa0891847883e68e3e432eb8, type: 3}
+  m_SpaceRequired: -70

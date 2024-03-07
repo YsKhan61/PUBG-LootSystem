@@ -60,6 +60,12 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         HelmetItem m_HelmetItem;
         public HelmetItem HelmetItem => m_HelmetItem;
 
+        [Header("Vest")]
+
+        [SerializeField]        // SerializeField is used only for Debug purposes
+        VestItem m_VestItem;
+        public VestItem VestItem => m_VestItem;
+
         [Header("Backpack")]
 
         [SerializeField]        // SerializeField is used only for Debug purposes
@@ -224,6 +230,8 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             return false;
         }
 
+
+
         public bool TryAddBackpackToInventory(BackpackItem backpackItem)
         {
             if (m_BackpackItem != null)
@@ -257,6 +265,8 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             return true;
         }
 
+
+
         public bool TryAddHelmetToInventory(HelmetItem helmetItem)
         {
             if (m_HelmetItem != null)
@@ -278,6 +288,32 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             }
 
             m_HelmetItem = null;
+            return true;
+        }
+
+
+
+        public bool TryAddVestToInventory(VestItem vestItem)
+        {
+            if (m_VestItem != null)
+            {
+                Debug.Log("Vest already present in the inventory!");
+                return false;
+            }
+
+            m_VestItem = vestItem;
+            return true;
+        }
+
+        public bool TryRemoveVestFromInventory(VestItem vestItem)
+        {
+            if (m_VestItem != vestItem)
+            {
+                Debug.Log("Vest not present in the inventory!");
+                return false;
+            }
+
+            m_VestItem = null;
             return true;
         }
 

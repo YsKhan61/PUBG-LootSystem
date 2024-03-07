@@ -83,24 +83,6 @@ namespace Weapon_System.GameplayObjects.UI
                 return;
             }
 
-            /*if (droppedItemUI.StoredItem is WeaponItem && slotTypeOfOtherItemUI == SlotType.Inventory)
-            {
-                TryAddWeaponAndDestroyItemUI(droppedItemUI);
-                return;
-            }
-
-            if (droppedItemUI.StoredItem is BackpackItem && slotTypeOfOtherItemUI == SlotType.Inventory)
-            {
-                TryAddBackpackAndDestroyItemUI(droppedItemUI);
-                return;
-            }
-
-            if (droppedItemUI.StoredItem is HelmetItem && slotTypeOfOtherItemUI == SlotType.Inventory)
-            {
-                TryAddHelmetAndDestroyItemUI(droppedItemUI);
-                return;
-            }*/
-
             switch (slotTypeOfOtherItemUI)
             {
                 case SlotType.Inventory:
@@ -133,33 +115,6 @@ namespace Weapon_System.GameplayObjects.UI
             {
                 itemUI.ResetItemDataAndHide();
                 m_PoolManager.ReleaseObjectToPool(itemUI);
-            }
-        }
-
-        public void TryAddWeaponAndDestroyItemUI(ItemUI droppedItemUI)
-        {
-            bool success = m_ItemUserHand.TryStoreCollectAndHoldWeapon(droppedItemUI.StoredItem as WeaponItem);
-            if (success)
-            {
-                ReleaseItemUIToPool(droppedItemUI);
-            }
-        }
-
-        internal void TryAddBackpackAndDestroyItemUI(ItemUI droppedItemUI)
-        {
-            bool success = m_ItemUserHand.TryStoreAndCollectBackpack(droppedItemUI.StoredItem as BackpackItem);
-            if (success)
-            {
-                ReleaseItemUIToPool(droppedItemUI);
-            }
-        }
-
-        internal void TryAddHelmetAndDestroyItemUI(ItemUI droppedItemUI)
-        {
-            bool success = m_ItemUserHand.TryStoreAndCollectHelmet(droppedItemUI.StoredItem as HelmetItem);
-            if (success)
-            {
-                ReleaseItemUIToPool(droppedItemUI);
             }
         }
 

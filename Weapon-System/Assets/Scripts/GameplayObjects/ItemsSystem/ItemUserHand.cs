@@ -67,6 +67,13 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         HelmetItemEventChannelSO m_OnHelmetItemRemovedFromInventory;
 
 
+        [SerializeField, Tooltip("When a vest is added to the inventory, this event is invoked")]
+        VestItemEventChannelSO m_OnVestItemAddedToInventory;
+
+        [SerializeField, Tooltip("When a vest is removed from the inventory, this event is invoked")]
+        VestItemEventChannelSO m_OnVestItemRemovedFromInventory;
+
+
 
         [Space(10)]
 
@@ -87,7 +94,10 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         Transform m_HelmetHolderTransform;
         public Transform HelmetHolderTransform => m_HelmetHolderTransform;
 
-        public Transform Transform => transform;
+        [SerializeField, Tooltip("The vest will be made child to this transform")]
+        Transform m_VestHolderTransform;
+        public Transform VestHolderTransform => m_VestHolderTransform;
+
 
         /// <remarks>
         /// For now we use GunItem, later we can use a base class for all items
@@ -414,6 +424,48 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
                 return false;
 
             m_OnHelmetItemRemovedFromInventory.RaiseEvent(helmetItem);
+            return true;
+        }
+
+
+
+        public bool TryStoreAndCollectVest(VestItem vestItem)
+        {
+            if (!TryStoreVest(vestItem))
+                return false;
+
+            return TryCollect(vestItem);
+        }
+
+        public bool TryStoreVest(VestItem vestItem)
+        {
+            if (m_Inventory.VestItem != null)
+            {
+                if (!TryRemoveAndDropVest(m_Inventory.VestItem))
+                    return false;
+            }
+
+            if (!m_Inventory.TryAddVestToInventory(vestItem))
+                return false;
+
+            m_OnVestItemAddedToInventory.RaiseEvent(vestItem);
+            return true;
+        }
+
+        public bool TryRemoveAndDropVest(VestItem vestItem)
+        {
+            if (!TryRemoveVest(vestItem))
+                return false;
+
+            return TryPutAwayAndDropItem(vestItem);
+        }
+
+        public bool TryRemoveVest(VestItem vestItem)
+        {
+            if (!m_Inventory.TryRemoveVestFromInventory(vestItem))
+                return false;
+
+            m_OnVestItemRemovedFromInventory.RaiseEvent(vestItem);
             return true;
         }
 

@@ -6,7 +6,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
     /// <summary>
     /// Helmets
     /// </summary>
-    public class HelmetItem : InventoryItem
+    public class VestItem : InventoryItem
     {
         public override bool TryCollect(ItemUserHand hand)
         {
@@ -16,7 +16,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             }
 
             IsCollected = true;
-            m_RootGO.transform.SetParent(hand.HelmetHolderTransform);
+            m_RootGO.transform.SetParent(hand.VestHolderTransform);
             m_RootGO.transform.localPosition = Vector3.zero;
             m_RootGO.transform.localRotation = Quaternion.identity;
             Debug.Log(Name + " is collected");
@@ -25,12 +25,12 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         public override bool TryStore(ItemUserHand hand)
         {
-            return hand.TryStoreHelmet(this);
+            return hand.TryStoreVest(this);
         }
 
         public override bool TryRemove(ItemUserHand hand)
         {
-            return hand.TryRemoveHelmet(this);
+            return hand.TryRemoveVest(this);
         }
 
         public override bool Drop(ItemUserHand hand)

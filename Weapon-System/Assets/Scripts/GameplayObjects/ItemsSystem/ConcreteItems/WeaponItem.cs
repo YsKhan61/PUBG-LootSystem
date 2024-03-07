@@ -43,9 +43,9 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
             IsCollected = true;
             
-            m_RootGO.transform.position = hand.Transform.position;
-            m_RootGO.transform.forward = hand.Transform.forward;
-            m_RootGO.transform.SetParent(hand.Transform);
+            m_RootGO.transform.position = hand.transform.position;
+            m_RootGO.transform.forward = hand.transform.forward;
+            m_RootGO.transform.SetParent(hand.transform);
 
             IsInHand = false;
             HideGraphics();
