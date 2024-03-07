@@ -139,6 +139,7 @@ Transform:
   - {fileID: 2460721442636386673}
   - {fileID: 941956903071699302}
   - {fileID: 4696320689157423031}
+  - {fileID: 5284090939418896257}
   - {fileID: 4740263476427078353}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -453,6 +454,37 @@ MonoBehaviour:
   m_PickupItemEvent: {fileID: 11400000, guid: 59e93240b36bad642b18db42ba6fc7f5, type: 2}
   m_ToggleInventoryEvent: {fileID: 11400000, guid: 839a9b09f40946b4589534a87d46908b,
     type: 2}
+--- !u!1 &2568979545019189838
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5284090939418896257}
+  m_Layer: 0
+  m_Name: HelmetHolder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5284090939418896257
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2568979545019189838}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.8829999, z: -0.116000056}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6111941527781067775}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4659557876642669036
 GameObject:
   m_ObjectHideFlags: 0
@@ -510,10 +542,6 @@ MonoBehaviour:
     type: 2}
   m_OnInventoryItemAddedToInventory: {fileID: 11400000, guid: a232a433ebe571f4f97973b1bc5d5073,
     type: 2}
-  m_OnBackpackItemAddedToInventory: {fileID: 11400000, guid: d9c0bc1879976c74c8b8a22cb17957a7,
-    type: 2}
-  m_OnBackpackItemRemovedFromInventory: {fileID: 11400000, guid: 23bedc37de8fc704f929bb972962b4d3,
-    type: 2}
   m_OnWeaponItemAddedToWeaponInventoryToSpecificIndexEvent: {fileID: 11400000, guid: 5eec038a6de2f5243b6e0db3ab98e689,
     type: 2}
   m_OnBeforeWeaponItemRemovedFromWeaponInventoryEvent: {fileID: 11400000, guid: 0f2a273ae29ef0b4caebad2bec5c92e4,
@@ -522,12 +550,21 @@ MonoBehaviour:
     guid: 19db8f6374cebb94791464f5e6b0e88f, type: 2}
   m_OnWeaponItemSwappedInInventoryEvent: {fileID: 11400000, guid: 734bafa2b72e3f146ae1036e117ce876,
     type: 2}
+  m_OnBackpackItemAddedToInventory: {fileID: 11400000, guid: d9c0bc1879976c74c8b8a22cb17957a7,
+    type: 2}
+  m_OnBackpackItemRemovedFromInventory: {fileID: 11400000, guid: 23bedc37de8fc704f929bb972962b4d3,
+    type: 2}
+  m_OnHelmetItemAddedToInventory: {fileID: 11400000, guid: 6bf2cc84fc4bf644886fb5844fd8ee63,
+    type: 2}
+  m_OnHelmetItemRemovedFromInventory: {fileID: 11400000, guid: 4b0447ff2cd235b4b951d793c16f4382,
+    type: 2}
   m_Inventory: {fileID: 6398577312195835515}
   m_ItemLayer:
     serializedVersion: 2
     m_Bits: 65536
   m_Radius: 1
   m_BackpackHolderTransform: {fileID: 4740263476427078353}
+  m_HelmetHolderTransform: {fileID: 5284090939418896257}
 --- !u!1 &6033397690677499566
 GameObject:
   m_ObjectHideFlags: 0
@@ -575,6 +612,7 @@ MonoBehaviour:
   m_SpaceAvailable: 50
   m_InventoryItems: []
   m_Weapons: []
+  m_HelmetItem: {fileID: 0}
   m_BackpackItem: {fileID: 0}
 --- !u!1 &7338420347339635846
 GameObject:
@@ -664,6 +702,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4751317213596849972, guid: 249c722c53641c340bb15ef05eb46774,
+        type: 3}
+      propertyPath: m_Name
+      value: Eyes
       objectReference: {fileID: 0}
     - target: {fileID: 7056635873084247659, guid: 249c722c53641c340bb15ef05eb46774,
         type: 3}

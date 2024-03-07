@@ -54,6 +54,12 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         [SerializeField]        // SerializeField is used only for Debug purposes
         WeaponItem[] m_Weapons;       // Only primary and secondary gun. For now only 2 guns are allowed
 
+        [Header("Helmet")]
+
+        [SerializeField]        // SerializeField is used only for Debug purposes
+        HelmetItem m_HelmetItem;
+        public HelmetItem HelmetItem => m_HelmetItem;
+
         [Header("Backpack")]
 
         [SerializeField]        // SerializeField is used only for Debug purposes
@@ -219,6 +225,12 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         public bool TryRemoveBackpackFromInventory(BackpackItem backpackItem)
         {
+            if (m_BackpackItem != backpackItem)
+            {
+                Debug.Log("Backpack not present in the inventory!");
+                return false;
+            }
+
             int temp = m_SpaceAvailable + backpackItem.ItemData.SpaceRequired;       // Here backpackItem.ItemData.SpaceRequired will be provided as positive value
             if (temp < 0)
             {
@@ -228,6 +240,30 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
             m_SpaceAvailable = temp;
             m_BackpackItem = null;
+            return true;
+        }
+
+        public bool TryAddHelmetToInventory(HelmetItem helmetItem)
+        {
+            if (m_HelmetItem != null)
+            {
+                Debug.Log("Helmet already present in the inventory!");
+                return false;
+            }
+
+            m_HelmetItem = helmetItem;
+            return true;
+        }
+
+        public bool TryRemoveHelmetFromInventory(HelmetItem helmetItem)
+        {
+            if (m_HelmetItem != helmetItem)
+            {
+                Debug.Log("Helmet not present in the inventory!");
+                return false;
+            }
+
+            m_HelmetItem = null;
             return true;
         }
 

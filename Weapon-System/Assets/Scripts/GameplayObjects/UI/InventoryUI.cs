@@ -95,6 +95,12 @@ namespace Weapon_System.GameplayObjects.UI
                 return;
             }
 
+            if (droppedItemUI.StoredItem is HelmetItem && slotTypeOfOtherItemUI == SlotType.Inventory)
+            {
+                TryAddHelmetAndDestroyItemUI(droppedItemUI);
+                return;
+            }
+
             switch (slotTypeOfOtherItemUI)
             {
                 case SlotType.Inventory:
@@ -139,16 +145,6 @@ namespace Weapon_System.GameplayObjects.UI
             }
         }
 
-        public bool TryCollectItem(InventoryItem item)
-        {
-            return m_ItemUserHand.TryCollectItem(item);
-        }
-
-        public void AddItemToInventory(InventoryItem item)
-        {
-            m_Inventory.TryAddItemToInventory(item);
-        }
-
         internal void TryAddBackpackAndDestroyItemUI(ItemUI droppedItemUI)
         {
             bool success = m_ItemUserHand.TryStoreAndCollectBackpack(droppedItemUI.StoredItem as BackpackItem);
@@ -158,9 +154,13 @@ namespace Weapon_System.GameplayObjects.UI
             }
         }
 
-        internal bool TryRemoveAndDropBackpackFromInventory(BackpackItem backpackItem)
+        internal void TryAddHelmetAndDestroyItemUI(ItemUI droppedItemUI)
         {
-            return m_ItemUserHand.TryRemoveAndDropBackpack(backpackItem);
+            bool success = m_ItemUserHand.TryStoreAndCollectHelmet(droppedItemUI.StoredItem as HelmetItem);
+            if (success)
+            {
+                ReleaseItemUIToPool(droppedItemUI);
+            }
         }
 
         private void RefreshAndDisplayScannedCollectables()

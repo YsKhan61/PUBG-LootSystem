@@ -6,15 +6,15 @@ using Weapon_System.GameplayObjects.ItemsSystem;
 
 namespace Weapon_System.GameplayObjects.UI
 {
-    public class BackpackItemUI : MonoBehaviour, IPointerDownHandler, IDropHandler
+    public class HelmetItemUI : MonoBehaviour, IPointerDownHandler, IDropHandler
     {
         [Header("Listens to")]
 
-        [SerializeField, Tooltip("When a backpack is added to the inventory, this event is invoked")]
-        BackpackItemEventChannelSO m_OnBackpackItemAddedToInventory;
+        [SerializeField, Tooltip("When a helmet is added to the inventory, this event is invoked")]
+        HelmetItemEventChannelSO m_OnHelmetItemAddedToInventory;
 
-        [SerializeField, Tooltip("When a backpack is removed from the inventory, this event is invoked")]
-        BackpackItemEventChannelSO m_OnBackpackItemRemovedFromInventory;
+        [SerializeField, Tooltip("When a helmet is removed from the inventory, this event is invoked")]
+        HelmetItemEventChannelSO m_OnHelmetItemRemovedFromInventory;
 
         [Space(10)]
 
@@ -28,16 +28,16 @@ namespace Weapon_System.GameplayObjects.UI
         [SerializeField]
         ItemUserHand m_ItemUserHand;
 
-        BackpackItem m_StoredBackpack;
-        public BackpackItem StoredBackpack => m_StoredBackpack;
+        HelmetItem m_StoredHelmet;
+        public HelmetItem StoredHelmet => m_StoredHelmet;
 
         private Color m_DefaultColor;
 
 
         private void Start()
         {
-            m_OnBackpackItemAddedToInventory.OnEventRaised += SetData;
-            m_OnBackpackItemRemovedFromInventory.OnEventRaised += ResetData;
+            m_OnHelmetItemAddedToInventory.OnEventRaised += SetData;
+            m_OnHelmetItemRemovedFromInventory.OnEventRaised += ResetData;
 
             m_DefaultColor = m_Icon.color;
             ResetData(null);
@@ -45,8 +45,8 @@ namespace Weapon_System.GameplayObjects.UI
 
         private void OnDestroy()
         {
-            m_OnBackpackItemAddedToInventory.OnEventRaised -= SetData;
-            m_OnBackpackItemRemovedFromInventory.OnEventRaised -= ResetData;
+            m_OnHelmetItemAddedToInventory.OnEventRaised -= SetData;
+            m_OnHelmetItemRemovedFromInventory.OnEventRaised -= ResetData;
         }
 
         public void OnPointerDown(PointerEventData eventData)
@@ -55,11 +55,11 @@ namespace Weapon_System.GameplayObjects.UI
             if (eventData.button == PointerEventData.InputButton.Right)
             {
                 // Check if backpack is present
-                if (m_StoredBackpack == null)
+                if (m_StoredHelmet == null)
                     return;
 
                 // If yes, drop backpack
-                m_ItemUserHand.TryRemoveAndDropBackpack(m_StoredBackpack);
+                m_ItemUserHand.TryRemoveAndDropHelmet(m_StoredHelmet);
             }
         }
 
@@ -78,7 +78,7 @@ namespace Weapon_System.GameplayObjects.UI
                 }
 
                 // If no, try store backpack
-                bool success = m_ItemUserHand.TryStoreAndCollectBackpack(droppedItemUI.StoredItem as BackpackItem);
+                bool success = m_ItemUserHand.TryStoreAndCollectHelmet(droppedItemUI.StoredItem as HelmetItem);
                 if (success)
                 {
                     droppedItemUI.ReleaseSelfToPool();
@@ -86,16 +86,16 @@ namespace Weapon_System.GameplayObjects.UI
             }
         }
 
-        public void SetData(BackpackItem item)
+        public void SetData(HelmetItem item)
         {
-            m_StoredBackpack = item;
+            m_StoredHelmet = item;
             m_Icon.sprite = item.ItemData.IconSprite;
             m_Icon.color = new Color(1, 1, 1, 1);
         }
 
-        public void ResetData(BackpackItem _)
+        public void ResetData(HelmetItem _)
         {
-            m_StoredBackpack = null;
+            m_StoredHelmet = null;
             m_Icon.sprite = null;
             m_Icon.color = m_DefaultColor;
         }

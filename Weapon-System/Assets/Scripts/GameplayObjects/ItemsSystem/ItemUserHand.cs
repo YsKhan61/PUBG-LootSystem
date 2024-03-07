@@ -39,11 +39,6 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         [SerializeField, Tooltip("When an Inventory item is added to the inventory, this event is invoked")]
         InventoryItemEventChannelSO m_OnInventoryItemAddedToInventory;
 
-        [SerializeField, Tooltip("When a backpack is added to the inventory, this event is invoked")]
-        BackpackItemEventChannelSO m_OnBackpackItemAddedToInventory;
-
-        [SerializeField, Tooltip("When a backpack is removed from the inventory, this event is invoked")]
-        BackpackItemEventChannelSO m_OnBackpackItemRemovedFromInventory;
 
         [SerializeField, Tooltip("When an Weapon item is added to the inventory to specific index, this event is invoked")]
         WeaponItemIntEventChannelSO m_OnWeaponItemAddedToWeaponInventoryToSpecificIndexEvent;
@@ -56,6 +51,21 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         [SerializeField, Tooltip("When two WeaponItemUI's are swapped with each other in the inventory, this event is invoked")]
         IntIntEventChannelSO m_OnWeaponItemSwappedInInventoryEvent;
+
+
+        [SerializeField, Tooltip("When a backpack is added to the inventory, this event is invoked")]
+        BackpackItemEventChannelSO m_OnBackpackItemAddedToInventory;
+
+        [SerializeField, Tooltip("When a backpack is removed from the inventory, this event is invoked")]
+        BackpackItemEventChannelSO m_OnBackpackItemRemovedFromInventory;
+
+
+        [SerializeField, Tooltip("When a helmet is added to the inventory, this event is invoked")]
+        HelmetItemEventChannelSO m_OnHelmetItemAddedToInventory;
+
+        [SerializeField, Tooltip("When a helmet is removed from the inventory, this event is invoked")]
+        HelmetItemEventChannelSO m_OnHelmetItemRemovedFromInventory;
+
 
 
         [Space(10)]
@@ -179,50 +189,6 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             // No event needed yet, if needed later we raise the event here.
         }
 
-        /// <summary>
-        /// Try to store the backpack in the inventory and collect it.
-        /// Before trying to store, we check if there is already a backpack in the inventory.
-        /// If yes, we try remove it first.
-        /// </summary>
-        /// <param name="backpackItem"></param>
-        /// <returns></returns>
-        public bool TryStoreAndCollectBackpack(BackpackItem backpackItem)
-        {
-            if (m_Inventory.BackpackItem != null)
-            {
-                bool isRemoved = TryRemoveAndDropBackpack(m_Inventory.BackpackItem);
-                if (!isRemoved)
-                {
-                    return false;
-                }
-            }
-
-            bool isStored = m_Inventory.TryAddBackpackToInventory(backpackItem);
-            if (!isStored)
-            {
-                return false;
-            }
-
-            TryCollectItem(backpackItem);
-            m_OnBackpackItemAddedToInventory.RaiseEvent(backpackItem);
-
-            return true;
-        }
-
-        public bool TryRemoveAndDropBackpack(BackpackItem backpackItem)
-        {
-            bool isRemoved = m_Inventory.TryRemoveBackpackFromInventory(backpackItem);
-            if (!isRemoved)
-            {
-                return false;
-            }
-            TryDropItem(backpackItem);
-            m_OnBackpackItemRemovedFromInventory.RaiseEvent(backpackItem);
-
-            return true;
-        }
-
-
         public bool TryStoreAndCollectWeaponInWeaponStorage(WeaponItem wepaonItem)
         {
             bool added = false;
@@ -315,6 +281,86 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             return m_Inventory.TryGetWeaponItem(index, out weaponItem);
         }
 
+        /// <summary>
+        /// Try to store the backpack in the inventory and collect it.
+        /// Before trying to store, we check if there is already a backpack in the inventory.
+        /// If yes, we try remove it first.
+        /// </summary>
+        /// <param name="backpackItem"></param>
+        /// <returns></returns>
+        public bool TryStoreAndCollectBackpack(BackpackItem backpackItem)
+        {
+            if (m_Inventory.BackpackItem != null)
+            {
+                bool isRemoved = TryRemoveAndDropBackpack(m_Inventory.BackpackItem);
+                if (!isRemoved)
+                {
+                    return false;
+                }
+            }
+
+            bool isStored = m_Inventory.TryAddBackpackToInventory(backpackItem);
+            if (!isStored)
+            {
+                return false;
+            }
+
+            TryCollectItem(backpackItem);
+            m_OnBackpackItemAddedToInventory.RaiseEvent(backpackItem);
+
+            return true;
+        }
+
+        public bool TryRemoveAndDropBackpack(BackpackItem backpackItem)
+        {
+            bool isRemoved = m_Inventory.TryRemoveBackpackFromInventory(backpackItem);
+            if (!isRemoved)
+            {
+                return false;
+            }
+            TryDropItem(backpackItem);
+            m_OnBackpackItemRemovedFromInventory.RaiseEvent(backpackItem);
+
+            return true;
+        }
+
+
+        public bool TryStoreAndCollectHelmet(HelmetItem helmetItem)
+        {
+            if (m_Inventory.HelmetItem != null)
+            {
+                bool isRemoved = TryRemoveAndDropHelmet(m_Inventory.HelmetItem);
+                if (!isRemoved)
+                {
+                    return false;
+                }
+            }
+
+            bool isStored = m_Inventory.TryAddHelmetToInventory(helmetItem);
+            if (!isStored)
+            {
+                return false;
+            }
+
+            TryCollectItem(helmetItem);
+            m_OnHelmetItemAddedToInventory.RaiseEvent(helmetItem);
+
+            return true;
+        }
+
+        public bool TryRemoveAndDropHelmet(HelmetItem helmetItem)
+        {
+            bool isRemoved = m_Inventory.TryRemoveHelmetFromInventory(helmetItem);
+            if (!isRemoved)
+            {
+                return false;
+            }
+
+            TryDropItem(helmetItem);
+            m_OnHelmetItemRemovedFromInventory.RaiseEvent(helmetItem);
+
+            return true;
+        }
 
         private void ScanNearbyItems()
         {
@@ -354,6 +400,10 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
             switch (storable)
             { 
+                case HelmetItem:
+                    TryStoreAndCollectHelmet(storable as HelmetItem);
+                    break;
+
                 case BackpackItem:
                     TryStoreAndCollectBackpack(storable as BackpackItem);
                     break;

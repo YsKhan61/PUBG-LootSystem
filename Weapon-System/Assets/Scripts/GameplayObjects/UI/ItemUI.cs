@@ -165,5 +165,10 @@ namespace Weapon_System.GameplayObjects.UI
         {
             m_CanvasGroup.blocksRaycasts = false;
         }
+
+        public void ReleaseSelfToPool()
+        {
+            m_InventoryUI.ReleaseItemUIToPool(this);
+        }
     }
 }
