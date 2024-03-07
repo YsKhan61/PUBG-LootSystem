@@ -27,7 +27,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         /// </summary>
         /// <param name="hand"></param>
         /// <returns></returns>
-        public bool Collect(ItemUserHand hand);
+        public bool TryCollect(ItemUserHand hand);
     }
 
 
@@ -36,13 +36,14 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
     /// </summary>
     public interface IDroppable
     {
-        public bool Drop();
+        public bool Drop(ItemUserHand hand);
     }
 
 
     /// <summary>
     /// Interface for the storable items
     /// eg: Ammo, Heals, Attachments, etc.
+    /// An IStorable item must need to be ICollectable and IDroppable
     /// </summary>
     public interface IStorable : ICollectable, IDroppable
     {
@@ -50,7 +51,9 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         /// Store the item in the inventory
         /// </summary>
         /// <returns></returns>
-        public bool StoreInInventory();
+        public bool TryStore(ItemUserHand hand);
+
+        public bool TryRemove(ItemUserHand hand);
     }
 
 

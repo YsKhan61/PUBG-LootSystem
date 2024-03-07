@@ -8,7 +8,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
     /// </summary>
     public class BackpackItem : InventoryItem
     {
-        public override bool Collect(ItemUserHand hand)
+        public override bool TryCollect(ItemUserHand hand)
         {
             if (IsCollected)
             {
@@ -18,12 +18,22 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             IsCollected = true;
             m_RootGO.transform.SetParent(hand.BackpackHolderTransform);
             m_RootGO.transform.localPosition = Vector3.zero;
-            m_handTransform = hand.Transform;
+            m_RootGO.transform.localRotation = Quaternion.identity;
             Debug.Log(Name + " is collected");
             return true;
         }
 
-        public override bool Drop()
+        public override bool TryStore(ItemUserHand hand)
+        {
+            return hand.TryStoreBackpack(this);
+        }
+
+        public override bool TryRemove(ItemUserHand hand)
+        {
+            return hand.TryRemoveBackpack(this);
+        }
+
+        public override bool Drop(ItemUserHand hand)
         {
             if (!IsCollected)
             {
@@ -32,7 +42,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
             IsCollected = false;
 
-            m_RootGO.transform.position = m_handTransform.position + m_handTransform.forward * 2f;
+            m_RootGO.transform.position = hand.transform.position + hand.transform.forward * 2f;
             m_RootGO.transform.SetParent(null);
 
             Debug.Log(Name + " is dropped");

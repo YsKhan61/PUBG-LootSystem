@@ -11,7 +11,6 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
     /// </summary>
     public class HealItem : InventoryItem
     {
-
     }
 
 }

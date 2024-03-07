@@ -143,30 +143,55 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         }
 
 
-        public bool TryCollectItem(ICollectable item)
+        /// <summary>
+        /// Any item that implements IStorable can be stored in the inventory
+        /// If stored, then it will be collected
+        /// If collected, then it will be held in hand if it is IHoldable
+        /// </summary>
+        /// <param name="storable"></param>
+        /// <returns></returns>
+        public bool TryStoreCollectAndHoldItem(IStorable storable)
         {
-            return item.Collect(this);
+            if (!TryStore(storable))
+                return false;
+
+            if (!TryCollect(storable))
+                return false;
+
+            // for now it's optional if the item is holdable
+            TryHoldItemInHand(storable as IHoldable);
+            return true;
         }
+
+        public bool TryCollect(ICollectable collectable)
+        {
+            return collectable.TryCollect(this);
+        }
+
+        public bool TryStore(IStorable storable)
+        {
+            return storable.TryStore(this);
+        }
+        
+        public bool TryRemove(IStorable storable)
+        {
+            return storable.TryRemove(this);
+        }
+
+
 
         public bool TryStoreAndCollectInventoryItem(InventoryItem item)
         {
-            bool isStored = TryStoreInventoryItemAndRaiseEvent(item);
-
-            if (!isStored)
-            {
+            if (!TryStoreInventoryItemAndRaiseEvent(item))
                 return false;
-            }
 
-            return TryCollectItem(item);
+            return TryCollect(item);
         }
 
         public bool TryStoreInventoryItemAndRaiseEvent(InventoryItem item)
         {
-            bool isStored = m_Inventory.TryAddItemToInventory(item);
-            if (!isStored)
-            {
+            if (!m_Inventory.TryAddItemToInventory(item))
                 return false;
-            }
 
             m_OnInventoryItemAddedToInventory.RaiseEvent(item);
             return true;
@@ -174,13 +199,10 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         public bool TryRemoveAndDropInventoryItem(InventoryItem item)
         {
-            bool isRemoved = TryRemoveInventoryItem(item);
-            if (!isRemoved)
-            {
+            if (!TryRemoveInventoryItem(item))
                 return false;
-            }
 
-            return TryDropItem(item);        
+            return TryPutAwayAndDropItem(item);        
         }
 
         public bool TryRemoveInventoryItem(InventoryItem item)
@@ -189,7 +211,29 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             // No event needed yet, if needed later we raise the event here.
         }
 
-        public bool TryStoreAndCollectWeaponInWeaponStorage(WeaponItem wepaonItem)
+
+
+        /// <summary>
+        /// First try to store the weapon in the weapon storage.
+        /// Then try to collect it.
+        /// Then try to hold it in hand.
+        /// </summary>
+        /// <param name="weaponItem"></param>
+        /// <returns>true if success, false otherwise</returns>
+        public bool TryStoreCollectAndHoldWeapon(WeaponItem weaponItem)
+        {
+            if (!TryStoreWeapon(weaponItem))
+                return false;
+
+            if (!TryCollect(weaponItem))
+                return false;
+
+            TryHoldItemInHand(weaponItem);
+
+            return true;
+        }
+
+        public bool TryStoreWeapon(WeaponItem weaponItem)
         {
             bool added = false;
             int index;
@@ -198,7 +242,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             if (emptyIndexFound)
             {
                 // Store weapon in that index
-                added = m_Inventory.AddWeaponItemToStorageIndex(wepaonItem, index);
+                added = m_Inventory.AddWeaponItemToStorageIndex(weaponItem, index);
             }
 
             if (!added)
@@ -206,13 +250,13 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
                 bool weaponInHandFound = m_Inventory.TryGetIndexOfWeaponInHand(out index);
                 if (weaponInHandFound)
                 {
-                    bool isRemoved = TryRemoveWeaponFromWeaponStorageIndex(index);
+                    bool isRemoved = TryRemovePutAwayAndDropWeapon(index);
                     if (!isRemoved)
                     {
                         return false;
                     }
                     // Store weapon in that index
-                    added = m_Inventory.AddWeaponItemToStorageIndex(wepaonItem, index);
+                    added = m_Inventory.AddWeaponItemToStorageIndex(weaponItem, index);
                 }
             }
 
@@ -220,45 +264,47 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             {
                 index = 0;
                 // Remove weapon from first index and store the new weapon in that index
-                bool isRemoved = TryRemoveWeaponFromWeaponStorageIndex(index);
+                bool isRemoved = TryRemovePutAwayAndDropWeapon(index);
                 if (!isRemoved)
                 {
                     return false;
                 }
 
-                added = m_Inventory.AddWeaponItemToStorageIndex(wepaonItem, index);
+                added = m_Inventory.AddWeaponItemToStorageIndex(weaponItem, index);
             }
-            
+
             if (!added)
             {
                 return false;
             }
 
-            TryCollectItem(wepaonItem);
-            TryHoldItemInHand(wepaonItem);
-
-            m_OnWeaponItemAddedToWeaponInventoryToSpecificIndexEvent.RaiseEvent(wepaonItem, index);
+            m_OnWeaponItemAddedToWeaponInventoryToSpecificIndexEvent.RaiseEvent(weaponItem, index);
 
             return true;
         }
 
-        public bool TryRemoveWeaponFromWeaponStorageIndex(in int index)
+        public bool TryRemovePutAwayAndDropWeapon(in int index)
         {
-            bool isFound = m_Inventory.TryGetWeaponItem(index, out WeaponItem weaponItem);
-            if (!isFound)
+            if (!TryGetWeaponItemFromWeaponInventory(index, out WeaponItem weaponItem))
+                return false;
+
+            if (!TryRemoveWeapon(weaponItem))
+                return false;
+
+            return TryPutAwayAndDropItem(weaponItem);
+        }
+
+        public bool TryRemoveWeapon(WeaponItem weaponItem)
+        {
+            if (!m_Inventory.TryGetIndexOfWeaponItem(weaponItem, out int index))
             {
                 return false;
             }
 
             m_OnBeforeWeaponItemRemovedFromWeaponInventoryEvent.RaiseEvent(weaponItem, index);
 
-            bool isRemoved = m_Inventory.TryRemoveWeaponItemFromStorage(index);
-            if (!isRemoved)
-            {
+            if (!m_Inventory.TryRemoveWeaponItemFromStorage(index))
                 return false;
-            }
-
-            TryDropItem(weaponItem);
 
             m_OnAfterWeaponItemRemovedFromWeaponInventoryFromSpecificIndexEvent.RaiseEvent(weaponItem, index);
             return true;
@@ -266,11 +312,8 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         public bool SwapWeaponsInWeaponStorage(int leftIndex, int rightIndex)
         {
-            bool isSwapped = m_Inventory.TrySwapWeaponItemsInWeaponStorage(leftIndex, rightIndex);
-            if (!isSwapped)
-            {
+            if (!m_Inventory.TrySwapWeaponItemsInWeaponStorage(leftIndex, rightIndex))
                 return false;
-            }
 
             m_OnWeaponItemSwappedInInventoryEvent.RaiseEvent(leftIndex, rightIndex);
             return true;
@@ -281,6 +324,8 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             return m_Inventory.TryGetWeaponItem(index, out weaponItem);
         }
 
+
+
         /// <summary>
         /// Try to store the backpack in the inventory and collect it.
         /// Before trying to store, we check if there is already a backpack in the inventory.
@@ -290,22 +335,23 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         /// <returns></returns>
         public bool TryStoreAndCollectBackpack(BackpackItem backpackItem)
         {
+            if (!TryStoreBackpack(backpackItem))
+                return false;
+
+            return TryCollect(backpackItem);
+        }
+
+        public bool TryStoreBackpack(BackpackItem backpackItem)
+        {
             if (m_Inventory.BackpackItem != null)
             {
-                bool isRemoved = TryRemoveAndDropBackpack(m_Inventory.BackpackItem);
-                if (!isRemoved)
-                {
+                if (!TryRemoveAndDropBackpack(m_Inventory.BackpackItem))
                     return false;
-                }
             }
 
-            bool isStored = m_Inventory.TryAddBackpackToInventory(backpackItem);
-            if (!isStored)
-            {
+            if (!m_Inventory.TryAddBackpackToInventory(backpackItem))
                 return false;
-            }
 
-            TryCollectItem(backpackItem);
             m_OnBackpackItemAddedToInventory.RaiseEvent(backpackItem);
 
             return true;
@@ -313,54 +359,94 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         public bool TryRemoveAndDropBackpack(BackpackItem backpackItem)
         {
-            bool isRemoved = m_Inventory.TryRemoveBackpackFromInventory(backpackItem);
-            if (!isRemoved)
-            {
+            if (!TryRemoveBackpack(backpackItem))
                 return false;
-            }
-            TryDropItem(backpackItem);
+
+            return TryPutAwayAndDropItem(backpackItem);
+        }
+
+        public bool TryRemoveBackpack(BackpackItem backpackItem)
+        {
+            if (!m_Inventory.TryRemoveBackpackFromInventory(backpackItem))
+                return false;
+
             m_OnBackpackItemRemovedFromInventory.RaiseEvent(backpackItem);
 
             return true;
         }
 
 
+
         public bool TryStoreAndCollectHelmet(HelmetItem helmetItem)
+        {
+            if (!TryStoreHelmet(helmetItem))
+                return false;
+
+            return TryCollect(helmetItem);
+        }
+
+        public bool TryStoreHelmet(HelmetItem helmetItem)
         {
             if (m_Inventory.HelmetItem != null)
             {
-                bool isRemoved = TryRemoveAndDropHelmet(m_Inventory.HelmetItem);
-                if (!isRemoved)
-                {
+                if (!TryRemoveAndDropHelmet(m_Inventory.HelmetItem))
                     return false;
-                }
             }
 
-            bool isStored = m_Inventory.TryAddHelmetToInventory(helmetItem);
-            if (!isStored)
-            {
+            if (!m_Inventory.TryAddHelmetToInventory(helmetItem))
                 return false;
-            }
 
-            TryCollectItem(helmetItem);
             m_OnHelmetItemAddedToInventory.RaiseEvent(helmetItem);
-
             return true;
         }
 
         public bool TryRemoveAndDropHelmet(HelmetItem helmetItem)
         {
-            bool isRemoved = m_Inventory.TryRemoveHelmetFromInventory(helmetItem);
-            if (!isRemoved)
-            {
+            if (!TryRemoveHelmet(helmetItem))
                 return false;
-            }
 
-            TryDropItem(helmetItem);
+            return TryPutAwayAndDropItem(helmetItem);
+        }
+
+        public bool TryRemoveHelmet(HelmetItem helmetItem)
+        {
+            if (!m_Inventory.TryRemoveHelmetFromInventory(helmetItem))
+                return false;
+
             m_OnHelmetItemRemovedFromInventory.RaiseEvent(helmetItem);
-
             return true;
         }
+
+
+
+        private void OnPickupInputEvent(bool _)
+        {
+            if (m_CollectablesScanned.Count <= 0)
+                return;
+
+            // Items that are not IStorable, can be collected instantly.
+            // Storable items will be stored in inventory first and then collected.
+            // as if store fails, we don't want to collect the item.
+            if (m_CollectablesScanned[0] is not IStorable storable)
+            {
+                TryCollect(m_CollectablesScanned[0]);
+                return;
+            }
+
+            TryStoreCollectAndHoldItem(storable);
+        }
+
+        private void OnPrimaryWeaponSelect(bool _)
+        {
+            HoldWeapon(0);
+        }
+
+        private void OnSecondaryWeaponSelect(bool _)
+        {
+            HoldWeapon(1);
+        }
+
+
 
         private void ScanNearbyItems()
         {
@@ -386,37 +472,6 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
                 m_CollectablesScanned.Add(collectable);
             }
         }
-
-        private void OnPickupInputEvent(bool _)
-        {
-            if (m_CollectablesScanned.Count <= 0)
-                return;
-
-            if (m_CollectablesScanned[0] is not IStorable storable)
-            {
-                TryCollectItem(m_CollectablesScanned[0]);
-                return;
-            }
-
-            switch (storable)
-            { 
-                case HelmetItem:
-                    TryStoreAndCollectHelmet(storable as HelmetItem);
-                    break;
-
-                case BackpackItem:
-                    TryStoreAndCollectBackpack(storable as BackpackItem);
-                    break;
-
-                case WeaponItem:
-                    TryStoreAndCollectWeaponInWeaponStorage(storable as WeaponItem);
-                    break;
-
-                case InventoryItem:
-                    TryStoreAndCollectInventoryItem(storable as InventoryItem);
-                    break;
-            }
-        }
         
         private void TryHoldItemInHand(IHoldable item)
         {
@@ -436,17 +491,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             ItemInHand = null;
         }
 
-        private void OnPrimaryWeaponSelect(bool _)
-        {
-            HoldWeaponInHand(0);
-        }
-
-        private void OnSecondaryWeaponSelect(bool _)
-        {
-            HoldWeaponInHand(1);
-        }
-
-        private void HoldWeaponInHand(int index)
+        private void HoldWeapon(int index)
         {
             if (!m_Inventory.TryGetWeaponItem(index, out WeaponItem primaryWeapon))
                 return;
@@ -461,14 +506,14 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             ItemInHand?.Hold();
         }
 
-        private bool TryDropItem(IDroppable item)
+        private bool TryPutAwayAndDropItem(IDroppable item)
         {
             if (item as IHoldable == ItemInHand)
             {
                 TryPutAwayItem(true);
             }
 
-            return item.Drop();
+            return item.Drop(this);
         }
 
         #region Debug purposes

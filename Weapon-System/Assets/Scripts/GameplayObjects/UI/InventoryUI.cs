@@ -83,7 +83,7 @@ namespace Weapon_System.GameplayObjects.UI
                 return;
             }
 
-            if (droppedItemUI.StoredItem is WeaponItem && slotTypeOfOtherItemUI == SlotType.Inventory)
+            /*if (droppedItemUI.StoredItem is WeaponItem && slotTypeOfOtherItemUI == SlotType.Inventory)
             {
                 TryAddWeaponAndDestroyItemUI(droppedItemUI);
                 return;
@@ -99,7 +99,7 @@ namespace Weapon_System.GameplayObjects.UI
             {
                 TryAddHelmetAndDestroyItemUI(droppedItemUI);
                 return;
-            }
+            }*/
 
             switch (slotTypeOfOtherItemUI)
             {
@@ -138,7 +138,7 @@ namespace Weapon_System.GameplayObjects.UI
 
         public void TryAddWeaponAndDestroyItemUI(ItemUI droppedItemUI)
         {
-            bool success = m_ItemUserHand.TryStoreAndCollectWeaponInWeaponStorage(droppedItemUI.StoredItem as WeaponItem);
+            bool success = m_ItemUserHand.TryStoreCollectAndHoldWeapon(droppedItemUI.StoredItem as WeaponItem);
             if (success)
             {
                 ReleaseItemUIToPool(droppedItemUI);
@@ -209,7 +209,9 @@ namespace Weapon_System.GameplayObjects.UI
 
         void OnItemUIDroppedFromViscinityToInventory(ItemUI itemUI)
         {
-            bool success = m_ItemUserHand.TryStoreAndCollectInventoryItem(itemUI.StoredItem);
+            // bool success = m_ItemUserHand.TryStoreAndCollectInventoryItem(itemUI.StoredItem);
+            
+            bool success = m_ItemUserHand.TryStoreCollectAndHoldItem(itemUI.StoredItem);
             if (success)
             {
                 ReleaseItemUIToPool(itemUI);

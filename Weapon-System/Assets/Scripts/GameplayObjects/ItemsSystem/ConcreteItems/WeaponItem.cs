@@ -33,11 +33,8 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         public GripAttachmentItem GripAttachment { get; set; }
         public MuzzleAttachmentItem MuzzleAttachment { get; set; }
 
-        // The transform of the collector, who collected this item
-        // It is saved to drop the item at the same position and rotation
-        Transform m_CollectorTransform;
 
-        public override bool Collect(ItemUserHand hand)
+        public override bool TryCollect(ItemUserHand hand)
         {
             if (IsCollected)
             {
@@ -50,8 +47,6 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             m_RootGO.transform.forward = hand.Transform.forward;
             m_RootGO.transform.SetParent(hand.Transform);
 
-            m_CollectorTransform = hand.Transform;
-
             IsInHand = false;
             HideGraphics();
 
@@ -59,12 +54,17 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             return true;
         }
 
-        public override bool StoreInInventory()
+        public override bool TryStore(ItemUserHand hand)
         {
-            return true;
+            return hand.TryStoreWeapon(this);
         }
 
-        public override bool Drop()
+        public override bool TryRemove(ItemUserHand hand)
+        {
+            return hand.TryRemoveWeapon(this);
+        }
+
+        public override bool Drop(ItemUserHand hand)
         {
             if (!IsCollected)
             {
@@ -73,7 +73,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
             IsCollected = false;
 
-            m_RootGO.transform.position = m_CollectorTransform.position + m_CollectorTransform.forward * 2f;
+            m_RootGO.transform.position = hand.transform.position + hand.transform.forward * 2f;
             m_RootGO.transform.SetParent(null);
 
             IsInHand = false;

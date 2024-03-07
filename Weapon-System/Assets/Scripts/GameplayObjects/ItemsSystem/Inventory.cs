@@ -210,6 +210,20 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             return true;
         }
 
+        public bool TryGetIndexOfWeaponItem(WeaponItem weaponItem, out int index)
+        {
+            index = -1;
+            for (int i = 0; i < m_Weapons.Length; i++)
+            {
+                if (m_Weapons[i] != weaponItem)
+                    continue;
+
+                index = i;
+                return true;
+            }
+            return false;
+        }
+
         public bool TryAddBackpackToInventory(BackpackItem backpackItem)
         {
             if (m_BackpackItem != null)

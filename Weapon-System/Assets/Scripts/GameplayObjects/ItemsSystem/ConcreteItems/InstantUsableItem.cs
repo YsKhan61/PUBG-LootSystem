@@ -14,7 +14,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         /// For now we just destroy the entire gameobject
         /// </summary>
         /// <returns></returns>
-        public virtual bool Collect(ItemUserHand _)
+        public virtual bool TryCollect(ItemUserHand _)
         {
             PrimaryUse();
             return true;

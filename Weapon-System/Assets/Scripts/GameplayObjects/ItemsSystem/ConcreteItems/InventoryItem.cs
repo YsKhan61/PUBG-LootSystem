@@ -27,9 +27,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         [SerializeField, Tooltip("The root game object of this item")]
         protected GameObject m_RootGO;
 
-        protected Transform m_handTransform;
-
-        public virtual bool Collect(ItemUserHand hand)
+        public virtual bool TryCollect(ItemUserHand hand)
         {
             if (IsCollected)
             {
@@ -38,17 +36,21 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
             IsCollected = true;
             HideGraphics();
-            m_handTransform = hand.Transform;
             Debug.Log(Name + " is collected");
             return true;
         }
 
-        public virtual bool StoreInInventory()
+        public virtual bool TryStore(ItemUserHand hand)
         {
-            return true;
+            return hand.TryStoreInventoryItemAndRaiseEvent(this);
         }
 
-        public virtual bool Drop()
+        public virtual bool TryRemove(ItemUserHand hand)
+        {
+            return hand.TryRemoveInventoryItem(this);
+        }
+
+        public virtual bool Drop(ItemUserHand hand)
         {
             if (!IsCollected)
             {
@@ -57,7 +59,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
             IsCollected = false;
 
-            m_RootGO.transform.position = m_handTransform.position + m_handTransform.forward * 2f;
+            m_RootGO.transform.position = hand.transform.position + hand.transform.forward * 2f;
             ShowGraphics();
             Debug.Log(Name + " is dropped");
             return true;

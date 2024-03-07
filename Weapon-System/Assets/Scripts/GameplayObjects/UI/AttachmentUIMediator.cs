@@ -201,7 +201,7 @@ namespace Weapon_System.GameplayObjects.UI
             switch (droppedItemUI.StoredSlotType)
             {
                 case SlotType.Vicinity:
-                    if (!m_ItemUserHand.TryCollectItem(droppedItemUI.StoredItem))
+                    if (!m_ItemUserHand.TryCollect(droppedItemUI.StoredItem))
                     {
                         Debug.LogError("This should not happen!");
                         return;
@@ -210,7 +210,7 @@ namespace Weapon_System.GameplayObjects.UI
 
                 case SlotType.Inventory:
                     // We only remove it from teh inventory, no need to drop it as it will be attached to weapon
-                    if (!m_ItemUserHand.TryRemoveInventoryItem(droppedItemUI.StoredItem))
+                    if (!m_ItemUserHand.TryRemove(droppedItemUI.StoredItem))
                     {
                         Debug.LogError("This should not happen!");
                         return;

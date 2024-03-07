@@ -55,7 +55,7 @@ namespace Weapon_System.GameplayObjects.UI
 
         internal void TryAddWeaponAndDestroyItemUI(ItemUI droppedItemUI)
         {
-            bool success = m_ItemUserHand.TryStoreAndCollectWeaponInWeaponStorage(droppedItemUI.StoredItem as WeaponItem);
+            bool success = m_ItemUserHand.TryStoreCollectAndHoldWeapon(droppedItemUI.StoredItem as WeaponItem);
             if (success)
             {
                 droppedItemUI.ReleaseSelfToPool();
@@ -74,7 +74,7 @@ namespace Weapon_System.GameplayObjects.UI
                 return false;
             }
 
-            return m_ItemUserHand.TryRemoveWeaponFromWeaponStorageIndex(index);
+            return m_ItemUserHand.TryRemovePutAwayAndDropWeapon(index);
         }
 
         internal void SwapWeaponItemsInInventory(int leftIndex, int rightIndex)
