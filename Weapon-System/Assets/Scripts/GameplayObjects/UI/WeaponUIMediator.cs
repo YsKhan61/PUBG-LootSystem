@@ -58,7 +58,7 @@ namespace Weapon_System.GameplayObjects.UI
             bool success = m_ItemUserHand.TryStoreAndCollectWeaponInWeaponStorage(droppedItemUI.StoredItem as WeaponItem);
             if (success)
             {
-                droppedItemUI.InventoryUI.ReleaseItemUIToPool(droppedItemUI);
+                droppedItemUI.ReleaseSelfToPool();
             }
         }
 

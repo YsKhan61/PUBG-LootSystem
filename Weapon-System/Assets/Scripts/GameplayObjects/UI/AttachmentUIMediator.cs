@@ -64,16 +64,6 @@ namespace Weapon_System.GameplayObjects.UI
             m_OnWeaponItemSwappedInInventoryEvent.OnEventRaised -= SwapSlotIndices;
         }
 
-        /*internal void AddAttachmentItemToInventory(InventoryItem item)
-        {
-            m_OnAddInventoryItemToInventoryEvent.RaiseEvent(item);
-        }
-
-        private void RemoveAttachmentItemFromInventory(InventoryItem item)
-        {
-            m_OnRemoveInventoryItemFromInventoryEvent.RaiseEvent(item);
-        }*/
-
         internal void OnRightClickInputOnAttachmentItemUI(AttachmentItemUI attachmentItemUI)
         {
             if (attachmentItemUI.StoredItem == null)
@@ -232,7 +222,7 @@ namespace Weapon_System.GameplayObjects.UI
 
             attachmentItemUIOfDropArea.SetDataAndShowAttachmentItemUI(droppedItemUI.StoredItem as IWeaponAttachment);
 
-            droppedItemUI.InventoryUI.ReleaseItemUIToPool(droppedItemUI);
+            droppedItemUI.ReleaseSelfToPool();
         }
 
         /// <summary>
