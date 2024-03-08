@@ -2657,6 +2657,146 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 834655516}
   m_CullTransparentMesh: 1
+--- !u!1 &882843269 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2010727291848423200, guid: cbc1839e74f3092489e9d3200098973f,
+    type: 3}
+  m_PrefabInstance: {fileID: 4390806022631715982}
+  m_PrefabAsset: {fileID: 0}
+--- !u!143 &882843274 stripped
+CharacterController:
+  m_CorrespondingSourceObject: {fileID: 8835187037858646483, guid: cbc1839e74f3092489e9d3200098973f,
+    type: 3}
+  m_PrefabInstance: {fileID: 4390806022631715982}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &882843275 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4960714182652946185, guid: cbc1839e74f3092489e9d3200098973f,
+    type: 3}
+  m_PrefabInstance: {fileID: 4390806022631715982}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 882843269}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b0f94d948f8061468e8ea4668e7360b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &882843276
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 882843269}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c3f090aae3084d448a1c8799b7952d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_MouseXInputEvent: {fileID: 11400000, guid: d58d48118edff9a49b98ca0ebeda3467, type: 2}
+  m_MouseYInputEvent: {fileID: 11400000, guid: 73310bce7cdabf04b9e89df39e43abd1, type: 2}
+  m_CharacterController: {fileID: 882843274}
+  m_FirstPersonController: {fileID: 882843275}
+  m_MouseLook:
+    XSensitivity: 0.1
+    YSensitivity: 0.1
+    clampVerticalRotation: 1
+    MinimumX: -90
+    MaximumX: 90
+    smooth: 0
+    smoothTime: 5
+    lockCursor: 1
+  m_UseFovKick: 1
+  m_FovKick:
+    Camera: {fileID: 0}
+    originalFov: 0
+    FOVIncrease: 3
+    TimeToIncrease: 1
+    TimeToDecrease: 1
+    IncreaseCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 2
+        outSlope: 2
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+  m_UseHeadBob: 1
+  m_HeadBob:
+    HorizontalBobRange: 0.1
+    VerticalBobRange: 0.1
+    Bobcurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.5
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1.5
+        value: -1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 2
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    VerticaltoHorizontalRatio: 2
+  m_JumpBob:
+    BobDuration: 0.2
+    BobAmount: 0.1
+  m_StepInterval: 5
 --- !u!1 &883898478
 GameObject:
   m_ObjectHideFlags: 0
@@ -7318,6 +7458,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 4960714182652946185, guid: cbc1839e74f3092489e9d3200098973f,
+        type: 3}
+      propertyPath: m_CameraController
+      value: 
+      objectReference: {fileID: 882843276}
     - target: {fileID: 6111941527781067775, guid: cbc1839e74f3092489e9d3200098973f,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -7371,7 +7516,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2010727291848423200, guid: cbc1839e74f3092489e9d3200098973f,
+        type: 3}
+      insertIndex: 2
+      addedObject: {fileID: 882843276}
   m_SourcePrefab: {fileID: 100100000, guid: cbc1839e74f3092489e9d3200098973f, type: 3}
 --- !u!1001 &4755108691965760369
 PrefabInstance:

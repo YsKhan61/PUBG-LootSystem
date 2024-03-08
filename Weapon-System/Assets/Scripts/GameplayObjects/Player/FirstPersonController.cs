@@ -1,7 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.Serialization;
-using UnityStandardAssets.Utility;
 using Weapon_System.Utilities;
 using Random = UnityEngine.Random;
 
@@ -39,52 +37,55 @@ namespace Weapon_System.GameplayObjects.Player
 
         [Space(10)]
 
-        [SerializeField] private bool m_IsWalking;
+        [SerializeField]
+        CameraController m_CameraController;
+
         [SerializeField] private float m_WalkSpeed;
         [SerializeField] private float m_RunSpeed;
+
         [SerializeField] [Range(0f, 1f)] private float m_RunstepLenghten;
+        public float RunstepLenghten => m_RunstepLenghten;
+
         [SerializeField] private float m_JumpSpeed;
         [SerializeField] private float m_StickToGroundForce;
         [SerializeField] private float m_GravityMultiplier;
-        [SerializeField] private MouseLook m_MouseLook;
-        [SerializeField] private bool m_UseFovKick;
-        [SerializeField] private FOVKick m_FovKick = new FOVKick();
-        [SerializeField] private bool m_UseHeadBob;
-        [SerializeField] private CurveControlledBob m_HeadBob = new CurveControlledBob();
-        [SerializeField] private LerpControlledBob m_JumpBob = new LerpControlledBob();
+
+
         [SerializeField] private float m_StepInterval;
         [SerializeField] private AudioClip[] m_FootstepSounds;    // an array of footstep sounds that will be randomly selected from.
         [SerializeField] private AudioClip m_JumpSound;           // the sound played when character leaves the ground.
         [SerializeField] private AudioClip m_LandSound;           // the sound played when character touches back on ground.
 
-        private Camera m_Camera;
         private bool m_Jump;
         private Vector2 m_Input;
         private Vector3 m_MoveDir = Vector3.zero;
         private CharacterController m_CharacterController;
         private CollisionFlags m_CollisionFlags;
         private bool m_PreviouslyGrounded;
-        private Vector3 m_OriginalCameraPosition;
+
         private float m_StepCycle;
         private float m_NextStep;
         private bool m_Jumping;
-        private Vector3 m_DesiredMove;
         private AudioSource m_AudioSource;
+
+        private Vector3 m_DesiredMove;
+
+
+        private bool m_IsWalking;
+        public bool IsWalking => m_IsWalking;
+
+
+        private float m_Speed;
+        public float Speed => m_Speed;
 
         // Use this for initialization
         private void Start()
         {
             m_CharacterController = GetComponent<CharacterController>();
-            m_Camera = Camera.main;
-            m_OriginalCameraPosition = m_Camera.transform.localPosition;
-            m_FovKick.Setup(m_Camera);
-            m_HeadBob.Setup(m_Camera, m_StepInterval);
             m_StepCycle = 0f;
             m_NextStep = m_StepCycle/2f;
             m_Jumping = false;
             m_AudioSource = GetComponent<AudioSource>();
-			m_MouseLook.Init(transform , m_Camera.transform);
-
             m_JumpInputEvent.OnEventRaised += OnJumpEvent;
         }
 
@@ -92,7 +93,7 @@ namespace Weapon_System.GameplayObjects.Player
         // Update is called once per frame
         private void Update()
         {
-            RotateView();
+            GetInput(out m_Speed);
 
             // always move along the camera forward as it is the direction that it being aimed at
             if (!m_FreeLookInputEvent.Value)
@@ -102,7 +103,8 @@ namespace Weapon_System.GameplayObjects.Player
 
             if (!m_PreviouslyGrounded && m_CharacterController.isGrounded)
             {
-                StartCoroutine(m_JumpBob.DoBobCycle());
+                m_CameraController.DoBobCycle();
+                // StartCoroutine(m_JumpBob.DoBobCycle());
                 PlayLandingSound();
                 m_MoveDir.y = 0f;
                 m_Jumping = false;
@@ -138,18 +140,14 @@ namespace Weapon_System.GameplayObjects.Player
 
         private void FixedUpdate()
         {
-            float speed;
-            GetInput(out speed);
-            
-
             // get a normal for the surface that is being touched to move along it
             RaycastHit hitInfo;
             Physics.SphereCast(transform.position, m_CharacterController.radius, Vector3.down, out hitInfo,
                                m_CharacterController.height/2f, Physics.AllLayers, QueryTriggerInteraction.Ignore);
             m_DesiredMove = Vector3.ProjectOnPlane(m_DesiredMove, hitInfo.normal).normalized;
 
-            m_MoveDir.x = m_DesiredMove.x*speed;
-            m_MoveDir.z = m_DesiredMove.z*speed;
+            m_MoveDir.x = m_DesiredMove.x* m_Speed;
+            m_MoveDir.z = m_DesiredMove.z* m_Speed;
 
 
             if (m_CharacterController.isGrounded)
@@ -170,10 +168,7 @@ namespace Weapon_System.GameplayObjects.Player
             }
             m_CollisionFlags = m_CharacterController.Move(m_MoveDir*Time.fixedDeltaTime);
 
-            ProgressStepCycle(speed);
-            UpdateCameraPosition(speed);
-
-            m_MouseLook.UpdateCursorLock();
+            ProgressStepCycle(m_Speed);
         }
 
 
@@ -220,30 +215,6 @@ namespace Weapon_System.GameplayObjects.Player
         }
 
 
-        private void UpdateCameraPosition(float speed)
-        {
-            Vector3 newCameraPosition;
-            if (!m_UseHeadBob)
-            {
-                return;
-            }
-            if (m_CharacterController.velocity.magnitude > 0 && m_CharacterController.isGrounded)
-            {
-                m_Camera.transform.localPosition =
-                    m_HeadBob.DoHeadBob(m_CharacterController.velocity.magnitude +
-                                      (speed*(m_IsWalking ? 1f : m_RunstepLenghten)));
-                newCameraPosition = m_Camera.transform.localPosition;
-                newCameraPosition.y = m_Camera.transform.localPosition.y - m_JumpBob.Offset();
-            }
-            else
-            {
-                newCameraPosition = m_Camera.transform.localPosition;
-                newCameraPosition.y = m_OriginalCameraPosition.y - m_JumpBob.Offset();
-            }
-            m_Camera.transform.localPosition = newCameraPosition;
-        }
-
-
         private void GetInput(out float speed)
         {
             // Read input
@@ -269,18 +240,20 @@ namespace Weapon_System.GameplayObjects.Player
 
             // handle speed change to give an fov kick
             // only if the player is going to a run, is running and the fovkick is to be used
-            if (m_IsWalking != waswalking && m_UseFovKick && m_CharacterController.velocity.sqrMagnitude > 0)
+            if (m_IsWalking != waswalking && m_CameraController.UseFovKick && m_CharacterController.velocity.sqrMagnitude > 0)
             {
                 StopAllCoroutines();
-                StartCoroutine(!m_IsWalking ? m_FovKick.FOVKickUp() : m_FovKick.FOVKickDown());
+                if (!m_IsWalking)
+                {
+                    m_CameraController.DoFOVKickUp();
+                }
+                else
+                {
+                    m_CameraController.DoFOVKickDown();
+                }
             }
         }
 
-
-        private void RotateView()
-        {
-            m_MouseLook.LookRotation (transform, m_Camera.transform, m_MouseXInputEvent.Value, m_MouseYInputEvent.Value);
-        }
 
 
         private void OnControllerColliderHit(ControllerColliderHit hit)
