@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityStandardAssets.Utility;
 using Weapon_System.Utilities;
 using Random = UnityEngine.Random;
@@ -13,23 +14,28 @@ namespace Weapon_System.GameplayObjects.Player
     public class FirstPersonController : MonoBehaviour
     {
         [Header("Inputs")]
-        [SerializeField]
-        BoolEventChannelSO m_OnJumpEvent;
 
         [SerializeField]
-        FloatEventChannelSO m_HorizontalInput;
+        BoolEventChannelSO m_JumpInputEvent;
 
         [SerializeField]
-        FloatEventChannelSO m_VerticalInput;
+        FloatEventChannelSO m_HorizontalInputEvent;
 
         [SerializeField]
-        BoolEventChannelSO m_RunInput;
+        FloatEventChannelSO m_VerticalInputEvent;
 
         [SerializeField]
-        FloatEventChannelSO m_MouseXInput;
+        BoolEventChannelSO m_RunInputEvent;
 
         [SerializeField]
-        FloatEventChannelSO m_MouseYInput;
+        FloatEventChannelSO m_MouseXInputEvent;
+
+        [SerializeField]
+        FloatEventChannelSO m_MouseYInputEvent;
+
+        [SerializeField]
+        BoolEventChannelSO m_FreeLookInputEvent;
+
 
         [Space(10)]
 
@@ -62,6 +68,7 @@ namespace Weapon_System.GameplayObjects.Player
         private float m_StepCycle;
         private float m_NextStep;
         private bool m_Jumping;
+        private Vector3 m_DesiredMove;
         private AudioSource m_AudioSource;
 
         // Use this for initialization
@@ -78,7 +85,7 @@ namespace Weapon_System.GameplayObjects.Player
             m_AudioSource = GetComponent<AudioSource>();
 			m_MouseLook.Init(transform , m_Camera.transform);
 
-            m_OnJumpEvent.OnEventRaised += OnJumpEvent;
+            m_JumpInputEvent.OnEventRaised += OnJumpEvent;
         }
 
 
@@ -86,11 +93,12 @@ namespace Weapon_System.GameplayObjects.Player
         private void Update()
         {
             RotateView();
-            /*// the jump state needs to read here to make sure it is not missed
-            if (!m_Jump)
+
+            // always move along the camera forward as it is the direction that it being aimed at
+            if (!m_FreeLookInputEvent.Value)
             {
-                m_Jump = OnJumpEvent;
-            }*/
+                m_DesiredMove = transform.forward * m_Input.y + transform.right * m_Input.x;
+            }
 
             if (!m_PreviouslyGrounded && m_CharacterController.isGrounded)
             {
@@ -109,7 +117,7 @@ namespace Weapon_System.GameplayObjects.Player
 
         private void OnDestroy()
         {
-            m_OnJumpEvent.OnEventRaised -= OnJumpEvent;
+            m_JumpInputEvent.OnEventRaised -= OnJumpEvent;
         }
 
         private void OnJumpEvent(bool _)
@@ -132,17 +140,16 @@ namespace Weapon_System.GameplayObjects.Player
         {
             float speed;
             GetInput(out speed);
-            // always move along the camera forward as it is the direction that it being aimed at
-            Vector3 desiredMove = transform.forward*m_Input.y + transform.right*m_Input.x;
+            
 
             // get a normal for the surface that is being touched to move along it
             RaycastHit hitInfo;
             Physics.SphereCast(transform.position, m_CharacterController.radius, Vector3.down, out hitInfo,
                                m_CharacterController.height/2f, Physics.AllLayers, QueryTriggerInteraction.Ignore);
-            desiredMove = Vector3.ProjectOnPlane(desiredMove, hitInfo.normal).normalized;
+            m_DesiredMove = Vector3.ProjectOnPlane(m_DesiredMove, hitInfo.normal).normalized;
 
-            m_MoveDir.x = desiredMove.x*speed;
-            m_MoveDir.z = desiredMove.z*speed;
+            m_MoveDir.x = m_DesiredMove.x*speed;
+            m_MoveDir.z = m_DesiredMove.z*speed;
 
 
             if (m_CharacterController.isGrounded)
@@ -240,15 +247,15 @@ namespace Weapon_System.GameplayObjects.Player
         private void GetInput(out float speed)
         {
             // Read input
-            float horizontal = m_HorizontalInput.Value;
-            float vertical = m_VerticalInput.Value;
+            float horizontal = m_HorizontalInputEvent.Value;
+            float vertical = m_VerticalInputEvent.Value;
 
             bool waswalking = m_IsWalking;
 
 #if !MOBILE_INPUT
             // On standalone builds, walk/run speed is modified by a key press.
             // keep track of whether or not the character is walking or running
-            m_IsWalking = !m_RunInput.Value;
+            m_IsWalking = !m_RunInputEvent.Value;
 #endif
             // set the desired speed to be walking or running
             speed = m_IsWalking ? m_WalkSpeed : m_RunSpeed;
@@ -272,7 +279,7 @@ namespace Weapon_System.GameplayObjects.Player
 
         private void RotateView()
         {
-            m_MouseLook.LookRotation (transform, m_Camera.transform, m_MouseXInput.Value, m_MouseYInput.Value);
+            m_MouseLook.LookRotation (transform, m_Camera.transform, m_MouseXInputEvent.Value, m_MouseYInputEvent.Value);
         }
 
 

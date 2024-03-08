@@ -18,32 +18,32 @@ namespace Weapon_System.GameplayObjects.Player
 
         [Space(5)]
 
-        [SerializeField]
-        FloatEventChannelSO m_MouseXInputData;
+        [SerializeField, FormerlySerializedAs("m_MouseXInputData")]
+        FloatEventChannelSO m_MouseXInputEvent;
 
-        [SerializeField]
-        FloatEventChannelSO m_MouseYInputData;
+        [SerializeField, FormerlySerializedAs("m_MouseYInputData")]
+        FloatEventChannelSO m_MouseYInputEvent;
 
-        [SerializeField]
-        FloatEventChannelSO m_VerticalMoveInputData;
+        [SerializeField, FormerlySerializedAs("m_VerticalMoveInputData")]
+        FloatEventChannelSO m_VerticalMoveInputEvent;
 
-        [SerializeField]
-        FloatEventChannelSO m_HorizontalMoveInputData;
+        [SerializeField, FormerlySerializedAs("m_HorizontalMoveInputData")]
+        FloatEventChannelSO m_HorizontalMoveInputEvent;
 
-        [SerializeField]
+        [SerializeField, FormerlySerializedAs("m_JumpInputEvent")]
         BoolEventChannelSO m_JumpInputEvent;
 
         [SerializeField]
         BoolEventChannelSO m_RunInputEvent;
 
-        [SerializeField]
-        BoolEventChannelSO m_PrimaryWeaponSelectedEvent;
+        [SerializeField, FormerlySerializedAs("m_PrimaryWeaponSelectedEvent")]
+        BoolEventChannelSO m_PrimaryWeaponSelectInputEvent;
 
-        [SerializeField]
-        BoolEventChannelSO m_SecondaryWeaponSelectedEvent;
+        [SerializeField, FormerlySerializedAs("m_SecondaryWeaponSelectedEvent")]
+        BoolEventChannelSO m_SecondaryWeaponSelectInputEvent;
 
-        [SerializeField, FormerlySerializedAs("m_HolsterWeaponEvent")]
-        BoolEventChannelSO m_HolsterItemEvent;
+        [SerializeField, FormerlySerializedAs("m_HolsterItemEvent")]
+        BoolEventChannelSO m_HolsterItemInputEvent;
 
         /// <summary>
         /// Primary use case - Use, Fire, etc. , Press -> True, Release -> False
@@ -57,11 +57,15 @@ namespace Weapon_System.GameplayObjects.Player
         [SerializeField]
         BoolEventChannelSO m_SecondaryUseInputEvent;
 
-        [SerializeField]
-        BoolEventChannelSO m_PickupItemEvent;
+        [SerializeField, FormerlySerializedAs("m_PickupItemEvent")]
+        BoolEventChannelSO m_PickupItemInputEvent;
 
         [SerializeField]
-        BoolEventChannelSO m_ToggleInventoryEvent;
+        BoolEventChannelSO m_FreeLookInputEvent;
+
+
+        [SerializeField, FormerlySerializedAs("m_ToggleInventoryEvent")]
+        BoolEventChannelSO m_ToggleInventoryInputEvent;
 
         [Space(10)]
 
@@ -92,11 +96,11 @@ namespace Weapon_System.GameplayObjects.Player
 
         private void Update()
         {
-            m_MouseXInputData.SetValue(m_InputControls.Player.MouseXAxis.ReadValue<float>());
-            m_MouseYInputData.SetValue(m_InputControls.Player.MouseYAxis.ReadValue<float>());
+            m_MouseXInputEvent.SetValue(m_InputControls.Player.MouseXAxis.ReadValue<float>());
+            m_MouseYInputEvent.SetValue(m_InputControls.Player.MouseYAxis.ReadValue<float>());
 
-            m_VerticalMoveInputData.SetValue(m_InputControls.Player.VerticalMove.ReadValue<float>());
-            m_HorizontalMoveInputData.SetValue(m_InputControls.Player.HorizontalMove.ReadValue<float>());
+            m_VerticalMoveInputEvent.SetValue(m_InputControls.Player.VerticalMove.ReadValue<float>());
+            m_HorizontalMoveInputEvent.SetValue(m_InputControls.Player.HorizontalMove.ReadValue<float>());
         }
 
         private void OnDestroy()
@@ -124,17 +128,17 @@ namespace Weapon_System.GameplayObjects.Player
 
         private void OnPrimaryWeaponSelectActionPerformed(InputAction.CallbackContext context)
         {
-            m_PrimaryWeaponSelectedEvent?.RaiseEvent();
+            m_PrimaryWeaponSelectInputEvent?.RaiseEvent();
         }
 
         private void OnSecondaryWeaponSelectActionPerformed(InputAction.CallbackContext context)
         {
-            m_SecondaryWeaponSelectedEvent?.RaiseEvent();
+            m_SecondaryWeaponSelectInputEvent?.RaiseEvent();
         }
 
         private void OnHolsterInputActionPerformed(InputAction.CallbackContext context)
         {
-            m_HolsterItemEvent.RaiseEvent();
+            m_HolsterItemInputEvent.RaiseEvent();
         }
 
         private void OnPrimaryUseInputActionStarted(InputAction.CallbackContext context)
@@ -157,16 +161,26 @@ namespace Weapon_System.GameplayObjects.Player
             m_SecondaryUseInputEvent.SetValueAndRaiseEvent(false);
         }
 
+        private void OnFreeLookInputActionStarted(InputAction.CallbackContext context)
+        {
+            m_FreeLookInputEvent.SetValueAndRaiseEvent(true);
+        }
+
+        private void OnFreeLookInputActionCanceled(InputAction.CallbackContext context)
+        {
+            m_FreeLookInputEvent.SetValueAndRaiseEvent(false);
+        }
+
         private void OnPickupInputActionPerformed(InputAction.CallbackContext context)
         {
-            m_PickupItemEvent.RaiseEvent();
+            m_PickupItemInputEvent.RaiseEvent();
         }
 
         private void OnToggleInventoryActionStarted(InputAction.CallbackContext obj)
         {
-            m_ToggleInventoryEvent.SetValueAndRaiseEvent(!m_ToggleInventoryEvent.Value);
+            m_ToggleInventoryInputEvent.SetValueAndRaiseEvent(!m_ToggleInventoryInputEvent.Value);
 
-            if (m_ToggleInventoryEvent.Value)
+            if (m_ToggleInventoryInputEvent.Value)
             {
                 m_InputControls.Player.Disable();
                 m_InputControls.Player.VerticalMove.Enable();
@@ -208,6 +222,9 @@ namespace Weapon_System.GameplayObjects.Player
             m_InputControls.Player.SecondaryUse.started += OnSecondaryUseInputActionStarted;
             m_InputControls.Player.SecondaryUse.canceled += OnSecondaryUseInputActionCanceled;
 
+            m_InputControls.Player.FreeLook.started += OnFreeLookInputActionStarted;
+            m_InputControls.Player.FreeLook.canceled += OnFreeLookInputActionCanceled;
+
             m_InputControls.Player.Pickup.performed += OnPickupInputActionPerformed;
 
             m_InputControls.Global.Toggle_Inventory.started += OnToggleInventoryActionStarted;
@@ -232,10 +249,14 @@ namespace Weapon_System.GameplayObjects.Player
             m_InputControls.Player.SecondaryUse.started -= OnSecondaryUseInputActionStarted;
             m_InputControls.Player.SecondaryUse.canceled -= OnSecondaryUseInputActionCanceled;
 
+            m_InputControls.Player.FreeLook.started -= OnFreeLookInputActionStarted;
+            m_InputControls.Player.FreeLook.canceled -= OnFreeLookInputActionCanceled;
+
             m_InputControls.Player.Pickup.performed -= OnPickupInputActionPerformed;
 
             m_InputControls.Global.Toggle_Inventory.started -= OnToggleInventoryActionStarted;
         }
+
 
         private void EnableAllInputActionReferences()
         {

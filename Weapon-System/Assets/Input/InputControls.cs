@@ -154,6 +154,15 @@ namespace Weapon_System
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""FreeLook"",
+                    ""type"": ""Button"",
+                    ""id"": ""9ff69cfe-92ae-4004-a085-7ed6df4587a3"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -354,6 +363,17 @@ namespace Weapon_System
                     ""action"": ""MouseYAxis"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d20a55f9-b07e-43f9-ac28-0d28849ebd97"",
+                    ""path"": ""<Keyboard>/leftCtrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""FreeLook"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -421,6 +441,7 @@ namespace Weapon_System
             m_Player_Run = m_Player.FindAction("Run", throwIfNotFound: true);
             m_Player_MouseXAxis = m_Player.FindAction("MouseXAxis", throwIfNotFound: true);
             m_Player_MouseYAxis = m_Player.FindAction("MouseYAxis", throwIfNotFound: true);
+            m_Player_FreeLook = m_Player.FindAction("FreeLook", throwIfNotFound: true);
             // Global
             m_Global = asset.FindActionMap("Global", throwIfNotFound: true);
             m_Global_Toggle_Inventory = m_Global.FindAction("Toggle_Inventory", throwIfNotFound: true);
@@ -499,6 +520,7 @@ namespace Weapon_System
         private readonly InputAction m_Player_Run;
         private readonly InputAction m_Player_MouseXAxis;
         private readonly InputAction m_Player_MouseYAxis;
+        private readonly InputAction m_Player_FreeLook;
         public struct PlayerActions
         {
             private @InputControls m_Wrapper;
@@ -517,6 +539,7 @@ namespace Weapon_System
             public InputAction @Run => m_Wrapper.m_Player_Run;
             public InputAction @MouseXAxis => m_Wrapper.m_Player_MouseXAxis;
             public InputAction @MouseYAxis => m_Wrapper.m_Player_MouseYAxis;
+            public InputAction @FreeLook => m_Wrapper.m_Player_FreeLook;
             public InputActionMap Get() { return m_Wrapper.m_Player; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -568,6 +591,9 @@ namespace Weapon_System
                 @MouseYAxis.started += instance.OnMouseYAxis;
                 @MouseYAxis.performed += instance.OnMouseYAxis;
                 @MouseYAxis.canceled += instance.OnMouseYAxis;
+                @FreeLook.started += instance.OnFreeLook;
+                @FreeLook.performed += instance.OnFreeLook;
+                @FreeLook.canceled += instance.OnFreeLook;
             }
 
             private void UnregisterCallbacks(IPlayerActions instance)
@@ -614,6 +640,9 @@ namespace Weapon_System
                 @MouseYAxis.started -= instance.OnMouseYAxis;
                 @MouseYAxis.performed -= instance.OnMouseYAxis;
                 @MouseYAxis.canceled -= instance.OnMouseYAxis;
+                @FreeLook.started -= instance.OnFreeLook;
+                @FreeLook.performed -= instance.OnFreeLook;
+                @FreeLook.canceled -= instance.OnFreeLook;
             }
 
             public void RemoveCallbacks(IPlayerActions instance)
@@ -702,6 +731,7 @@ namespace Weapon_System
             void OnRun(InputAction.CallbackContext context);
             void OnMouseXAxis(InputAction.CallbackContext context);
             void OnMouseYAxis(InputAction.CallbackContext context);
+            void OnFreeLook(InputAction.CallbackContext context);
         }
         public interface IGlobalActions
         {
