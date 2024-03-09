@@ -34,6 +34,81 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         public MuzzleAttachmentItem MuzzleAttachment { get; set; }
 
 
+        public override bool TryStoreAndCollect(ItemUserHand hand)
+        {
+            if (!TryStore(hand))
+                return false;
+
+            if (!TryCollect(hand))
+                return false;
+
+            // Holding is optional, only occurs for IHoldable items and when the hand is empty
+            Hold();
+            return true;
+        }
+        
+
+        public override bool TryStore(ItemUserHand hand)
+        {
+            Inventory inventory = hand.Inventory;
+
+            bool isAdded = false;
+
+            bool emptyIndexFound = inventory.TryGetEmptyWeaponStorageIndex(out int index);
+            if (emptyIndexFound)
+            {
+                // Store weapon in that index
+                isAdded = inventory.TryAddWeaponItemToStorageIndex(this, index);
+            }
+
+            if (isAdded)
+            {
+                m_Inventory = inventory;
+                return true;
+            }
+
+            WeaponItem weaponItem;
+
+            if (inventory.TryGetIndexOfWeaponInHand(out index))
+            {
+                if (inventory.TryGetWeaponItem(index, out weaponItem))
+                {
+                    if (weaponItem.TryRemoveAndDrop())
+                    {
+                        // Store weapon in that index
+                        isAdded = inventory.TryAddWeaponItemToStorageIndex(this, index);
+                    }
+                }
+            }
+
+            if (isAdded)
+            {
+                m_Inventory = inventory;
+                return true;
+            }
+
+            index = 0;
+            // Remove weapon from first index and store the new weapon in that index
+            if (inventory.TryGetWeaponItem(index, out weaponItem))
+            {
+                if (weaponItem.TryRemoveAndDrop())
+                {
+                    // Store weapon in that index
+                    isAdded = inventory.TryAddWeaponItemToStorageIndex(this, index);
+                }
+            }
+
+            if (isAdded)
+            {
+                m_Inventory = inventory;
+                return true;
+            }
+
+            return false;
+
+            // m_OnWeaponItemAddedToWeaponInventoryToSpecificIndexEvent.RaiseEvent(weaponItem, index);
+        }
+
         public override bool TryCollect(ItemUserHand hand)
         {
             if (IsCollected)
@@ -42,7 +117,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             }
 
             IsCollected = true;
-            
+
             m_RootGO.transform.position = hand.transform.position;
             m_RootGO.transform.forward = hand.transform.forward;
             m_RootGO.transform.SetParent(hand.transform);
@@ -50,22 +125,43 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             IsInHand = false;
             HideGraphics();
 
+            m_ItemUserHand = hand;
             Debug.Log(Name + " is collected");
             return true;
         }
 
-        public override bool TryStore(ItemUserHand hand)
+        public override bool TryRemoveAndDrop()
         {
-            return hand.TryStoreWeapon(this);
+            if (!TryRemove())
+                return false;
+
+            m_ItemUserHand.TryPutAwayItem();
+            return Drop();
         }
 
-        public override bool TryRemove(ItemUserHand hand)
+        public override bool TryRemove()
         {
-            return hand.TryRemoveWeapon(this);
+            if (m_Inventory == null)
+            {
+                Debug.LogError("Inventory not found!");
+                return false;
+            }
+
+            if (!m_Inventory.TryRemoveWeaponItem(this))
+                return false;
+
+            m_Inventory = null;
+            return true;
         }
 
-        public override bool Drop(ItemUserHand hand)
+        public override bool Drop()
         {
+            if (m_ItemUserHand == null)
+            {
+                Debug.LogError("ItemUserHand not found!");
+                return false;
+            }
+
             if (!IsCollected)
             {
                 return false;
@@ -73,13 +169,14 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
             IsCollected = false;
 
-            m_RootGO.transform.position = hand.transform.position + hand.transform.forward * 2f;
+            m_RootGO.transform.position = m_ItemUserHand.transform.position + m_ItemUserHand.transform.forward * 2f;
             m_RootGO.transform.SetParent(null);
 
-            IsInHand = false;
+            TryPutAway();
 
             ShowGraphics();
 
+            m_ItemUserHand = null;
             Debug.Log(Name + " is dropped");
             return true;
         }
@@ -106,13 +203,28 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         public virtual bool Hold()
         {
+            if (m_ItemUserHand == null)
+            {
+                Debug.LogError("ItemUserHand not found!");
+                return false;
+            }
+
             IsInHand = true;
             ShowGraphics();
+            m_ItemUserHand.TryHoldItemInHand(this);
             return true;
         }
 
-        public virtual bool PutAway()
+        public virtual bool TryPutAway()
         {
+            if (m_ItemUserHand == null)
+            {
+                Debug.LogError("ItemUserHand not found!");
+                return false;
+            }
+
+            m_ItemUserHand.TryPutAwayItem();
+
             IsInHand = false;
             HideGraphics();
             return true;

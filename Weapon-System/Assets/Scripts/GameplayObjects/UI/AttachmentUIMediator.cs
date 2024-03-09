@@ -70,7 +70,7 @@ namespace Weapon_System.GameplayObjects.UI
                 return;
 
             attachmentItemUI.StoredItem.DetachFromWeapon();
-            m_ItemUserHand.TryStoreInventoryItemAndRaiseEvent(attachmentItemUI.StoredItem as InventoryItem);
+            (attachmentItemUI.StoredItem as InventoryItem).TryStoreAndCollect(m_ItemUserHand);
             attachmentItemUI.ResetDataAndHideAttachmentItemUI();
         }
 
@@ -144,7 +144,7 @@ namespace Weapon_System.GameplayObjects.UI
                 }
                 else
                 {
-                    m_ItemUserHand.TryStoreInventoryItemAndRaiseEvent(droppedAttachmentItemUI.StoredItem as InventoryItem);
+                    (droppedAttachmentItemUI.StoredItem as InventoryItem).TryStoreAndCollect(m_ItemUserHand);
                     droppedAttachmentItemUI.ResetDataAndHideAttachmentItemUI();
                 }
             }
@@ -195,13 +195,13 @@ namespace Weapon_System.GameplayObjects.UI
                 attachmentItemUIOfDropArea.StoredItem.DetachFromWeapon();
 
                 // We only store the attachment item, as it was collected already when it was picked up.
-                m_ItemUserHand.TryStoreInventoryItemAndRaiseEvent(attachmentItemUIOfDropArea.StoredItem as InventoryItem);
+                (attachmentItemUIOfDropArea.StoredItem as InventoryItem).TryStoreAndCollect(m_ItemUserHand);
             }
 
             switch (droppedItemUI.StoredSlotType)
             {
                 case SlotType.Vicinity:
-                    if (!m_ItemUserHand.TryCollect(droppedItemUI.StoredItem))
+                    if (!(droppedItemUI.StoredItem).TryCollect(m_ItemUserHand))
                     {
                         Debug.LogError("This should not happen!");
                         return;
@@ -210,7 +210,7 @@ namespace Weapon_System.GameplayObjects.UI
 
                 case SlotType.Inventory:
                     // We only remove it from teh inventory, no need to drop it as it will be attached to weapon
-                    if (!m_ItemUserHand.TryRemove(droppedItemUI.StoredItem))
+                    if (!(droppedItemUI.StoredItem).TryRemove())
                     {
                         Debug.LogError("This should not happen!");
                         return;
@@ -268,7 +268,7 @@ namespace Weapon_System.GameplayObjects.UI
                 return;
 
             attachmentItemUI.StoredItem.DetachFromWeapon();
-            m_ItemUserHand.TryStoreInventoryItemAndRaiseEvent(attachmentItemUI.StoredItem as InventoryItem);
+            (attachmentItemUI.StoredItem as InventoryItem).TryStoreAndCollect(m_ItemUserHand);
             attachmentItemUI.ResetDataAndHideAttachmentItemUI();
         }
 

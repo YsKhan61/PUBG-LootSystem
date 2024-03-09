@@ -8,22 +8,6 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
     /// </summary>
     public class HelmetItem : InventoryItem
     {
-        Inventory m_Inventory;
-        ItemUserHand m_ItemUserHand;
-
-        public bool TryStoreAndCollect(ItemUserHand hand)
-        {
-            if (!TryStore(hand))
-                return false;
-
-            if (!TryCollect(hand))
-                return false;
-
-            // holding is optional
-            hand.TryHoldItemInHand(this as IHoldable);
-            return true;
-        }
-
         public override bool TryStore(ItemUserHand hand)
         {
             if (hand.Inventory.HelmetItem != null)
@@ -32,10 +16,9 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
                     return false;
             }
 
-            if (!hand.Inventory.TryAddHelmetToInventory(this))
+            if (!hand.Inventory.TryAddHelmetItem(this))
                 return false;
 
-            (ItemData as HelmetDataSO).OnHelmetItemAddedToInventory.RaiseEvent(this);
             m_Inventory = hand.Inventory;
             return true;
         }
@@ -56,16 +39,8 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             return true;
         }
 
-        public bool TryRemoveAndDrop()
-        {
-            if (!TryRemove(m_ItemUserHand))
-                return false;
 
-            m_ItemUserHand.TryPutAwayItem(this);
-            return Drop(m_ItemUserHand);
-        }
-
-        public override bool TryRemove(ItemUserHand hand)
+        public override bool TryRemove()
         {
             if (m_Inventory == null)
             {
@@ -73,15 +48,20 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
                 return false;
             }
 
-            if (!m_Inventory.TryRemoveHelmetFromInventory(this))
+            if (!m_Inventory.TryRemoveHelmetItem(this))
                 return false;
 
-            (ItemData as HelmetDataSO).OnHelmetItemRemovedFromInventory.RaiseEvent(this);
             return true;
         }
 
-        public override bool Drop(ItemUserHand hand)
+        public override bool Drop( )
         {
+            if (m_ItemUserHand == null)
+            {
+                Debug.LogError("ItemUserHand not found!");
+                return false;
+            }
+
             if (!IsCollected)
             {
                 return false;
@@ -89,9 +69,10 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
             IsCollected = false;
 
-            m_RootGO.transform.position = hand.transform.position + hand.transform.forward * 2f;
+            m_RootGO.transform.position = m_ItemUserHand.transform.position + m_ItemUserHand.transform.forward * 2f;
             m_RootGO.transform.SetParent(null);
 
+            m_ItemUserHand = null;
             Debug.Log(Name + " is dropped");
             return true;
         }

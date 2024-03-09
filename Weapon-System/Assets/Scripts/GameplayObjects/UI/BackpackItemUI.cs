@@ -59,7 +59,7 @@ namespace Weapon_System.GameplayObjects.UI
                     return;
 
                 // If yes, drop backpack
-                m_ItemUserHand.TryRemoveAndDropBackpack(m_StoredBackpack);
+                m_StoredBackpack.TryRemoveAndDrop();
             }
         }
 
@@ -78,7 +78,7 @@ namespace Weapon_System.GameplayObjects.UI
                 }
 
                 // If no, try store backpack
-                bool success = m_ItemUserHand.TryStoreAndCollectBackpack(droppedItemUI.StoredItem as BackpackItem);
+                bool success = (droppedItemUI.StoredItem as BackpackItem).TryStoreAndCollect(m_ItemUserHand);
                 if (success)
                 {
                     droppedItemUI.ReleaseSelfToPool();

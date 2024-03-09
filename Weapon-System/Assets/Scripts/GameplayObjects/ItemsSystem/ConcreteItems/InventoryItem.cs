@@ -27,6 +27,30 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         [SerializeField, Tooltip("The root game object of this item")]
         protected GameObject m_RootGO;
 
+        protected Inventory m_Inventory;
+        protected ItemUserHand m_ItemUserHand;
+
+
+        public virtual bool TryStoreAndCollect(ItemUserHand hand)
+        {
+            if (!TryStore(hand))
+                return false;
+
+            if (!TryCollect(hand))
+                return false;
+
+            return true;
+        }
+
+        public virtual bool TryStore(ItemUserHand hand)
+        {
+            if (!hand.Inventory.TryAddInventoryItem(this))
+                return false;
+
+            m_Inventory = hand.Inventory;
+            return true;
+        }
+
         public virtual bool TryCollect(ItemUserHand hand)
         {
             if (IsCollected)
@@ -36,21 +60,36 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
             IsCollected = true;
             HideGraphics();
+
+            m_ItemUserHand = hand;
             Debug.Log(Name + " is collected");
             return true;
         }
 
-        public virtual bool TryStore(ItemUserHand hand)
+        public virtual bool TryRemoveAndDrop()
         {
-            return hand.TryStoreInventoryItemAndRaiseEvent(this);
+            if (!TryRemove())
+                return false;
+
+            return Drop();
         }
 
-        public virtual bool TryRemove(ItemUserHand hand)
+        public virtual bool TryRemove()
         {
-            return hand.TryRemoveInventoryItem(this);
+            if (m_Inventory == null)
+            {
+                Debug.LogError("Inventory not found!");
+                return false;
+            }
+
+            if (!m_Inventory.TryRemoveInventoryItem(this))
+                return false;
+
+            m_Inventory = null;
+            return true;
         }
 
-        public virtual bool Drop(ItemUserHand hand)
+        public virtual bool Drop()
         {
             if (!IsCollected)
             {
@@ -59,8 +98,10 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
             IsCollected = false;
 
-            m_RootGO.transform.position = hand.transform.position + hand.transform.forward * 2f;
+            m_RootGO.transform.position = m_ItemUserHand.transform.position + m_ItemUserHand.transform.forward * 2f;
             ShowGraphics();
+
+            m_ItemUserHand = null;
             Debug.Log(Name + " is dropped");
             return true;
         }

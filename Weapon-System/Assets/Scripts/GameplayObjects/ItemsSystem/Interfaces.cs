@@ -36,7 +36,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
     /// </summary>
     public interface IDroppable
     {
-        public bool Drop(ItemUserHand hand);
+        public bool Drop();
     }
 
 
@@ -47,13 +47,16 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
     /// </summary>
     public interface IStorable : ICollectable, IDroppable
     {
+        public bool TryStoreAndCollect(ItemUserHand hand);
+        public bool TryRemoveAndDrop();
+
         /// <summary>
         /// Store the item in the inventory
         /// </summary>
         /// <returns></returns>
         public bool TryStore(ItemUserHand hand);
 
-        public bool TryRemove(ItemUserHand hand);
+        public bool TryRemove();
     }
 
 
@@ -99,7 +102,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         /// or drop it on the ground
         /// </summary>
         /// <returns></returns>
-        public bool PutAway();
+        public bool TryPutAway();
     }
 
 

@@ -166,7 +166,7 @@ namespace Weapon_System.GameplayObjects.UI
         {
             // bool success = m_ItemUserHand.TryStoreAndCollectInventoryItem(itemUI.StoredItem);
             
-            bool success = m_ItemUserHand.TryStoreCollectAndHoldItem(itemUI.StoredItem);
+            bool success = itemUI.StoredItem.TryStoreAndCollect(m_ItemUserHand);
             if (success)
             {
                 ReleaseItemUIToPool(itemUI);
@@ -181,7 +181,7 @@ namespace Weapon_System.GameplayObjects.UI
 
         void OnItemUIDroppedFromInventoryToViscinity(ItemUI itemUI)
         {
-            bool success = m_ItemUserHand.TryRemoveAndDropInventoryItem(itemUI.StoredItem);
+            bool success = (itemUI.StoredItem).TryRemoveAndDrop();
             if (success)
             {
                 ReleaseItemUIToPool(itemUI);

@@ -1,37 +1,76 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Weapon_System.Utilities;
 
 
 namespace Weapon_System.GameplayObjects.ItemsSystem
 {
     /// <summary>
     /// The main Inventory of the Game, where player will store all collected and storable items
-    /// Only ItemUserHand is allowed to access this class.
     /// Follow FlowDiagram for more details.
     /// </summary>
     public class Inventory : MonoBehaviour
     {
-        /*[Header("Listens to")]
-
-        [SerializeField, Tooltip("To add an inventory item in the inventory, this event is invoked")]
-        InventoryItemEventChannelSO m_OnAddInventoryItemToInventoryEvent;
-
-        [SerializeField, Tooltip("To remove an inventory item from inventory, this event is invoked")]
-        InventoryItemEventChannelSO m_OnRemoveInventoryItemFromInventoryEvent;
-
-
-        [Space(10)]
-
         [Header("Broadcast to")]
+
+        [Header("Inventory Item events")]
 
         [SerializeField, Tooltip("When an Inventory item is added to the inventory, this event is invoked")]
         InventoryItemEventChannelSO m_OnInventoryItemAddedToInventory;
 
-        [SerializeField, Tooltip("When an Inventory item is removed from the inventory, this event is invoked")]
-        InventoryItemEventChannelSO m_OnInventoryItemRemovedFromInventory;
+
+        [Space(10)]
+
+        [Header("Wepaon Item events")]
+
+        [SerializeField, Tooltip("When an Weapon item is added to the inventory to specific index, this event is invoked")]
+        WeaponItemIntEventChannelSO m_OnWeaponItemAddedToWeaponInventoryToSpecificIndexEvent;
+
+        [SerializeField, Tooltip("Before an Weaopn item is removed from the inventory, this event is invoked")]
+        WeaponItemIntEventChannelSO m_OnBeforeWeaponItemRemovedFromWeaponInventoryEvent;
+
+        [SerializeField, Tooltip("When an Weapon item is removed from the inventory from specific index, this event is invoked")]
+        WeaponItemIntEventChannelSO m_OnAfterWeaponItemRemovedFromWeaponInventoryFromSpecificIndexEvent;
+
+        [SerializeField, Tooltip("When two WeaponItemUI's are swapped with each other in the inventory, this event is invoked")]
+        IntIntEventChannelSO m_OnWeaponItemSwappedInInventoryEvent;
 
 
-        [Space(10)]*/
+        [Space(10)]
+
+        [Header("Helmet Item events")]
+
+        [SerializeField, Tooltip("When a helmet is added to the inventory, this event is invoked")]
+        HelmetItemEventChannelSO m_OnHelmetItemAddedToInventory;
+
+        [SerializeField, Tooltip("When a helmet is removed from the inventory, this event is invoked")]
+        HelmetItemEventChannelSO m_OnHelmetItemRemovedFromInventory;
+
+
+        [Space(10)]
+
+        [Header("Vest Item events")]
+
+        [SerializeField, Tooltip("When a vest is added to the inventory, this event is invoked")]
+        VestItemEventChannelSO m_OnVestItemAddedToInventory;
+
+        [SerializeField, Tooltip("When a vest is removed from the inventory, this event is invoked")]
+        VestItemEventChannelSO m_OnVestItemRemovedFromInventory;
+
+
+        [Space(10)]
+
+        [Header("Backpack Item events")]
+
+        [SerializeField, Tooltip("When a backpack is added to the inventory, this event is invoked")]
+        BackpackItemEventChannelSO m_OnBackpackItemAddedToInventory;
+
+        [SerializeField, Tooltip("When a backpack is removed from the inventory, this event is invoked")]
+        BackpackItemEventChannelSO m_OnBackpackItemRemovedFromInventory;
+
+
+
+        [Space(10)]
 
         [SerializeField]
         int m_SpaceAvailable = 50;
@@ -79,12 +118,13 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             m_Weapons = new WeaponItem[2];                    // For now only 2 guns are allowed
         }
 
+
         /// <summary>
         /// Later, the inventory will have a capacity, beyond which no more items can be added.
         /// That time it will return false
         /// </summary>
         /// <param name="item"></param>
-        public bool TryAddItemToInventory(InventoryItem item)
+        public bool TryAddInventoryItem(InventoryItem item)
         {
             int temp = m_SpaceAvailable - item.ItemData.SpaceRequired;
             if (temp <= 0)
@@ -96,11 +136,12 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             m_InventoryItems.Add(item);
             m_SpaceAvailable = temp;
 
+            m_OnInventoryItemAddedToInventory.RaiseEvent(item);
             Debug.Log(item.Name + " added to inventory!");
             return true;
         }
 
-        public bool TryRemoveItemFromInventory(InventoryItem item)
+        public bool TryRemoveInventoryItem(InventoryItem item)
         {
             if (!m_InventoryItems.Contains(item))
                 return false;
@@ -112,7 +153,9 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             return true;
         }
 
-        public bool AddWeaponItemToStorageIndex(in WeaponItem weaponItem, in int index)
+
+
+        public bool TryAddWeaponItemToStorageIndex(in WeaponItem weaponItem, in int index)
         {
             if (TryGetWeaponItem(index, out WeaponItem _))
             {
@@ -123,8 +166,25 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             m_Weapons[index] = weaponItem;
             Debug.Log(weaponItem.Name + " added to inventory!");
 
+            m_OnWeaponItemAddedToWeaponInventoryToSpecificIndexEvent.RaiseEvent(weaponItem, index);
             return true;
-            // m_OnWeaponItemAddedToWeaponInventoryToSpecificIndexEvent.RaiseEvent(weaponItem, index);
+        }
+
+        public bool TryRemoveWeaponItem(WeaponItem weaponItem)
+        {
+            if (!TryGetIndexOfWeaponItem(weaponItem, out int index))
+            {
+                Debug.LogError("Gun not present in the inventory");
+                return false;
+            }
+
+            m_OnBeforeWeaponItemRemovedFromWeaponInventoryEvent.RaiseEvent(weaponItem, index);
+
+            m_Weapons[index] = null;
+            Debug.Log(weaponItem.Name + " removed from inventory!");
+
+            m_OnAfterWeaponItemRemovedFromWeaponInventoryFromSpecificIndexEvent.RaiseEvent(weaponItem, index);
+            return true;
         }
 
         public bool TryRemoveWeaponItemFromStorage(in int index)
@@ -166,7 +226,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
             m_Weapons[rightIndex] = temp;
 
-            // m_OnWeaponItemSwappedInInventoryEvent.RaiseEvent(leftIndex, rightIndex);
+            m_OnWeaponItemSwappedInInventoryEvent.RaiseEvent(leftIndex, rightIndex);
             return true;
         }
 
@@ -193,6 +253,20 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
                     continue;
                 
                 index = i;
+                return true;
+            }
+            return false;
+        }
+
+        public bool TryGetWeaponItemInHand(out WeaponItem weaponItem)
+        {
+            weaponItem = null;
+            for (int i = 0; i < m_Weapons.Length; i++)
+            {
+                if (!m_Weapons[i].IsInHand)
+                    continue;
+
+                weaponItem = m_Weapons[i];
                 return true;
             }
             return false;
@@ -232,7 +306,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
 
 
-        public bool TryAddBackpackToInventory(BackpackItem backpackItem)
+        public bool TryAddBackpackItem(BackpackItem backpackItem)
         {
             if (m_BackpackItem != null)
             {
@@ -245,7 +319,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             return true;
         }
 
-        public bool TryRemoveBackpackFromInventory(BackpackItem backpackItem)
+        public bool TryRemoveBackpackItem(BackpackItem backpackItem)
         {
             if (m_BackpackItem != backpackItem)
             {
@@ -267,7 +341,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
 
 
-        public bool TryAddHelmetToInventory(HelmetItem helmetItem)
+        public bool TryAddHelmetItem(HelmetItem helmetItem)
         {
             if (m_HelmetItem != null)
             {
@@ -276,10 +350,11 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             }
 
             m_HelmetItem = helmetItem;
+            m_OnHelmetItemAddedToInventory.RaiseEvent(helmetItem);
             return true;
         }
 
-        public bool TryRemoveHelmetFromInventory(HelmetItem helmetItem)
+        public bool TryRemoveHelmetItem(HelmetItem helmetItem)
         {
             if (m_HelmetItem != helmetItem)
             {
@@ -288,12 +363,13 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             }
 
             m_HelmetItem = null;
+            m_OnHelmetItemRemovedFromInventory.RaiseEvent(helmetItem);
             return true;
         }
 
 
 
-        public bool TryAddVestToInventory(VestItem vestItem)
+        public bool TryAddVestItem(VestItem vestItem)
         {
             if (m_VestItem != null)
             {
@@ -302,10 +378,11 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             }
 
             m_VestItem = vestItem;
+            m_OnVestItemAddedToInventory.RaiseEvent(vestItem);
             return true;
         }
 
-        public bool TryRemoveVestFromInventory(VestItem vestItem)
+        public bool TryRemoveVestItem(VestItem vestItem)
         {
             if (m_VestItem != vestItem)
             {
@@ -314,6 +391,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             }
 
             m_VestItem = null;
+            m_OnVestItemRemovedFromInventory.RaiseEvent(vestItem);
             return true;
         }
 
