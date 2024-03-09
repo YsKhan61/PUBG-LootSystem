@@ -568,12 +568,6 @@ MonoBehaviour:
     type: 2}
   m_SecondaryUseInputEvent: {fileID: 11400000, guid: f9aae48968a40d94b9ca503df60eff3f,
     type: 2}
-  m_OnInventoryItemAddedToInventory: {fileID: 11400000, guid: a232a433ebe571f4f97973b1bc5d5073,
-    type: 2}
-  m_OnBackpackItemAddedToInventory: {fileID: 11400000, guid: d9c0bc1879976c74c8b8a22cb17957a7,
-    type: 2}
-  m_OnBackpackItemRemovedFromInventory: {fileID: 11400000, guid: 23bedc37de8fc704f929bb972962b4d3,
-    type: 2}
   m_Inventory: {fileID: 6398577312195835515}
   m_ItemLayer:
     serializedVersion: 2
@@ -657,6 +651,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4bfafc705cbf8d4b9449da700825fd3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_OnInventoryItemAddedToInventory: {fileID: 11400000, guid: a232a433ebe571f4f97973b1bc5d5073,
+    type: 2}
   m_OnWeaponItemAddedToWeaponInventoryToSpecificIndexEvent: {fileID: 11400000, guid: 5eec038a6de2f5243b6e0db3ab98e689,
     type: 2}
   m_OnBeforeWeaponItemRemovedFromWeaponInventoryEvent: {fileID: 11400000, guid: 0f2a273ae29ef0b4caebad2bec5c92e4,

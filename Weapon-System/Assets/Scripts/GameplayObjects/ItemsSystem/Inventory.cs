@@ -316,6 +316,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
             m_SpaceAvailable -= backpackItem.ItemData.SpaceRequired;       // Here backpackItem.ItemData.SpaceRequired will be provided as negative value
             m_BackpackItem = backpackItem;
+            m_OnBackpackItemAddedToInventory.RaiseEvent(backpackItem);
             return true;
         }
 
@@ -336,6 +337,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
             m_SpaceAvailable = temp;
             m_BackpackItem = null;
+            m_OnBackpackItemRemovedFromInventory.RaiseEvent(backpackItem);
             return true;
         }
 
