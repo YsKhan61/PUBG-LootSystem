@@ -16,3 +16,7 @@ MonoBehaviour:
   m_UITag: {fileID: 11400000, guid: ac131fff990e0aa45a7e94391436c18d, type: 2}
   m_IconSprite: {fileID: 21300000, guid: b7dd3a9c7e30016409baf8ff7b3dffc5, type: 3}
   m_SpaceRequired: -100
+  OnVestItemAddedToInventory: {fileID: 11400000, guid: 9bc4ff2efc653dd46aea2dc3ea3dca81,
+    type: 2}
+  OnVestItemRemovedFromInventory: {fileID: 11400000, guid: 466015b23c0f56045be095e4ccb2c572,
+    type: 2}

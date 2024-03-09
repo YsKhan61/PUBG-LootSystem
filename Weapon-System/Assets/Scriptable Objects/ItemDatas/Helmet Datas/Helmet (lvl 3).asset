@@ -16,3 +16,7 @@ MonoBehaviour:
   m_UITag: {fileID: 11400000, guid: 0caf2c77575e17c42bd6f3ea7f8b2c37, type: 2}
   m_IconSprite: {fileID: 21300000, guid: ba5d443800ed99d4280961328cb9e2a7, type: 3}
   m_SpaceRequired: 0
+  OnHelmetItemAddedToInventory: {fileID: 11400000, guid: 6bf2cc84fc4bf644886fb5844fd8ee63,
+    type: 2}
+  OnHelmetItemRemovedFromInventory: {fileID: 11400000, guid: 4b0447ff2cd235b4b951d793c16f4382,
+    type: 2}

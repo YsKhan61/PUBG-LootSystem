@@ -62,13 +62,6 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         BackpackItemEventChannelSO m_OnBackpackItemRemovedFromInventory;
 
 
-        [SerializeField, Tooltip("When a helmet is added to the inventory, this event is invoked")]
-        HelmetItemEventChannelSO m_OnHelmetItemAddedToInventory;
-
-        [SerializeField, Tooltip("When a helmet is removed from the inventory, this event is invoked")]
-        HelmetItemEventChannelSO m_OnHelmetItemRemovedFromInventory;
-
-
         [SerializeField, Tooltip("When a vest is added to the inventory, this event is invoked")]
         VestItemEventChannelSO m_OnVestItemAddedToInventory;
 
@@ -81,6 +74,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         [SerializeField]
         Inventory m_Inventory;
+        public Inventory Inventory => m_Inventory;
 
         [SerializeField]
         LayerMask m_ItemLayer;
@@ -164,6 +158,15 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         /// <returns></returns>
         public bool TryStoreCollectAndHoldItem(IStorable storable)
         {
+            if (storable is HelmetItem helmetItem)
+            {
+                return helmetItem.TryStoreAndCollect(this);
+            }
+            else if (storable is VestItem vestItem)
+            {
+                return vestItem.TryStoreAndCollect(this);
+            }
+
             if (!TryStore(storable))
                 return false;
 
@@ -189,6 +192,25 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         {
             return storable.TryRemove(this);
         }
+
+        public void TryHoldItemInHand(IHoldable item)
+        {
+            if (ItemInHand != null)
+                return;
+
+            ItemInHand = item;
+            ItemInHand?.Hold();
+        }
+
+        public void TryPutAwayItem(bool _)
+        {
+            if (ItemInHand == null)
+                return;
+
+            ItemInHand.PutAway();
+            ItemInHand = null;
+        }
+
 
 
 
@@ -389,49 +411,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
 
 
-        public bool TryStoreAndCollectHelmet(HelmetItem helmetItem)
-        {
-            if (!TryStoreHelmet(helmetItem))
-                return false;
-
-            return TryCollect(helmetItem);
-        }
-
-        public bool TryStoreHelmet(HelmetItem helmetItem)
-        {
-            if (m_Inventory.HelmetItem != null)
-            {
-                if (!TryRemoveAndDropHelmet(m_Inventory.HelmetItem))
-                    return false;
-            }
-
-            if (!m_Inventory.TryAddHelmetToInventory(helmetItem))
-                return false;
-
-            m_OnHelmetItemAddedToInventory.RaiseEvent(helmetItem);
-            return true;
-        }
-
-        public bool TryRemoveAndDropHelmet(HelmetItem helmetItem)
-        {
-            if (!TryRemoveHelmet(helmetItem))
-                return false;
-
-            return TryPutAwayAndDropItem(helmetItem);
-        }
-
-        public bool TryRemoveHelmet(HelmetItem helmetItem)
-        {
-            if (!m_Inventory.TryRemoveHelmetFromInventory(helmetItem))
-                return false;
-
-            m_OnHelmetItemRemovedFromInventory.RaiseEvent(helmetItem);
-            return true;
-        }
-
-
-
-        public bool TryStoreAndCollectVest(VestItem vestItem)
+        /*public bool TryStoreAndCollectVest(VestItem vestItem)
         {
             if (!TryStoreVest(vestItem))
                 return false;
@@ -469,7 +449,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
             m_OnVestItemRemovedFromInventory.RaiseEvent(vestItem);
             return true;
-        }
+        }*/
 
 
 
@@ -527,23 +507,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             }
         }
         
-        private void TryHoldItemInHand(IHoldable item)
-        {
-            if (ItemInHand != null)
-                return;
-
-            ItemInHand = item;
-            ItemInHand?.Hold();
-        }
-
-        private void TryPutAwayItem(bool _)
-        {
-            if (ItemInHand == null)
-                return;
-
-            ItemInHand.PutAway();
-            ItemInHand = null;
-        }
+        
 
         private void HoldWeapon(int index)
         {
