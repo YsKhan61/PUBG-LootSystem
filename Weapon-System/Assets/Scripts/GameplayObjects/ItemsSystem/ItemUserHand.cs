@@ -32,6 +32,8 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         [SerializeField, Tooltip("This event notifies the secondary use input performing")]
         BoolEventChannelSO m_SecondaryUseInputEvent;
 
+
+
         [Space(10)]
 
         [Header("Broadcast to")]
