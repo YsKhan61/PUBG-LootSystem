@@ -163,6 +163,15 @@ namespace Weapon_System
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MouseXYAxes"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""349fbcbd-f12a-4dd2-ae9b-f5ff60eb9299"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -374,6 +383,17 @@ namespace Weapon_System
                     ""action"": ""FreeLook"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e7c56ba4-4f82-4c53-943a-9e62234a4435"",
+                    ""path"": ""<Mouse>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MouseXYAxes"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -442,6 +462,7 @@ namespace Weapon_System
             m_Player_MouseXAxis = m_Player.FindAction("MouseXAxis", throwIfNotFound: true);
             m_Player_MouseYAxis = m_Player.FindAction("MouseYAxis", throwIfNotFound: true);
             m_Player_FreeLook = m_Player.FindAction("FreeLook", throwIfNotFound: true);
+            m_Player_MouseXYAxes = m_Player.FindAction("MouseXYAxes", throwIfNotFound: true);
             // Global
             m_Global = asset.FindActionMap("Global", throwIfNotFound: true);
             m_Global_Toggle_Inventory = m_Global.FindAction("Toggle_Inventory", throwIfNotFound: true);
@@ -521,6 +542,7 @@ namespace Weapon_System
         private readonly InputAction m_Player_MouseXAxis;
         private readonly InputAction m_Player_MouseYAxis;
         private readonly InputAction m_Player_FreeLook;
+        private readonly InputAction m_Player_MouseXYAxes;
         public struct PlayerActions
         {
             private @InputControls m_Wrapper;
@@ -540,6 +562,7 @@ namespace Weapon_System
             public InputAction @MouseXAxis => m_Wrapper.m_Player_MouseXAxis;
             public InputAction @MouseYAxis => m_Wrapper.m_Player_MouseYAxis;
             public InputAction @FreeLook => m_Wrapper.m_Player_FreeLook;
+            public InputAction @MouseXYAxes => m_Wrapper.m_Player_MouseXYAxes;
             public InputActionMap Get() { return m_Wrapper.m_Player; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -594,6 +617,9 @@ namespace Weapon_System
                 @FreeLook.started += instance.OnFreeLook;
                 @FreeLook.performed += instance.OnFreeLook;
                 @FreeLook.canceled += instance.OnFreeLook;
+                @MouseXYAxes.started += instance.OnMouseXYAxes;
+                @MouseXYAxes.performed += instance.OnMouseXYAxes;
+                @MouseXYAxes.canceled += instance.OnMouseXYAxes;
             }
 
             private void UnregisterCallbacks(IPlayerActions instance)
@@ -643,6 +669,9 @@ namespace Weapon_System
                 @FreeLook.started -= instance.OnFreeLook;
                 @FreeLook.performed -= instance.OnFreeLook;
                 @FreeLook.canceled -= instance.OnFreeLook;
+                @MouseXYAxes.started -= instance.OnMouseXYAxes;
+                @MouseXYAxes.performed -= instance.OnMouseXYAxes;
+                @MouseXYAxes.canceled -= instance.OnMouseXYAxes;
             }
 
             public void RemoveCallbacks(IPlayerActions instance)
@@ -732,6 +761,7 @@ namespace Weapon_System
             void OnMouseXAxis(InputAction.CallbackContext context);
             void OnMouseYAxis(InputAction.CallbackContext context);
             void OnFreeLook(InputAction.CallbackContext context);
+            void OnMouseXYAxes(InputAction.CallbackContext context);
         }
         public interface IGlobalActions
         {

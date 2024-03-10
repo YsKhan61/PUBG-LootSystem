@@ -12,9 +12,15 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         private WeaponItem m_WeaponItem;
 
-        public bool AimDownSight()
+        public bool StartAimDownSight()
         {
             Debug.Log("Aiming down sight through " + Name + " with ADS Zoom value of " + SightAttachmentData.ADSZoomValue);
+            return true;
+        }
+
+        public bool StopAimDownSight()
+        {
+            Debug.Log("Stopped aiming down sight through " + Name);
             return true;
         }
 

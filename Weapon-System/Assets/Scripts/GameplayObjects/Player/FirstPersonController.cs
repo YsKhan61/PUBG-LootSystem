@@ -1,4 +1,5 @@
 using System;
+using UnityEditor.PackageManager;
 using UnityEngine;
 using Weapon_System.Utilities;
 using Random = UnityEngine.Random;
@@ -37,8 +38,8 @@ namespace Weapon_System.GameplayObjects.Player
 
         [Space(10)]
 
-        [SerializeField]
-        CameraController m_CameraController;
+        /*[SerializeField]
+        CameraController m_CameraController;*/
 
         [SerializeField] private float m_WalkSpeed;
         [SerializeField] private float m_RunSpeed;
@@ -78,6 +79,8 @@ namespace Weapon_System.GameplayObjects.Player
         private float m_Speed;
         public float Speed => m_Speed;
 
+        RaycastHit m_HitInfo;
+
         // Use this for initialization
         private void Start()
         {
@@ -87,6 +90,39 @@ namespace Weapon_System.GameplayObjects.Player
             m_Jumping = false;
             m_AudioSource = GetComponent<AudioSource>();
             m_JumpInputEvent.OnEventRaised += OnJumpEvent;
+        }
+
+
+        private void FixedUpdate()
+        {
+            // get a normal for the surface that is being touched to move along it
+            Physics.SphereCast(transform.position, m_CharacterController.radius, Vector3.down, out m_HitInfo,
+                               m_CharacterController.height / 2f, Physics.AllLayers, QueryTriggerInteraction.Ignore);
+            m_DesiredMove = Vector3.ProjectOnPlane(m_DesiredMove, m_HitInfo.normal).normalized;
+
+            m_MoveDir.x = m_DesiredMove.x * m_Speed;
+            m_MoveDir.z = m_DesiredMove.z * m_Speed;
+
+
+            if (m_CharacterController.isGrounded)
+            {
+                m_MoveDir.y = -m_StickToGroundForce;
+
+                if (m_Jump)
+                {
+                    m_MoveDir.y = m_JumpSpeed;
+                    PlayJumpSound();
+                    m_Jump = false;
+                    m_Jumping = true;
+                }
+            }
+            else
+            {
+                m_MoveDir += Physics.gravity * m_GravityMultiplier * Time.fixedDeltaTime;
+            }
+            m_CollisionFlags = m_CharacterController.Move(m_MoveDir * Time.fixedDeltaTime);
+
+            ProgressStepCycle(m_Speed);
         }
 
 
@@ -103,8 +139,7 @@ namespace Weapon_System.GameplayObjects.Player
 
             if (!m_PreviouslyGrounded && m_CharacterController.isGrounded)
             {
-                m_CameraController.DoBobCycle();
-                // StartCoroutine(m_JumpBob.DoBobCycle());
+                // m_CameraController.DoBobCycle();
                 PlayLandingSound();
                 m_MoveDir.y = 0f;
                 m_Jumping = false;
@@ -138,38 +173,7 @@ namespace Weapon_System.GameplayObjects.Player
         }
 
 
-        private void FixedUpdate()
-        {
-            // get a normal for the surface that is being touched to move along it
-            RaycastHit hitInfo;
-            Physics.SphereCast(transform.position, m_CharacterController.radius, Vector3.down, out hitInfo,
-                               m_CharacterController.height/2f, Physics.AllLayers, QueryTriggerInteraction.Ignore);
-            m_DesiredMove = Vector3.ProjectOnPlane(m_DesiredMove, hitInfo.normal).normalized;
-
-            m_MoveDir.x = m_DesiredMove.x* m_Speed;
-            m_MoveDir.z = m_DesiredMove.z* m_Speed;
-
-
-            if (m_CharacterController.isGrounded)
-            {
-                m_MoveDir.y = -m_StickToGroundForce;
-
-                if (m_Jump)
-                {
-                    m_MoveDir.y = m_JumpSpeed;
-                    PlayJumpSound();
-                    m_Jump = false;
-                    m_Jumping = true;
-                }
-            }
-            else
-            {
-                m_MoveDir += Physics.gravity*m_GravityMultiplier*Time.fixedDeltaTime;
-            }
-            m_CollisionFlags = m_CharacterController.Move(m_MoveDir*Time.fixedDeltaTime);
-
-            ProgressStepCycle(m_Speed);
-        }
+        
 
 
         private void PlayJumpSound()
@@ -240,7 +244,9 @@ namespace Weapon_System.GameplayObjects.Player
 
             // handle speed change to give an fov kick
             // only if the player is going to a run, is running and the fovkick is to be used
-            if (m_IsWalking != waswalking && m_CameraController.UseFovKick && m_CharacterController.velocity.sqrMagnitude > 0)
+            /*if (m_IsWalking != waswalking && 
+                m_CameraController.UseFovKick && 
+                m_CharacterController.velocity.sqrMagnitude > 0)
             {
                 StopAllCoroutines();
                 if (!m_IsWalking)
@@ -251,7 +257,7 @@ namespace Weapon_System.GameplayObjects.Player
                 {
                     m_CameraController.DoFOVKickDown();
                 }
-            }
+            }*/
         }
 
 

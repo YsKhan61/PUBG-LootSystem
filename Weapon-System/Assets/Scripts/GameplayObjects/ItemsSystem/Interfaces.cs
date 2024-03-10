@@ -66,7 +66,9 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
     /// </summary>
     public interface  IP_Usable
     {
-        public bool PrimaryUse();
+        public bool PrimaryUseStarted();
+
+        public bool PrimaryUseCanceled();
     }
 
 
@@ -76,7 +78,9 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
     /// </summary>
     public interface IS_Usable
     {
-        public bool SecondaryUse();
+        public bool SecondaryUseStarted();
+
+        public bool SecondaryUseCanceled();
     }
 
 
@@ -119,9 +123,9 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         /// <summary>
         /// This method is used to attach the attachment to the weapon
         /// </summary>
-        /// <param name="gun">the gun on which the attachment will be attached</param>
+        /// <param name="weaponItem">the gun on which the attachment will be attached</param>
         /// <returns></returns>
-        public bool AttachToWeapon(WeaponItem gun);
+        public bool AttachToWeapon(WeaponItem weaponItem);
         public bool DetachFromWeapon();
     }
 }

@@ -29,9 +29,42 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         public WeaponDataSO WeaponData => m_ItemData as WeaponDataSO;
         public bool IsInHand { get; protected set; }
-        public SightAttachmentItem SightAttachment { get; set; }
+
+        [SerializeField, Tooltip("This is the iron sight or no sight")] 
+        SightAttachmentItem m_DefaultSight;
+        
+        /// <summary>
+        /// This is the sight attachment that is attached to the weapon. (not the iron sight)
+        /// </summary>
+        private SightAttachmentItem m_SightAttachment;
+
+        public SightAttachmentItem SightAttachment 
+        {
+            get
+            { 
+                if (m_SightAttachment == null)
+                {
+                    m_SightAttachment = m_DefaultSight;
+                }
+                return m_SightAttachment;
+            }
+            set
+            {
+                m_SightAttachment = value;
+            } 
+        }
+
         public GripAttachmentItem GripAttachment { get; set; }
         public MuzzleAttachmentItem MuzzleAttachment { get; set; }
+
+
+        private void Start()
+        {
+            if (m_DefaultSight != null)
+            {
+                m_DefaultSight.AttachToWeapon(this);
+            }
+        }
 
 
         public override bool TryStoreAndCollect(ItemUserHand hand)
@@ -181,24 +214,44 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             return true;
         }
 
-        public virtual bool PrimaryUse()
+        public virtual bool PrimaryUseStarted()
         {
             Shoot();
             return true;
         }
 
-        public virtual bool SecondaryUse()
+        public virtual bool PrimaryUseCanceled()
+        {
+            Debug.Log(Name + " primary use canceled");
+            return true;
+        }
+
+        public virtual bool SecondaryUseStarted()
         {
             Debug.Log(Name);
             // If there is a sight attachment, then aim down sight through it
-            if (SightAttachment != null)
+            if (SightAttachment == null)
             {
-                return SightAttachment.AimDownSight();
+                Debug.Log("No sight attachment found!");
+                return false;
+                
             }
 
             // If there is no sight attachment, then aim down sight through iron sight
             Debug.Log("Aiming down sight through iron sight with ADS Zoom value of " + WeaponData.ADSZoomValue);
-            return true;
+            return SightAttachment.StartAimDownSight();
+        }
+
+        public virtual bool SecondaryUseCanceled()
+        {
+            if (SightAttachment == null)
+            {
+                Debug.Log("No sight attachment found!");
+                return false;
+
+            }
+
+            return SightAttachment.StopAimDownSight();
         }
 
         public virtual bool Hold()

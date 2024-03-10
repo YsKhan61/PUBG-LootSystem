@@ -16,13 +16,18 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         /// <returns></returns>
         public virtual bool TryCollect(ItemUserHand _)
         {
-            PrimaryUse();
+            PrimaryUseStarted();
             return true;
         }
 
-        public virtual bool PrimaryUse()
+        public virtual bool PrimaryUseStarted()
         {
             Debug.Log(Name + " used!");
+            return true;
+        }
+
+        public virtual bool PrimaryUseCanceled()
+        {
             return true;
         }
     }

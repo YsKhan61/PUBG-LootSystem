@@ -139,6 +139,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "MouseXYAxes",
+                    "type": "PassThrough",
+                    "id": "349fbcbd-f12a-4dd2-ae9b-f5ff60eb9299",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -348,6 +357,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "FreeLook",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e7c56ba4-4f82-4c53-943a-9e62234a4435",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MouseXYAxes",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

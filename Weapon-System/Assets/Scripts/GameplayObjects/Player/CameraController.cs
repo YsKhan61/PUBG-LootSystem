@@ -49,7 +49,7 @@ namespace Weapon_System.GameplayObjects.Player
 
             UpdateCameraPosition(m_FirstPersonController.Speed);
 
-            m_MouseLook.UpdateCursorLock();
+            // m_MouseLook.UpdateCursorLock();
         }
 
         public void DoBobCycle()

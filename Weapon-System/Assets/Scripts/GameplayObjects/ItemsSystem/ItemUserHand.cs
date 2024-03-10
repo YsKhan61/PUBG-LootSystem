@@ -78,20 +78,12 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             m_SecondaryWeaponSelectInputEvent.OnEventRaised += OnSecondaryWeaponSelect;
             m_HolsterItemInputEvent.OnEventRaised += OnHolsterItemInputEvent;
 
+            m_PrimaryUseInputEvent.OnEventRaised += OnPrimaryUseInputEvent;
+            m_SecondaryUseInputEvent.OnEventRaised += OnSecondaryUseInputEvent;
         }
 
         private void Update()
         {
-            if (m_PrimaryUseInputEvent.Value)
-            {
-                ((IP_Usable)ItemInHand)?.PrimaryUse();
-            }
-
-            if (m_SecondaryUseInputEvent.Value)
-            {
-                ((IS_Usable)ItemInHand)?.SecondaryUse();
-            }
-
             ScanNearbyItems();
         }
 
@@ -101,6 +93,9 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             m_PrimaryWeaponSelectInputEvent.OnEventRaised -= OnPrimaryWeaponSelect;
             m_SecondaryWeaponSelectInputEvent.OnEventRaised -= OnSecondaryWeaponSelect;
             m_HolsterItemInputEvent.OnEventRaised -= OnHolsterItemInputEvent;
+
+            m_PrimaryUseInputEvent.OnEventRaised -= OnPrimaryUseInputEvent;
+            m_SecondaryUseInputEvent.OnEventRaised -= OnSecondaryUseInputEvent;
         }
 
 
@@ -175,6 +170,37 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         {
             ItemInHand?.TryPutAway();
         }
+
+        private void OnPrimaryUseInputEvent(bool value)
+        {
+            if (ItemInHand == null)
+                return;
+
+            if (value)
+            {
+                ((IP_Usable)ItemInHand)?.PrimaryUseStarted();
+            }
+            else
+            {
+                ((IP_Usable)ItemInHand)?.PrimaryUseCanceled();
+            }
+        }
+
+        private void OnSecondaryUseInputEvent(bool value)
+        {
+            if (ItemInHand == null)
+                return;
+
+            if (value)
+            {
+                ((IS_Usable)ItemInHand)?.SecondaryUseStarted();
+            }
+            else
+            {
+                ((IS_Usable)ItemInHand)?.SecondaryUseCanceled();
+            }
+        }
+
 
 
         private void ScanNearbyItems()

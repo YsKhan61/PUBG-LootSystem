@@ -28,7 +28,9 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         protected GameObject m_RootGO;
 
         protected Inventory m_Inventory;
+
         protected ItemUserHand m_ItemUserHand;
+        public ItemUserHand ItemUserHand => m_ItemUserHand;
 
 
         public virtual bool TryStoreAndCollect(ItemUserHand hand)

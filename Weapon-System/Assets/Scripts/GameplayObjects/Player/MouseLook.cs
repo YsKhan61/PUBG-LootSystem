@@ -13,7 +13,7 @@ namespace Weapon_System.GameplayObjects.Player
         public float MaximumX = 90F;
         public bool smooth;
         public float smoothTime = 5f;
-        public bool lockCursor = true;
+        // public bool lockCursor = true;
 
 
         private Quaternion m_CharacterTargetRot;
@@ -29,6 +29,7 @@ namespace Weapon_System.GameplayObjects.Player
 
         public void LookRotation(Transform character, Transform camera, float yRot, float xRot)
         {
+            
             m_CharacterTargetRot *= Quaternion.Euler (0f, yRot, 0f);
             m_CameraTargetRot *= Quaternion.Euler (-xRot, 0f, 0f);
 
@@ -48,7 +49,7 @@ namespace Weapon_System.GameplayObjects.Player
                 camera.localRotation = m_CameraTargetRot;
             }
 
-            UpdateCursorLock();
+            // UpdateCursorLock();
         }
 
         /*public void SetCursorLock(bool value)
