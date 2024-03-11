@@ -10,9 +10,19 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
     [CreateAssetMenu(fileName = "GunData", menuName = "ScriptableObjects/ItemDatas/GunDataSO", order = 0)]
     public class WeaponDataSO : ItemDataSO
     {
+        [SerializeField, Tooltip("The prefab of the bullet")]
+        GameObject m_BulletPrefab;
+        public GameObject BulletPrefab => m_BulletPrefab;
+
+
         [SerializeField, Tooltip("How much will the player camera zoom in this iron sight ADS")]
         float m_ADSZoomValue;
         public float ADSZoomValue => m_ADSZoomValue;
+
+
+        [SerializeField, Tooltip("No of bullet shots per second")]
+        float m_FireRate;
+        public float FireRate => m_FireRate;
 
 
         [SerializeField, Tooltip("The sight items allowed to be attached to this gun")]

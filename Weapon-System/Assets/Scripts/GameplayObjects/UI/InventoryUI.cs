@@ -42,9 +42,6 @@ namespace Weapon_System.GameplayObjects.UI
         ItemUserHand m_ItemUserHand;
 
         [SerializeField]
-        PoolManager m_PoolManager;
-
-        [SerializeField]
         Inventory m_Inventory;
 
         public float CanvasScaleFactor => m_Canvas.scaleFactor;
@@ -96,7 +93,7 @@ namespace Weapon_System.GameplayObjects.UI
 
         public void CreateItemUIForVicinitySlot(InventoryItem item)
         {
-            ItemUI itemUI = m_PoolManager.GetObjectFromPool(m_ItemUIPrefab.Name) as ItemUI;
+            ItemUI itemUI = PoolManager.Instance.GetObjectFromPool(m_ItemUIPrefab.Name) as ItemUI;
             itemUI.SetItemDataAndShow(item, this, SlotType.Vicinity);
             itemUI.transform.SetParent(m_ViscinityContentTransform.transform);
             m_ViscinityItemUIs.Add(itemUI);
@@ -104,7 +101,7 @@ namespace Weapon_System.GameplayObjects.UI
 
         public void CreateItemUIInInventorySlot(InventoryItem item)
         {
-            ItemUI itemUI = m_PoolManager.GetObjectFromPool(m_ItemUIPrefab.Name) as ItemUI;
+            ItemUI itemUI = PoolManager.Instance.GetObjectFromPool(m_ItemUIPrefab.Name) as ItemUI;
             itemUI.SetItemDataAndShow(item, this, SlotType.Inventory);
             itemUI.transform.SetParent(m_InventoryContentTransform.transform);
         }
@@ -114,7 +111,7 @@ namespace Weapon_System.GameplayObjects.UI
             if (itemUI != null)
             {
                 itemUI.ResetItemDataAndHide();
-                m_PoolManager.ReleaseObjectToPool(itemUI);
+                PoolManager.Instance.ReleaseObjectToPool(itemUI);
             }
         }
 

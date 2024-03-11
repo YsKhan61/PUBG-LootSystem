@@ -16,7 +16,7 @@ namespace Weapon_System.Utilities
     /// GameObjects that are spawned and despawned are pooled
     /// and they must be inherited from ISpawnable interface
     /// </summary>
-    public class PoolManager : MonoBehaviour
+    public class PoolManager : Singleton<PoolManager>
     {
         [SerializeField] private GameObject[] _spawnablesGO;
 
@@ -25,8 +25,10 @@ namespace Weapon_System.Utilities
         private ISpawnable[] _spawnables;
         private Dictionary<string, ObjectPool<ISpawnable>> _objectsPool = new Dictionary<string, ObjectPool<ISpawnable>>();
 
-        void Awake()
+        public override void Awake()
         {
+            base.Awake();
+
             FetchSpawnableFromGameObjects();
 
             FillupPool();

@@ -16,7 +16,10 @@ MonoBehaviour:
   m_UITag: {fileID: 11400000, guid: 33139a9e371ef9a46ba2c458bf15cf0c, type: 2}
   m_IconSprite: {fileID: 21300000, guid: a5684b65aef70014e9429daf22f88ec7, type: 3}
   m_SpaceRequired: 0
+  m_BulletPrefab: {fileID: 7721014828812477737, guid: 89dbf087b1d9dc34f9f85bd942ba6f0f,
+    type: 3}
   m_ADSZoomValue: 2
+  m_FireRate: 1
   m_AllowedSightAttachments:
   - {fileID: 11400000, guid: 70895ec059a52134682eef78d0c2e3b0, type: 2}
   - {fileID: 11400000, guid: 351f48ffa23c68943be98de56550b22f, type: 2}

@@ -147,6 +147,7 @@ MonoBehaviour:
   m_Graphics: {fileID: 8087991231554445608}
   m_RootGO: {fileID: 4210785308608106674}
   m_WeaponAnimator: {fileID: 1821375599727000215}
+  m_BulletSpawnTransform: {fileID: 8947734833154344044}
   m_SightHolderTransform: {fileID: 340389995491341194}
   m_GripHolderTransform: {fileID: 8236772654167067588}
   m_MuzzleHolderTransform: {fileID: 2544676949556162755}
@@ -344,6 +345,12 @@ GameObject:
 --- !u!4 &8236772654167067588 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4248809400789812167, guid: dccd2405c8598c24b9699ff712add0d5,
+    type: 3}
+  m_PrefabInstance: {fileID: 5239982925359695875}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &8947734833154344044 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3788817947068238959, guid: dccd2405c8598c24b9699ff712add0d5,
     type: 3}
   m_PrefabInstance: {fileID: 5239982925359695875}
   m_PrefabAsset: {fileID: 0}

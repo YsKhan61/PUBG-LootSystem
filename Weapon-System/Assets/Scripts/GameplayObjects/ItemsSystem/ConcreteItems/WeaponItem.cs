@@ -1,4 +1,6 @@
+using System.Collections;
 using UnityEngine;
+using Weapon_System.Utilities;
 
 
 namespace Weapon_System.GameplayObjects.ItemsSystem
@@ -19,6 +21,10 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
 
         [Header("Attachment holders")]
+
+        [SerializeField, Tooltip("Bullet will be spawned from this transform")]
+        Transform m_BulletSpawnTransform;
+        public Transform BulletSpawnTransform => m_BulletSpawnTransform;
 
         [SerializeField, Tooltip("The sight will become a child of this game object with same position")]
         Transform m_SightHolderTransform;
@@ -48,7 +54,6 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         /// This is the sight attachment that is attached to the weapon. (not the iron sight)
         /// </summary>
         private SightAttachmentItem m_SightAttachment;
-
         public SightAttachmentItem SightAttachment 
         {
             get
@@ -66,9 +71,18 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
                 m_SightAttachment = value;
             } 
         }
-
         public GripAttachmentItem GripAttachment { get; set; }
         public MuzzleAttachmentItem MuzzleAttachment { get; set; }
+
+        Coroutine m_ShootRoutine;
+
+        private WaitForSeconds m_FireRateWait;
+
+
+        private void Start()
+        {
+            m_FireRateWait = new WaitForSeconds(1f / WeaponData.FireRate);
+        }
 
 
         public override bool TryStoreAndCollect(ItemUserHand hand)
@@ -220,12 +234,18 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         public virtual bool PrimaryUseStarted()
         {
-            Shoot();
+            m_ShootRoutine =  StartCoroutine(Shoot());
             return true;
         }
 
         public virtual bool PrimaryUseCanceled()
         {
+            if (m_ShootRoutine != null)
+            {
+                StopCoroutine(m_ShootRoutine);
+            }
+            m_ShootRoutine = null;
+
             Debug.Log(Name + " primary use canceled");
             return true;
         }
@@ -267,14 +287,13 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
                 return false;
             }
 
+            // If an item is already in hand, then put it away first
             m_ItemUserHand.ItemInHand?.TryPutAway();
-
             
             m_ItemUserHand.ItemInHand = this;
             IsInHand = true;
             
             ShowGraphics();
-            // SetHoldPosition();
 
             return true;
         }
@@ -302,21 +321,35 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             return true;
         }
 
-        bool Shoot()
+        IEnumerator Shoot()
         {
-            Debug.Log(Name + " shooting....!");
-            return true;
+            while (true)
+            {
+                SpawnBullet();
+
+                yield return m_FireRateWait;
+            }
         }
 
-        /// <summary>
-        /// This is a temporary solution to set the hold position of the weapon
-        /// When an hold in hand animation clip will be added,
-        /// then we will set the hold position through the animation clip
-        /// </summary>
-        void SetHoldPosition()
+        void SpawnBullet()
         {
-            m_Graphics.transform.localPosition = Vector3.zero;
-            m_Graphics.transform.localRotation = Quaternion.identity;
+            // Spawn bullet
+            ISpawnable spawnable = PoolManager.Instance.GetObjectFromPool(WeaponData.BulletPrefab.name);
+            if (spawnable == null)
+            {
+                Debug.LogError("Bullet not found in the pool");
+                return;
+            }
+
+            Bullet bullet = spawnable as Bullet;
+            if (bullet == null)
+            {
+                Debug.LogError("Bullet not found in the pool");
+                return;
+            }
+
+            bullet.gameObject.transform.position = BulletSpawnTransform.position;
+            bullet.gameObject.transform.rotation = BulletSpawnTransform.rotation;
         }
     }
 
