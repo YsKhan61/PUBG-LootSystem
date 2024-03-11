@@ -144,7 +144,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ItemData: {fileID: 11400000, guid: 8094637332a63b745bd3ba33c401079e, type: 2}
-  m_Graphics: {fileID: 4911823104727943502}
+  m_Graphics: {fileID: 8087991231554445608}
   m_RootGO: {fileID: 4210785308608106674}
   m_WeaponAnimator: {fileID: 1821375599727000215}
   m_SightHolderTransform: {fileID: 340389995491341194}
@@ -320,12 +320,6 @@ Transform:
 --- !u!4 &2544676949556162755 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7775652228509350080, guid: dccd2405c8598c24b9699ff712add0d5,
-    type: 3}
-  m_PrefabInstance: {fileID: 5239982925359695875}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &4911823104727943502 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 905898229096300877, guid: dccd2405c8598c24b9699ff712add0d5,
     type: 3}
   m_PrefabInstance: {fileID: 5239982925359695875}
   m_PrefabAsset: {fileID: 0}

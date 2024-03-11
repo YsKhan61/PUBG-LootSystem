@@ -118,33 +118,6 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         }
 
 
-        /*/// <remarks>
-        /// Don't call this method directly, this method will only be called from the IHoldable item
-        /// </remarks>
-        internal void TryHoldItemInHand(IHoldable item)
-        {
-            if (ItemInHand != null)
-            {
-                // If there is already an item in hand, then put it away
-                ItemInHand.TryPutAway();
-            }
-
-            ItemInHand = item;
-            ItemInHand?.Hold();
-        }*/
-
-        /*/// <remarks>
-        /// Don't call this method directly, this method will only be called from the IHoldable item
-        /// </remarks>
-        internal void TryPutAwayItem()
-        {
-            if (ItemInHand == null)
-                return;
-
-            ItemInHand = null;
-        }*/
-
-
         private void OnPickupInputEvent(bool _)
         {
             if (m_CollectablesScanned.Count <= 0)

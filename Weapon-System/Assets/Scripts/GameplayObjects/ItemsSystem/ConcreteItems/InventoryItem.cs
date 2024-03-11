@@ -22,7 +22,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         public bool IsCollected { get; protected set; }
 
         [SerializeField]
-        GameObject m_Graphics;
+        protected GameObject m_Graphics;
 
         [SerializeField, Tooltip("The root game object of this item")]
         protected GameObject m_RootGO;

@@ -42,6 +42,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         public WeaponDataSO WeaponData => m_ItemData as WeaponDataSO;
         public bool IsInHand { get; protected set; }
+        public bool IsAimingDownSight { get; protected set; }
         
         /// <summary>
         /// This is the sight attachment that is attached to the weapon. (not the iron sight)
@@ -231,7 +232,9 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         public virtual bool SecondaryUseStarted()
         {
-            Debug.Log(Name);
+            IsAimingDownSight = true;
+
+            // Debug.Log(Name);
             // If there is a sight attachment, then aim down sight through it
             if (SightAttachment == null)
             {
@@ -245,11 +248,12 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         public virtual bool SecondaryUseCanceled()
         {
+            IsAimingDownSight = false;
+
             if (SightAttachment == null)
             {
                 Debug.Log("It should not happen. No sight attachment found!");
                 return false;
-
             }
 
             return SightAttachment.StopAimDownSight();
@@ -268,8 +272,10 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             
             m_ItemUserHand.ItemInHand = this;
             IsInHand = true;
-
+            
             ShowGraphics();
+            // SetHoldPosition();
+
             return true;
         }
 
@@ -287,6 +293,11 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             m_ItemUserHand.ItemInHand = null;
             IsInHand = false;
 
+            if (IsAimingDownSight)
+            {
+                SecondaryUseCanceled();
+            }
+
             HideGraphics();
             return true;
         }
@@ -295,6 +306,17 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         {
             Debug.Log(Name + " shooting....!");
             return true;
+        }
+
+        /// <summary>
+        /// This is a temporary solution to set the hold position of the weapon
+        /// When an hold in hand animation clip will be added,
+        /// then we will set the hold position through the animation clip
+        /// </summary>
+        void SetHoldPosition()
+        {
+            m_Graphics.transform.localPosition = Vector3.zero;
+            m_Graphics.transform.localRotation = Quaternion.identity;
         }
     }
 
