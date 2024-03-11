@@ -2,7 +2,8 @@
     "name": "Weapon_System.GameplayObjects.Item",
     "rootNamespace": "",
     "references": [
-        "GUID:373f8237bb2862440b9ecb2ab7f21ab3"
+        "GUID:373f8237bb2862440b9ecb2ab7f21ab3",
+        "GUID:4307f53044263cf4b835bd812fc161a4"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

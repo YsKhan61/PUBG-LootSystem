@@ -11,8 +11,12 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
     public class SightAttachmentDataSO : ItemDataSO
     {
         [SerializeField, Tooltip("How much will the player camera zoom in this iron sight ADS")]
-        float m_ADSZoomValue;
-        public float ADSZoomValue => m_ADSZoomValue;
+        float m_ADS_FOV;
+        public float ADS_FOV => m_ADS_FOV;
+
+        [SerializeField, Tooltip("The seconds needed to ads in, or ads out")]
+        float m_ADS_Time;
+        public float ADS_Time => m_ADS_Time;
     }
 
 }

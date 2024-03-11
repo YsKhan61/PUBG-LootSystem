@@ -14,13 +14,16 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         public bool StartAimDownSight()
         {
-            Debug.Log("Aiming down sight through " + Name + " with ADS Zoom value of " + SightAttachmentData.ADSZoomValue);
+            Debug.Log("Aiming down sight through " + Name + " with ADS Zoom value of " + SightAttachmentData.ADS_FOV);
+            
+            m_WeaponItem.ItemUserHand.ADSController.StartADS();
             return true;
         }
 
         public bool StopAimDownSight()
         {
             Debug.Log("Stopped aiming down sight through " + Name);
+            m_WeaponItem.ItemUserHand.ADSController.StopADS();
             return true;
         }
 
@@ -34,6 +37,9 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             m_RootGO.transform.localRotation = Quaternion.identity;
 
             ShowGraphics();
+
+            m_WeaponItem.ItemUserHand.ADSController.SetADS(SightAttachmentData.ADS_FOV);
+            m_WeaponItem.ItemUserHand.ADSController.SetTransitionTime(SightAttachmentData.ADS_Time);
 
             return true;
         }

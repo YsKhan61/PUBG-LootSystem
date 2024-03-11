@@ -15,5 +15,6 @@ MonoBehaviour:
   m_ItemTag: {fileID: 11400000, guid: 70895ec059a52134682eef78d0c2e3b0, type: 2}
   m_UITag: {fileID: 0}
   m_IconSprite: {fileID: 0}
-  m_SpaceRequired: 0
-  m_ADSZoomValue: 1
+  m_SpaceRequired: 1
+  m_ADS_FOV: 80
+  m_ADS_Time: 0.3

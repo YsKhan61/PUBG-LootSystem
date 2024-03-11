@@ -40,6 +40,10 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         public Inventory Inventory => m_Inventory;
 
         [SerializeField]
+        ADSController m_ADSController;
+        public ADSController ADSController => m_ADSController;
+
+        [SerializeField]
         LayerMask m_ItemLayer;
 
         [SerializeField, Tooltip("This radius will be used for the OverlapSphere that will detect the collectable items nearby")]

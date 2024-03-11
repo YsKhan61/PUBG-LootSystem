@@ -5,6 +5,10 @@ using Weapon_System.Utilities;
 
 namespace Weapon_System.GameplayObjects.Player
 {
+    /// <summary>
+    /// The target that will be rotated using mouse look input.
+    /// The cinemachine player look camera will have this target as follow at reference.
+    /// </summary>
     public class POVTargetController : MonoBehaviour
     {
         [SerializeField]

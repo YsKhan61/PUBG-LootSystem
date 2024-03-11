@@ -13,6 +13,8 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
     /// </summary>
     public class WeaponItem : InventoryItem, IP_Usable, IS_Usable, IHoldable
     {
+        [Header("Attachment holders")]
+
         [SerializeField, Tooltip("The sight will become a child of this game object with same position")]
         Transform m_SightHolderTransform;
         public Transform SightHolderTransform => m_SightHolderTransform;
@@ -24,14 +26,18 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         [SerializeField, Tooltip("The muzzle will become a child of this game object with same position")]
         Transform m_MuzzleHolderTransform;
-        public Transform MuzzleHolderTransform => m_MuzzleHolderTransform; 
+        public Transform MuzzleHolderTransform => m_MuzzleHolderTransform;
 
+
+        [Space(10)]
+
+        [Header("Default Attachments")]
+
+        [SerializeField, Tooltip("This is the iron sight or no sight")]
+        SightAttachmentItem m_DefaultSight;
 
         public WeaponDataSO WeaponData => m_ItemData as WeaponDataSO;
         public bool IsInHand { get; protected set; }
-
-        [SerializeField, Tooltip("This is the iron sight or no sight")] 
-        SightAttachmentItem m_DefaultSight;
         
         /// <summary>
         /// This is the sight attachment that is attached to the weapon. (not the iron sight)
@@ -44,7 +50,9 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             { 
                 if (m_SightAttachment == null)
                 {
+                    // if no sight attachment is attached, then use the default sight
                     m_SightAttachment = m_DefaultSight;
+                    m_SightAttachment.AttachToWeapon(this);
                 }
                 return m_SightAttachment;
             }
@@ -56,15 +64,6 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         public GripAttachmentItem GripAttachment { get; set; }
         public MuzzleAttachmentItem MuzzleAttachment { get; set; }
-
-
-        private void Start()
-        {
-            if (m_DefaultSight != null)
-            {
-                m_DefaultSight.AttachToWeapon(this);
-            }
-        }
 
 
         public override bool TryStoreAndCollect(ItemUserHand hand)
@@ -232,13 +231,11 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             // If there is a sight attachment, then aim down sight through it
             if (SightAttachment == null)
             {
-                Debug.Log("No sight attachment found!");
+                Debug.Log("It should not happen. No sight attachment found!");
                 return false;
                 
             }
 
-            // If there is no sight attachment, then aim down sight through iron sight
-            Debug.Log("Aiming down sight through iron sight with ADS Zoom value of " + WeaponData.ADSZoomValue);
             return SightAttachment.StartAimDownSight();
         }
 
@@ -246,7 +243,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         {
             if (SightAttachment == null)
             {
-                Debug.Log("No sight attachment found!");
+                Debug.Log("It should not happen. No sight attachment found!");
                 return false;
 
             }
