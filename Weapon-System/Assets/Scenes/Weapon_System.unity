@@ -7733,16 +7733,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 3105537113614004563, guid: cbc1839e74f3092489e9d3200098973f,
+    - target: {fileID: 4508521993492890020, guid: cbc1839e74f3092489e9d3200098973f,
         type: 3}
-      propertyPath: m_ADSVirtualCamera
-      value: 
-      objectReference: {fileID: 1520947060}
-    - target: {fileID: 3105537113614004563, guid: cbc1839e74f3092489e9d3200098973f,
+      propertyPath: m_MouseLook.smooth
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4508521993492890020, guid: cbc1839e74f3092489e9d3200098973f,
         type: 3}
-      propertyPath: m_CinemachineBrain
-      value: 
-      objectReference: {fileID: 140881873}
+      propertyPath: m_MouseLook.smoothTime
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 6111941527781067775, guid: cbc1839e74f3092489e9d3200098973f,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -7793,6 +7793,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7610040620629100727, guid: cbc1839e74f3092489e9d3200098973f,
+        type: 3}
+      propertyPath: m_ADSVirtualCamera
+      value: 
+      objectReference: {fileID: 1520947060}
+    - target: {fileID: 7610040620629100727, guid: cbc1839e74f3092489e9d3200098973f,
+        type: 3}
+      propertyPath: m_CinemachineBrain
+      value: 
+      objectReference: {fileID: 140881873}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

@@ -40,8 +40,8 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         public Inventory Inventory => m_Inventory;
 
         [SerializeField]
-        ADSController m_ADSController;
-        public ADSController ADSController => m_ADSController;
+        AimCameraController m_AimCameraController;
+        public AimCameraController AimCameraController => m_AimCameraController;
 
         [SerializeField]
         LayerMask m_ItemLayer;

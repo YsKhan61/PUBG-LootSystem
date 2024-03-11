@@ -28,12 +28,7 @@ namespace Weapon_System.GameplayObjects.Player
 
         private void Update()
         {
-            RotateView();
-        }
-
-        private void RotateView()
-        {
-            m_MouseLook.LookRotation(transform, m_TargetTransform, m_MouseXInputEvent.Value, m_MouseYInputEvent.Value);
+            m_MouseLook.LookRotation(transform, m_TargetTransform, m_MouseXInputEvent.Value * Time.deltaTime, m_MouseYInputEvent.Value * Time.deltaTime);
         }
     }
 }

@@ -4,17 +4,17 @@ using UnityEngine;
 
 namespace Weapon_System.GameplayObjects.ItemsSystem
 {
-    public class ADSController : MonoBehaviour
+    public class AimCameraController : MonoBehaviour
     {
         [SerializeField] CinemachineVirtualCamera m_ADSVirtualCamera;
         [SerializeField] CinemachineBrain m_CinemachineBrain;
 
         private void Start()
         {
-            StopADS();
+            SetPriorityValue(0);
         }
 
-        public void SetADS(float fovValue)
+        public void SetFOV(float fovValue)
         {
             m_ADSVirtualCamera.m_Lens.FieldOfView = fovValue;
         }
@@ -24,14 +24,9 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             m_CinemachineBrain.m_DefaultBlend.m_Time = seconds;
         }
 
-        public void StartADS()
+        public void SetPriorityValue(int value)
         {
-            m_ADSVirtualCamera.Priority = 20;
-        }
-
-        public void StopADS()
-        {
-            m_ADSVirtualCamera.Priority = 0;
+            m_ADSVirtualCamera.Priority = value;
         }
     }
 

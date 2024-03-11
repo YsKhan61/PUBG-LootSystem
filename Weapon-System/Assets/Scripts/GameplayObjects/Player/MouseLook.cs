@@ -30,8 +30,8 @@ namespace Weapon_System.GameplayObjects.Player
         public void LookRotation(Transform character, Transform camera, float yRot, float xRot)
         {
             
-            m_CharacterTargetRot *= Quaternion.Euler (0f, yRot, 0f);
-            m_CameraTargetRot *= Quaternion.Euler (-xRot, 0f, 0f);
+            m_CharacterTargetRot *= Quaternion.Euler (0f, yRot * YSensitivity, 0f);
+            m_CameraTargetRot *= Quaternion.Euler (-xRot * XSensitivity, 0f, 0f);
 
             if(clampVerticalRotation)
                 m_CameraTargetRot = ClampRotationAroundXAxis (m_CameraTargetRot);

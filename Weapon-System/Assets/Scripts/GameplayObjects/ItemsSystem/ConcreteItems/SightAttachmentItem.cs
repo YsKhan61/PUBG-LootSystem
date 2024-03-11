@@ -1,4 +1,5 @@
 using UnityEngine;
+using static Codice.Client.Common.Connection.AskCredentialsToUser;
 
 
 namespace Weapon_System.GameplayObjects.ItemsSystem
@@ -14,33 +15,31 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         public bool StartAimDownSight()
         {
-            Debug.Log("Aiming down sight through " + Name + " with ADS Zoom value of " + SightAttachmentData.ADS_FOV);
+            // Debug.Log("Aiming down sight through " + Name + " with ADS Zoom value of " + SightAttachmentData.ADS_FOV);
             
-            m_WeaponItem.ItemUserHand.ADSController.StartADS();
+            m_WeaponItem.ItemUserHand.AimCameraController.SetPriorityValue(20);
+            m_WeaponItem.WeaponAnimator.AimIn();
+
             return true;
         }
 
         public bool StopAimDownSight()
         {
-            Debug.Log("Stopped aiming down sight through " + Name);
-            m_WeaponItem.ItemUserHand.ADSController.StopADS();
+            // Debug.Log("Stopped aiming down sight through " + Name);
+
+            m_WeaponItem.ItemUserHand.AimCameraController.SetPriorityValue(0);
+            m_WeaponItem.WeaponAnimator.AimOut();
+
             return true;
         }
 
         public bool AttachToWeapon(WeaponItem weapon)
         {
-            m_WeaponItem = weapon;
-            m_WeaponItem.SightAttachment = this;
-
-            m_RootGO.transform.SetParent(m_WeaponItem.SightHolderTransform);
-            m_RootGO.transform.localPosition = Vector3.zero;
-            m_RootGO.transform.localRotation = Quaternion.identity;
-
+            SetReferences(weapon);
+            SetParentToHolder();
             ShowGraphics();
-
-            m_WeaponItem.ItemUserHand.ADSController.SetADS(SightAttachmentData.ADS_FOV);
-            m_WeaponItem.ItemUserHand.ADSController.SetTransitionTime(SightAttachmentData.ADS_Time);
-
+            Configure();
+            
             return true;
         }
 
@@ -52,12 +51,9 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
                 return false;
             }
 
-            m_RootGO.transform.SetParent(null);
-
+            ResetParent();
             HideGraphics();
-
-            m_WeaponItem.SightAttachment = null;
-            m_WeaponItem = null;
+            RemoveReferences();
 
             return true;
         }
@@ -73,6 +69,37 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             }
 
             return false;
+        }
+
+
+        void SetReferences(in WeaponItem weapon)
+        {
+            m_WeaponItem = weapon;
+            m_WeaponItem.SightAttachment = this;
+        }
+
+        void SetParentToHolder()
+        {
+            m_RootGO.transform.SetParent(m_WeaponItem.SightHolderTransform);
+            m_RootGO.transform.localPosition = Vector3.zero;
+            m_RootGO.transform.localRotation = Quaternion.identity;
+        }
+
+        void ResetParent()
+        {
+            m_RootGO.transform.SetParent(null);
+        }
+
+        void RemoveReferences()
+        {
+            m_WeaponItem.SightAttachment = null;
+            m_WeaponItem = null;
+        }
+
+        void Configure()
+        {
+            m_WeaponItem.ItemUserHand.AimCameraController.SetFOV(SightAttachmentData.ADS_FOV);
+            m_WeaponItem.ItemUserHand.AimCameraController.SetTransitionTime(SightAttachmentData.ADS_Time);
         }
     }
 

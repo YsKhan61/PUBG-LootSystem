@@ -13,12 +13,16 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
     /// </summary>
     public class WeaponItem : InventoryItem, IP_Usable, IS_Usable, IHoldable
     {
+        [SerializeField]
+        WeaponAnimator m_WeaponAnimator;
+        public WeaponAnimator WeaponAnimator => m_WeaponAnimator;
+
+
         [Header("Attachment holders")]
 
         [SerializeField, Tooltip("The sight will become a child of this game object with same position")]
         Transform m_SightHolderTransform;
         public Transform SightHolderTransform => m_SightHolderTransform;
-
 
         [SerializeField, Tooltip("The grip will become a child of this game object with same position")]
         Transform m_GripHolderTransform;
