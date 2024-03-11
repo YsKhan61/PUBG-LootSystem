@@ -66,7 +66,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         /// For now we use GunItem, later we can use a base class for all items
         /// We need to have IHoldable and IUsable interfaces for the items
         /// </remarks>
-        public IHoldable ItemInHand { get; private set; }
+        public IHoldable ItemInHand { get; set; }
 
         Collider[] resultColliders = new Collider[10];
         List<ICollectable> m_CollectablesScanned;
@@ -118,19 +118,22 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         }
 
 
-        /// <remarks>
+        /*/// <remarks>
         /// Don't call this method directly, this method will only be called from the IHoldable item
         /// </remarks>
         internal void TryHoldItemInHand(IHoldable item)
         {
             if (ItemInHand != null)
-                return;
+            {
+                // If there is already an item in hand, then put it away
+                ItemInHand.TryPutAway();
+            }
 
             ItemInHand = item;
             ItemInHand?.Hold();
-        }
+        }*/
 
-        /// <remarks>
+        /*/// <remarks>
         /// Don't call this method directly, this method will only be called from the IHoldable item
         /// </remarks>
         internal void TryPutAwayItem()
@@ -139,7 +142,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
                 return;
 
             ItemInHand = null;
-        }
+        }*/
 
 
         private void OnPickupInputEvent(bool _)
@@ -234,17 +237,10 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         
         private void HoldWeapon(int index)
         {
-            if (!m_Inventory.TryGetWeaponItem(index, out WeaponItem primaryWeapon))
+            if (!m_Inventory.TryGetWeaponItem(index, out WeaponItem weapon))
                 return;
 
-            if (ItemInHand != null)
-            {
-                // If there is already an item in hand, then put it away
-                ItemInHand.TryPutAway();
-            }
-
-            ItemInHand = primaryWeapon;
-            ItemInHand?.Hold();
+            weapon.Hold();
         }
 
 

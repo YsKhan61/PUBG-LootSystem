@@ -171,7 +171,7 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             if (!TryRemove())
                 return false;
 
-            m_ItemUserHand.TryPutAwayItem();
+            TryPutAway();
             return Drop();
         }
 
@@ -263,9 +263,13 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
                 return false;
             }
 
+            m_ItemUserHand.ItemInHand?.TryPutAway();
+
+            
+            m_ItemUserHand.ItemInHand = this;
             IsInHand = true;
+
             ShowGraphics();
-            m_ItemUserHand.TryHoldItemInHand(this);
             return true;
         }
 
@@ -277,9 +281,12 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
                 return false;
             }
 
-            m_ItemUserHand.TryPutAwayItem();
+            if (m_ItemUserHand.ItemInHand != this as IHoldable)
+                return false;
 
+            m_ItemUserHand.ItemInHand = null;
             IsInHand = false;
+
             HideGraphics();
             return true;
         }
