@@ -31,9 +31,6 @@ namespace Weapon_System.GameplayObjects.UI
         [SerializeField, Tooltip("To show ItemUI in Inventory, The spawned instance of 'm_ItemUIPrefab' will be set as a child of this transform")]
         Transform m_InventoryContentTransform;
 
-        [SerializeField, Tooltip("The slots where various ItemUIs can be dropped.")]
-        ItemSlotUI[] m_ItemSlotUIs;
-
         [SerializeField, Tooltip("The canvas of this whole UI")]
         Canvas m_Canvas;
         public Transform CanvasTransform => m_Canvas.transform;
@@ -94,23 +91,23 @@ namespace Weapon_System.GameplayObjects.UI
         public void CreateItemUIForVicinitySlot(InventoryItem item)
         {
             ItemUI itemUI = PoolManager.Instance.GetObjectFromPool(m_ItemUIPrefab.Name) as ItemUI;
-            itemUI.SetItemDataAndShow(item, this, SlotType.Vicinity);
-            itemUI.transform.SetParent(m_ViscinityContentTransform.transform);
+            itemUI.SetItemData(item, this, SlotType.Vicinity);
+            itemUI.transform.SetParent(m_ViscinityContentTransform);
             m_ViscinityItemUIs.Add(itemUI);
         }
 
         public void CreateItemUIInInventorySlot(InventoryItem item)
         {
             ItemUI itemUI = PoolManager.Instance.GetObjectFromPool(m_ItemUIPrefab.Name) as ItemUI;
-            itemUI.SetItemDataAndShow(item, this, SlotType.Inventory);
-            itemUI.transform.SetParent(m_InventoryContentTransform.transform);
+            itemUI.SetItemData(item, this, SlotType.Inventory);
+            itemUI.transform.SetParent(m_InventoryContentTransform);
         }
 
         public void ReleaseItemUIToPool(ItemUI itemUI)
         {
             if (itemUI != null)
             {
-                itemUI.ResetItemDataAndHide();
+                itemUI.ResetItemData();
                 PoolManager.Instance.ReleaseObjectToPool(itemUI);
             }
         }
@@ -137,16 +134,31 @@ namespace Weapon_System.GameplayObjects.UI
                 CreateItemUIForVicinitySlot(item);
             }
 
-            // Release the ItemUIs whose Item is not in the vicinity anymore.
-            foreach (ItemUI itemUI in m_ViscinityItemUIs)
-            {
-                if (!m_ItemUserHand.CollectablesScanned.Contains(itemUI.StoredItem))
-                {
-                    ReleaseItemUIToPool(itemUI);
-                }
-            }
+            RemoveExtraItemUIs();
+            
         }
 
+        // Release the ItemUIs whose Item is not in the vicinity anymore.
+        void RemoveExtraItemUIs()
+        {
+            int index = -1;
+            for (int i = 0, count = m_ViscinityItemUIs.Count; i < count; i++)
+            {
+                if ((m_ViscinityItemUIs[i].StoredItem == null) || 
+                    (!m_ItemUserHand.CollectablesScanned.Contains(m_ViscinityItemUIs[i].StoredItem)))
+                {
+                    index = i;
+                    break;
+                }
+            }
+
+            if (index > -1 && index < m_ViscinityItemUIs.Count)
+            {
+                ReleaseItemUIToPool(m_ViscinityItemUIs[index]);
+                m_ViscinityItemUIs.RemoveAt(index);
+                RemoveExtraItemUIs();
+            }
+        }
         bool IsItemAlreadyPresentInVicinitySlot(in InventoryItem item)
         {
             for (int i = 0, count = m_ViscinityItemUIs.Count; i < count; i++)

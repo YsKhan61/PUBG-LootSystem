@@ -139,36 +139,6 @@ namespace Weapon_System.GameplayObjects.UI
             Hide();
         }
 
-        internal void ShowItemUIAndResetItsPosition()
-        {
-            if (m_TempItemUI == null)
-            {
-                // If the ItemUI is null, then throw an error as every ItemUI should have an ItemUI
-                Debug.LogError("This should not be null");
-                return;
-            }
-            else
-            {
-                // Show the ItemUI if it is not null, and block raycast, and fallback to last position
-                m_TempItemUI.Show();
-                m_TempItemUI.BlockRaycast();
-                m_TempItemUI.FallbackToLastPosition();
-            }
-        }
-
-        /// <summary>
-        /// Hide and reset the ItemUI of the SightItem 
-        /// that is being dragged and dropped on this ItemUI
-        /// </summary>
-        /// <param name="itemUI"></param>
-        void HideItemUI(ItemUI itemUI)
-        {
-            // itemUI.IsDragSuccess = true;            // Set the drag success to true, so that the OnEndDrag of ItemUI doesn't make it visible again or fallback to last position
-            itemUI.Hide();
-            itemUI.UnblockRaycast();
-            m_TempItemUI = itemUI;
-        }
-
         internal void Show()
         {
             m_CanvasGroup.alpha = 1;

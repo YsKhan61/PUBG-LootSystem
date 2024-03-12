@@ -27,7 +27,7 @@ namespace Weapon_System.GameplayObjects.UI
         private InventoryItem m_Item;
         public InventoryItem StoredItem => m_Item;
 
-        public string Name => gameObject.name;
+        public string Name => "ItemUI";
 
         public GameObject GameObject => gameObject;
 
@@ -112,24 +112,21 @@ namespace Weapon_System.GameplayObjects.UI
             m_InventoryUI.OnItemUIDroppedOnSlotType(itemUI, StoredSlotType);
         }
 
-        public void SetItemDataAndShow(InventoryItem item, InventoryUI inventoryUI, SlotType storedSlotType)
+        public void SetItemData(InventoryItem item, InventoryUI inventoryUI, SlotType storedSlotType)
         {
             m_InventoryUI = inventoryUI;
             StoredSlotType = storedSlotType;
             m_Item = item;
             m_Icon.sprite = m_Item.ItemData.IconSprite;
             m_NameText.text = m_Item.ItemData.name;
-
-            Show();
         }
 
-        public void ResetItemDataAndHide()
+        public void ResetItemData()
         {
+            m_InventoryUI = null;
             m_Item = null;
             m_Icon.sprite = null;
             m_NameText.text = string.Empty;
-
-            Hide();
         }
 
         public void FallbackToLastPosition()

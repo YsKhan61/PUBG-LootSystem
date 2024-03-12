@@ -11,8 +11,8 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
     public class WeaponDataSO : ItemDataSO
     {
         [SerializeField, Tooltip("The prefab of the bullet")]
-        GameObject m_BulletPrefab;
-        public GameObject BulletPrefab => m_BulletPrefab;
+        Bullet m_BulletPrefab;
+        public Bullet BulletPrefab => m_BulletPrefab;
 
 
         [SerializeField, Tooltip("How much will the player camera zoom in this iron sight ADS")]

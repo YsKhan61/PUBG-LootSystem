@@ -20,15 +20,13 @@ namespace Weapon_System.Utilities
     {
         [SerializeField] private GameObject[] _spawnablesGO;
 
-        // Expose the spawnables to other scripts
-        public ISpawnable[] Spawnables => _spawnables;
-        private ISpawnable[] _spawnables;
         private Dictionary<string, ObjectPool<ISpawnable>> _objectsPool = new Dictionary<string, ObjectPool<ISpawnable>>();
 
-        public override void Awake()
-        {
-            base.Awake();
+        // Expose the spawnables to other scripts
+        private ISpawnable[] _spawnables;
 
+        private void Start()
+        {
             FetchSpawnableFromGameObjects();
 
             FillupPool();
@@ -44,8 +42,7 @@ namespace Weapon_System.Utilities
             }
 
             // get the object from the pool
-            var spawnable = pool.Get();
-            return spawnable;
+            return pool.Get();
         }
 
         public void ReleaseObjectToPool(ISpawnable spawnable)
@@ -107,32 +104,32 @@ namespace Weapon_System.Utilities
                 return newSpawnable;
             },
 
-                // Get the object from the pool
-                (spawnable) =>
-                {
-                    spawnable.GameObject.SetActive(true);
-                },
+            // Get the object from the pool
+            (newSpawnable) =>
+            {
+                newSpawnable.GameObject.SetActive(true);
+            },
 
-                // Return the object to the pool
-                (spawnable) =>
-                {
-                    spawnable.GameObject.SetActive(false);
-                },
+            // Return the object to the pool
+            (newSpawnable) =>
+            {
+                newSpawnable.GameObject.SetActive(false);
+            },
 
-                // Destroy the object
-                (spawnable) =>
-                {
-                    Destroy(spawnable.GameObject);
-                },
+            // Destroy the object
+            (newSpawnable) =>
+            {
+                Destroy(newSpawnable.GameObject);
+            },
 
-                // Collection Check
-                false,
+            // Collection Check
+            false,
 
-                // Initial Pool Size
-                spawnable.PoolSize > 0 ? spawnable.PoolSize : 1,
+            // Initial Pool Size
+            spawnable.PoolSize > 0 ? spawnable.PoolSize : 1,
 
-                // Max Pool Size
-                spawnable.PoolSize > 0 ? spawnable.PoolSize + 10 : 10
+            // Max Pool Size
+            spawnable.PoolSize > 0 ? spawnable.PoolSize + 10 : 10
             );
 
             return pool;

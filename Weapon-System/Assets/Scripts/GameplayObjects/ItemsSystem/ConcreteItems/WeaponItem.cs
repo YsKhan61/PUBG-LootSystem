@@ -234,19 +234,13 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
 
         public virtual bool PrimaryUseStarted()
         {
-            m_ShootRoutine =  StartCoroutine(Shoot());
+            StartShootRoutine();
             return true;
         }
 
         public virtual bool PrimaryUseCanceled()
         {
-            if (m_ShootRoutine != null)
-            {
-                StopCoroutine(m_ShootRoutine);
-            }
-            m_ShootRoutine = null;
-
-            Debug.Log(Name + " primary use canceled");
+            StopShootRoutine();
             return true;
         }
 
@@ -321,35 +315,57 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             return true;
         }
 
+        void StartShootRoutine()
+        {
+            if (m_ShootRoutine != null)
+            {
+                StopCoroutine(m_ShootRoutine);
+            }
+            m_ShootRoutine = StartCoroutine(Shoot());
+        }
+
+        void StopShootRoutine()
+        {
+            if (m_ShootRoutine != null)
+            {
+                StopCoroutine(m_ShootRoutine);
+            }
+            m_ShootRoutine = null;
+        }
+
         IEnumerator Shoot()
         {
             while (true)
             {
-                SpawnBullet();
+                if (TrySpawnBullet(out Bullet bullet))
+                {
+                    bullet.SetPositionAndRotation(BulletSpawnTransform.position, BulletSpawnTransform.rotation);
+                    bullet.Fire();
+                }
 
                 yield return m_FireRateWait;
             }
         }
 
-        void SpawnBullet()
+        bool TrySpawnBullet(out Bullet bullet)
         {
+            bullet = null;
             // Spawn bullet
-            ISpawnable spawnable = PoolManager.Instance.GetObjectFromPool(WeaponData.BulletPrefab.name);
+            ISpawnable spawnable = PoolManager.Instance.GetObjectFromPool(WeaponData.BulletPrefab.Name);
             if (spawnable == null)
             {
                 Debug.LogError("Bullet not found in the pool");
-                return;
+                return false;
             }
 
-            Bullet bullet = spawnable as Bullet;
+            bullet = spawnable as Bullet;
             if (bullet == null)
             {
                 Debug.LogError("Bullet not found in the pool");
-                return;
+                return false;
             }
 
-            bullet.gameObject.transform.position = BulletSpawnTransform.position;
-            bullet.gameObject.transform.rotation = BulletSpawnTransform.rotation;
+            return true;
         }
     }
 
