@@ -1,2 +1,2 @@
-# Weapon-System
-A weapon system architecture to create various weapons for a game.
+# PUBG Loot System
+Replicating the loot system of PUBG
