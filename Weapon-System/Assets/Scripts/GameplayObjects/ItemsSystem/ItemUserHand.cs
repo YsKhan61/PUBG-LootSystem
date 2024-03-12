@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Weapon_System.Utilities;
+using Wepaon_System.GameplayObjects.ItemsSystem;
 
 
 namespace Weapon_System.GameplayObjects.ItemsSystem
@@ -42,6 +43,10 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
         [SerializeField]
         AimCameraController m_AimCameraController;
         public AimCameraController AimCameraController => m_AimCameraController;
+
+        [SerializeField]
+        Recoil m_Recoil;
+        public Recoil Recoil => m_Recoil;
 
         [SerializeField]
         LayerMask m_ItemLayer;

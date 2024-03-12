@@ -331,6 +331,8 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
                 StopCoroutine(m_ShootRoutine);
             }
             m_ShootRoutine = null;
+
+            // m_ItemUserHand.Recoil.StopResetRecoil();
         }
 
         IEnumerator Shoot()
@@ -339,6 +341,8 @@ namespace Weapon_System.GameplayObjects.ItemsSystem
             {
                 if (TrySpawnBullet(out Bullet bullet))
                 {
+                    m_ItemUserHand.Recoil.StartHipfireRecoil();
+
                     bullet.SetPositionAndRotation(BulletSpawnTransform.position, BulletSpawnTransform.rotation);
                     bullet.Fire();
                 }
